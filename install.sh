@@ -17,16 +17,17 @@ function installFreenect() {
 	make
 	sudo make install
 	sudo ldconfig /usr/local/lib64/
-	sudo glview
+	#sudo glview
 	
 	# To allow Kinect use when not root
 	sudo adduser $USER video
-	# Make linux device manager rules
-	sudo cp -f 51-kinect.rules /etc/udev/rules.d/51-kinect.rules
-	
-	echo "Install and build finished. Test libfreenect with \"freenect-glview\"."
 	
 	cd ../..
+	
+	# Make linux device manager rules
+	sudo cp -f robotarm/51-kinect.rules /etc/udev/rules.d/51-kinect.rules
+	
+	echo "Install and build finished. Test libfreenect with \"freenect-glview\"."
 }
 
 function installCV() {
@@ -74,10 +75,12 @@ function installPCL() {
 
 # check that we're running Ubuntu and install
 if [[ uname == "Linux" ]]; then
+	cd ~
 	installDeps
 	installFreenect
 	installCV
 	installPCL
+	cd ~/robotarm
 else
 	echo "You're trying to run this on something that isn't Linux. Aborting..."
 fi
