@@ -49,7 +49,6 @@ function installCV() {
 	sudo apt-get install libtbb2 libtbb-dev
 	
 	# download and install opencv
-	Start from CV-4
 	git clone git://github.com/Itseez/opencv.git
 	cd opencv
 	mkdir build
