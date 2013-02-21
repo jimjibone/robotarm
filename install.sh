@@ -74,7 +74,7 @@ function installPCL() {
 }
 
 # check that we're running Ubuntu and install
-if [[ uname == "Linux" ]]; then
+if [[ `uname` == "Linux" ]]; then
 	cd ~
 	installDeps
 	installFreenect
