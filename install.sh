@@ -67,7 +67,7 @@ function installCV() {
 
 function installPCL() {
 	# install PCL. super easy
-	sudo apt-get-repository ppa:v-launchpad-jochen-sprickerhof-de/pcl
+	sudo add-apt-repository ppa:v-launchpad-jochen-sprickerhof-de/pcl
 	sudo apt-get update
 	sudo apt-get install libpcl-all
 }
