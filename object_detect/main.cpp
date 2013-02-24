@@ -11,6 +11,7 @@
 
 #include <iostream>
 #include <libfreenect.hpp>
+#include <libfreenect/libfreenect-registration.hpp>
 #include <pthread.h>
 #include <stdio.h>
 #include <string.h>
