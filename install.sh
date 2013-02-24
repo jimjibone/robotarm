@@ -9,7 +9,7 @@ function installDeps() {
 
 function installFreenect() {
 	# download freenect and install
-	git clone git://github.com/jimjibone/libfreenect.git
+	git clone https://github.com/jimjibone/libfreenect.git
 	cd libfreenect
 	mkdir build
 	cd build

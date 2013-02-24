@@ -9,20 +9,6 @@
  * This files does some stuff.
 -*---------------------------------------------*/
 
-/*#include <opencv2/core/core_c.h>
-#include <opencv2/core/core.hpp>
-#include <opencv2/imgproc/imgproc_c.h>
-#include <opencv2/imgproc/imgproc.hpp>
-
-#include <pcl/io/pcd_io.h>
-#include <pcl/console/parse.h>
-#include <pcl/visualization/pcl_visualizer.h>
-#include <pcl/sample_consensus/ransac.h>
-#include <pcl/sample_consensus/sac_model_sphere.h>
-#include <pcl/sample_consensus/msac.h>
-
-#include <boost/thread/thread.hpp>*/
-
 #include <iostream>
 #include <libfreenect.hpp>
 #include <pthread.h>
