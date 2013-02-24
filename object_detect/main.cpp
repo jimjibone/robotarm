@@ -34,21 +34,19 @@ public:
 	Mutex() { pthread_mutex_init(&m_mutex, NULL); }
 	void lock() { pthread_mutex_lock(&m_mutex); }
 	void unlock() { pthread_mutex_unlock(&m_mutex); }
-};
-
-// Scoped Lock Class
-// What does this do?
-class ScopedLock {
-private:
-	pthread_mutex_t m_mutex;
-public:
-	Mutex & _mutex;
-	ScopedLock(Mutex & mutex) : _mutex(mutex) {
-		_mutex.lock();
-	}
-	~ScopedLock() {
-		_mutex.unlock();
-	}
+	
+	// Scoped Lock Class
+	// What does this do?
+	class ScopedLock {
+	public:
+		Mutex & _mutex;
+		ScopedLock(Mutex & mutex) : _mutex(mutex) {
+			_mutex.lock();
+		}
+		~ScopedLock() {
+			_mutex.unlock();
+		}
+	};
 };
 
 // Kinect Hardware Connection Class
