@@ -71,7 +71,7 @@ public:
 		m_new_rgb_frame = true;
 	}
 	// Do not call directly even in child!
-	void DepthCallback(void* _rgb, uint32_t timestamp) {
+	void DepthCallback(void* _depth, uint32_t timestamp) {
 		Mutex::ScopedLock lock(m_depth_mutex);
 		depth.clear();
 		uint16_t* call_depth = static_cast<uint16_t*>(_depth);
@@ -121,6 +121,8 @@ int user_data = 0;
 pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZRGB>);
 unsigned int cloud_id = 0;
 
+void keyboardEventOccurred(const pcl::visualization::KeyboardEvent &event, void* viewer_void);
+
 
 
 
@@ -140,7 +142,7 @@ int main(int argc, char** argv) {
 	cloud->points.resize(cloud->width * cloud->height);
 	
 	// Create and setup viewer
-	boost::shared_ptr<pcl::visualization:PCLVisualizer> viewer(new pcl::visualization::PCLVisualizer ("3D Viewer"));
+	boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer(new pcl::visualization::PCLVisualizer ("3D Viewer"));
 	viewer->registerKeyboardCallback(keyboardEventOccurred, (void*)&viewer);
 	viewer->setBackgroundColor(255, 255, 255);
 	viewer->addPointCloud<pcl::PointXYZRGB>(cloud, "Kinect Cloud");
