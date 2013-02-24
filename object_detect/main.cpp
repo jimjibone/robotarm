@@ -146,7 +146,7 @@ int main(int argc, char** argv) {
 	boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer(new pcl::visualization::PCLVisualizer ("3D Viewer"));
 	viewer->registerKeyboardCallback(keyboardEventOccurred, (void*)&viewer);
 	viewer->setBackgroundColor(255, 255, 255);
-	viewer->addPointCloud<pcl::PointXYZRGB>(cloud, "Kinect Cloud");
+	viewer->addPointCloud/*<pcl::PointXYZRGB>*/(cloud, "Kinect Cloud");
 	viewer->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 1, "Kinect Cloud");
 	viewer->addCoordinateSystem(1.0);
 	viewer->initCameraParameters();
