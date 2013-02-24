@@ -11,7 +11,7 @@
 
 #include <iostream>
 #include <libfreenect.hpp>
-#include <libfreenect/libfreenect-registration.hpp>
+#include <libfreenect/libfreenect-registration.h>
 #include <pthread.h>
 #include <stdio.h>
 #include <string.h>
@@ -154,7 +154,7 @@ int main(int argc, char** argv) {
 	// Actually starting up the Kinect
 	device = &freenect.createDevice<MyFreenectDevice>(0);
 	device->startVideo();
-	device->setartDepth();
+	device->startDepth();
 	boost::this_thread::sleep(boost::posix_time::seconds(1));
 	// Grab until clean returns...
 	int depthCount = 0;
