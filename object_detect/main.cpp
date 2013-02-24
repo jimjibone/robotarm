@@ -145,8 +145,8 @@ int main(int argc, char** argv) {
 	// Create and setup viewer
 	boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer(new pcl::visualization::PCLVisualizer ("3D Viewer"));
 	viewer->registerKeyboardCallback(keyboardEventOccurred, (void*)&viewer);
-	viewer->setBackgroundColor(255, 255, 255);
-	viewer->addPointCloud/*<pcl::PointXYZRGB>*/(cloud, "Kinect Cloud");
+	viewer->setBackgroundColor(55, 55, 55);
+	viewer->addPointCloud<pcl::PointXYZRGB>(cloud, "Kinect Cloud");
 	viewer->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 1, "Kinect Cloud");
 	viewer->addCoordinateSystem(1.0);
 	viewer->initCameraParameters();
@@ -164,6 +164,7 @@ int main(int argc, char** argv) {
 		device->getRGB(mrgb);
 		for (size_t i = 0; i < 640*480; i++)
 			depthCount += mdepth[i];
+			printf("Blank frame (%d).\n", depthCount);
 	}
 	device->setVideoFormat(requested_format);
 	
