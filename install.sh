@@ -27,7 +27,7 @@ function installFreenect() {
 	# Make linux device manager rules
 	sudo cp -f robotarm/51-kinect.rules /etc/udev/rules.d/51-kinect.rules
 	
-	echo "Install and build finished. Test libfreenect with \"freenect-glview\"."
+	echo "Install and build finished. Test libfreenect with \"glview\"."
 }
 
 function installCV() {
