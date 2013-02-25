@@ -1,5 +1,6 @@
 #include<iostream>
 #include<libfreenect.hpp>
+#include<libfreenect/libfreenect-registration.h>
 #include<pthread.h>
 #include<stdio.h>
 #include<string.h>
@@ -7,12 +8,12 @@
 #include<vector>
 #include<ctime>
 #include<boost/thread/thread.hpp>
-#include"boost/lexical_cast.hpp"
-#include"pcl/common/common_headers.h"
-#include"pcl/io/pcd_io.h"
-#include"pcl/visualization/pcl_visualizer.h"
-#include"pcl/console/parse.h"
-#include"pcl/point_types.h"
+#include<boost/lexical_cast.hpp>
+#include<pcl/common/common_headers.h>
+#include<pcl/io/pcd_io.h>
+#include<pcl/visualization/pcl_visualizer.h>
+#include<pcl/console/parse.h>
+#include<pcl/point_types.h>
 
 
 class Mutex {

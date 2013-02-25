@@ -3,16 +3,16 @@
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 set(CMAKE_C_FLAGS "-Wall")
 
-project(robotarm)
+project(okpcl)
 
 find_package(PCL 1.4 REQUIRED)
 #find_package(OpenCV REQUIRED)
 
-include_directories(${PCL_INCLUDE_DIRS})    #${OPENCV_INCLUDE_DIRS}
+include_directories(. ${PCL_INCLUDE_DIRS})    #${OPENCV_INCLUDE_DIRS}
 link_directories(${PCL_LIBRARY_DIRS})       #${OPENCV_LIBRARY_DIRS}
 add_definitions(${PCL_DEFINITIONS})
 
-add_executable (okpcl main.cpp)
+add_executable (okpcl OKPCL.cpp)
 
 find_package(Threads REQUIRED)
 include_directories(${USB_INCLUDE_DIRS})
