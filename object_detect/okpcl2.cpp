@@ -204,7 +204,7 @@ int main (int argc, char** argv)
 	int iRealDepth = 0;
 	while (!viewer->wasStopped ())
 	{
-		device->updateState();
+		device->updateState();	// Use this to make sure the Kinect is still alive.
 		device->getDepth(mdepth);
 		device->getRGB(mrgb);
 		
