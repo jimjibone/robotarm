@@ -42,3 +42,19 @@ Just a standard install. But it is the cutting edge version from GitHub! BEWARE!
 ###Point Cloud Library###
 
 Good ol' Ubuntu has a PCL install using `apt-get`. Easy.
+
+
+Build `object_detect` files
+---------------------------
+
+This can be done very simply by using Cmake:
+
+1. In the Terminal `cd` into object_detect
+1. `mkdir build`
+1. `cd build`
+1. Various `cmake` commands can now be run to produce makefiles or IDE projects:
+	1. Normal binary makefile - `cmake ..`
+	1. Xcode project - `cmake .. -G 'Xcode'`
+	1. For other IDE's run `cmake` and a list of Generators will appear at the bottom
+1. To make the binaries if you used `cmake ..` then run `make`
+1. Otherwise, open the project file in your IDE and build that way.
