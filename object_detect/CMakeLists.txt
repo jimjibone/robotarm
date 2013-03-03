@@ -15,14 +15,14 @@ find_package(Threads REQUIRED)
 include_directories(${USB_INCLUDE_DIRS})
 
 add_executable (simple simple.cpp)
-add_executable (simplecv simplecloudviewer.cpp ../cloud_viewer/CloudViewer.h ../cloud_viewer/CloudViewer.cpp)
+add_executable (simplegl simplegl.cpp ../helpers/Mutex.hpp ../helpers/Freenect.hpp)
 
 # Mac just has everything already
 if(APPLE)
 	set(CMAKE_EXE_LINKER_FLAGS "-framework OpenGL -framework GLUT")
 	
 	target_link_libraries (simple freenect ${CMAKE_THREAD_LIBS_INIT} ${MATH_LIB} ${PCL_LIBRARIES})
-	target_link_libraries (simplecv freenect ${CMAKE_THREAD_LIBS_INIT} ${MATH_LIB} ${PCL_LIBRARIES})
+	target_link_libraries (simplegl freenect ${CMAKE_THREAD_LIBS_INIT} ${MATH_LIB} ${PCL_LIBRARIES})
 	
 # Linux, not so much
 else()
@@ -32,5 +32,5 @@ else()
 	include_directories(${OPENGL_INCLUDE_DIRS} ${GLUT_INCLUDE_DIRS})
 
 	target_link_libraries (simple freenect ${CMAKE_THREAD_LIBS_INIT} ${MATH_LIB} ${PCL_LIBRARIES} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY})
-	target_link_libraries (simplecv freenect ${CMAKE_THREAD_LIBS_INIT} ${MATH_LIB} ${PCL_LIBRARIES} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY})
+	target_link_libraries (simplegl freenect ${CMAKE_THREAD_LIBS_INIT} ${MATH_LIB} ${PCL_LIBRARIES} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY})
 endif()
