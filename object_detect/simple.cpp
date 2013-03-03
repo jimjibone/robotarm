@@ -1,12 +1,11 @@
 /*---------------------------------------------*-
- * Object Detection Main File
+ * Simple Kinect Access with PCL
  *
  * Eye Tracking Robotic Arm
  * By James Reuss
  * Copyright 2013
 -*---------------------------------------------*-
- * Main.cpp
- * This files does some stuff.
+ * simple.cpp
 -*---------------------------------------------*/
 
 #include <iostream>
@@ -164,17 +163,20 @@ void keyboardEventOccurred (const pcl::visualization::KeyboardEvent &event,void*
 -*---------------------------------------------*/
 int main (int argc, char** argv)
 {
+	printf("Hello\n");
 	// Some more Kinect setup
 	static std::vector<uint16_t> mdepth(640*480);
 	static std::vector<uint8_t> mrgb(640*480*4);
 	
 	// Fill in the cloud data
+	printf("Make a cloud\n");
 	cloud->width = 640;
 	cloud->height = 480;
 	cloud->is_dense = false;
 	cloud->points.resize (cloud->width * cloud->height);
 
 	// Create and setup the viewer
+	printf("Make a viewer\n");
 	boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer (new pcl::visualization::PCLVisualizer ("3D Viewer"));
 	viewer->registerKeyboardCallback (keyboardEventOccurred, (void*)&viewer);
 	viewer->setBackgroundColor (255, 255, 255);
@@ -184,13 +186,17 @@ int main (int argc, char** argv)
 	viewer->initCameraParameters ();
 	
 	// Actually starting up the Kinect
+	printf("Start the Kinect\n");
 	device = &freenect.createDevice<MyFreenectDevice>(0);
 	device->startVideo();
 	device->startDepth();
 	boost::this_thread::sleep (boost::posix_time::seconds (1));
 	// Grab until clean returns...
+	printf("Start Kinect checks\n");
 	int DepthCount = 0;
+	int check = 0;
 	while (DepthCount == 0) {
+		printf("\tchecking... %d\n", check++);
 		device->updateState();
 		device->getDepth(mdepth);
 		device->getRGB(mrgb);
@@ -199,6 +205,7 @@ int main (int argc, char** argv)
 	device->setVideoFormat(requested_format);
 
 	// Main Loop. Mmmmm continuous steak.
+	printf("Main Loop Time\n");
 	double x = NULL;
 	double y = NULL;
 	int iRealDepth = 0;
@@ -231,5 +238,6 @@ int main (int argc, char** argv)
 	printf("render loop finished\n");
 	device->stopVideo();
 	device->stopDepth();
+	printf("Goodbye\n");
 	return 0;
 }

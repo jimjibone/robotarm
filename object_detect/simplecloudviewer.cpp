@@ -1,52 +1,36 @@
-#include<iostream>
-#include<libfreenect.hpp>
-#include<libfreenect/libfreenect-registration.h>
-#include<pthread.h>
-#include<stdio.h>
-#include<string.h>
-#include<cmath>
-#include<vector>
-#include<ctime>
-#include<boost/thread/thread.hpp>
-#include<boost/lexical_cast.hpp>
-#include<pcl/common/common_headers.h>
-#include<pcl/io/pcd_io.h>
-#include<pcl/visualization/pcl_visualizer.h>
-#include<pcl/console/parse.h>
-#include<pcl/point_types.h>
+/*---------------------------------------------*-
+ * Simple Kinect Access with PCL
+ *
+ * Eye Tracking Robotic Arm
+ * By James Reuss
+ * Copyright 2013
+-*---------------------------------------------*-
+ * simple.cpp
+-*---------------------------------------------*/
+
+#include <iostream>
+#include <libfreenect.hpp>
+#include <libfreenect/libfreenect-registration.h>
+#include <pthread.h>
+#include <stdio.h>
+#include <string.h>
+#include <cmath>
+#include <vector>
+#include <ctime>
+#include <boost/thread/thread.hpp>
+#include <boost/lexical_cast.hpp>
+#include <pcl/common/common_headers.h>
+#include <pcl/io/pcd_io.h>
+#include <pcl/visualization/pcl_visualizer.h>
+#include <pcl/console/parse.h>
+#include <pcl/point_types.h>
+#include "../cloud_viewer/CloudViewer.h"
+#include "../helpers/Mutex.hpp"
 
 
-class Mutex {
-	public:
-		Mutex() {
-			pthread_mutex_init( &m_mutex, NULL );
-		}
-		void lock() {
-			pthread_mutex_lock( &m_mutex );
-		}
-		void unlock() {
-			pthread_mutex_unlock( &m_mutex );
-		}
 
-	class ScopedLock
-	{
-		Mutex & _mutex;
-		public:
-			ScopedLock(Mutex & mutex): _mutex(mutex)
-			{
-				_mutex.lock();
-			}
-			~ScopedLock()
-			{
-				_mutex.unlock();
-			}
-	};
-	private:
-	pthread_mutex_t m_mutex;
-};
-
-///Kinect Hardware Connection Class
-/* thanks to Yoda---- from IRC */
+// Kinect Hardware Connection Class
+// Thanks to Yoda---- from IRC (libfreenect)
 class MyFreenectDevice : public Freenect::FreenectDevice {
 	public:
 		MyFreenectDevice(freenect_context *_ctx, int _index):
@@ -99,8 +83,14 @@ class MyFreenectDevice : public Freenect::FreenectDevice {
 		bool m_new_depth_frame;
 };
 
-///Start the PCL/OK Bridging
-//OK
+
+
+
+/*---------------------------------------------*-
+ * START THE ENGINES! IT'S BRIDGING TIME!
+ * PCL->OK OK?
+-*---------------------------------------------*/
+// libfreenect
 Freenect::Freenect freenect;
 MyFreenectDevice* device;
 freenect_video_format requested_format(FREENECT_VIDEO_RGB);
@@ -109,73 +99,62 @@ int got_frames(0),window(0);
 int g_argc;
 char **g_argv;
 int user_data = 0;
-//PCL
+// point clouds 'n' that.
 pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZRGB>);
 unsigned int cloud_id = 0;
 
-///Keyboard Event Tracking
-void keyboardEventOccurred (const pcl::visualization::KeyboardEvent &event,void* viewer_void)
-{
-	boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer = *static_cast<boost::shared_ptr<pcl::visualization::PCLVisualizer> *> (viewer_void);
-	if (event.getKeySym () == "c"&&event.keyDown ())
-	{
-		std::cout <<"c was pressed => capturing a pointcloud"<< std::endl;
-		std::string filename = "KinectCap";
-		filename.append(boost::lexical_cast<std::string>(cloud_id));
-		filename.append(".pcd");
-		pcl::io::savePCDFileASCII (filename, *cloud);
-		cloud_id++;
-	}
-}
 
-int main (int argc, char** argv)
+
+
+CloudViewer *viewer;
+
+/*---------------------------------------------*-
+ * PROCESSING LOOP
+-*---------------------------------------------*/
+bool killProcessing = 0;
+static void *processingThreadFunc(void *v)
 {
-	//More Kinect Setup
+	// Some more Kinect setup
 	static std::vector<uint16_t> mdepth(640*480);
 	static std::vector<uint8_t> mrgb(640*480*4);
-	// Fill in the cloud data
-	cloud->width = 640;
-	cloud->height = 480;
-	cloud->is_dense = false;
-	cloud->points.resize (cloud->width * cloud->height);
-
-	// Create and setup the viewer
-	boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer (new pcl::visualization::PCLVisualizer ("3D Viewer"));
-	viewer->registerKeyboardCallback (keyboardEventOccurred, (void*)&viewer);
-	viewer->setBackgroundColor (255, 255, 255);
-	viewer->addPointCloud<pcl::PointXYZRGB> (cloud, "Kinect Cloud");
-	viewer->setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE,1, "Kinect Cloud");
-	viewer->addCoordinateSystem (1.0);
-	viewer->initCameraParameters ();
-
+	
+	// Actually starting up the Kinect
+	printf("Start the Kinect\n");
 	device = &freenect.createDevice<MyFreenectDevice>(0);
+	printf("\tcreated device\n");
 	device->startVideo();
+	printf("\tstarted video\n");
 	device->startDepth();
+	printf("\tstarted depth\n");
 	boost::this_thread::sleep (boost::posix_time::seconds (1));
-
-	//Grab until clean returns
+	printf("\tslept for 1 sec\n");
+	// Grab until clean returns...
 	int DepthCount = 0;
+	printf("\tbegin grabs till clean returns\n");
 	while (DepthCount == 0) {
 		device->updateState();
 		device->getDepth(mdepth);
 		device->getRGB(mrgb);
 		for (size_t i = 0;i < 480*640;i++) DepthCount+=mdepth[i];
 	}
+	printf("\tfinished grabs\n");
 	device->setVideoFormat(requested_format);
-
-	//--------------------
-	// -----Main loop-----
-	//--------------------
+	printf("\tset video format\n");
+	
+	// Main Processing Loop Time. Mmmmm continuous steak.
+	printf("Main Loop Time\n");
 	double x = NULL;
 	double y = NULL;
 	int iRealDepth = 0;
-	while (!viewer->wasStopped ())
+	int count = 0;
+	while (!killProcessing)
 	{
-		device->updateState();
+		//printf("\tprocessed %d frames\n", ++count);
+		device->updateState();	// Use this to make sure the Kinect is still alive.
 		device->getDepth(mdepth);
 		device->getRGB(mrgb);
+		
 		size_t i = 0;
-		size_t cinput = 0;
 		for (size_t v=0 ; v<480 ; v++)
 		{
 			for ( size_t u=0 ; u<640 ; u++, i++)
@@ -190,12 +169,44 @@ int main (int argc, char** argv)
 				cloud->points[i].b = mrgb[(i*3)+2];
 			}
 		}
-
-		viewer->updatePointCloud (cloud, "Kinect Cloud");
-		viewer->spinOnce ();
+		
+		viewer->updateCloud(cloud);
 	}
-	printf("render loop finished\n");
 	device->stopVideo();
 	device->stopDepth();
+	printf("processing loop finished\n");
+	
+	return;
+}
+
+
+
+/*---------------------------------------------*-
+ * MAIN
+ * Steak?
+-*---------------------------------------------*/
+int main (int argc, char** argv)
+{
+	printf("Hello\n");
+
+	// Fill in the cloud data
+	printf("Make a cloud\n");
+	cloud->width = 640;
+	cloud->height = 480;
+	cloud->is_dense = false;
+	cloud->points.resize (cloud->width * cloud->height);
+	cloud->makeShared();
+	
+	// Start up the Kinect processing
+	pthread_t processing_thread;
+	pthread_create(&processing_thread, NULL, processingThreadFunc, 0);
+	
+	// Create and start the viewer and NEVER EVER RETURN!
+	printf("Make a viewer\n");
+	viewer = new CloudViewer("Kinect Cloud v2");
+	
+	viewer->startCloudViewer(&argc, argv, &killProcessing);
+	
+	printf("Goodbye\n");
 	return 0;
 }
