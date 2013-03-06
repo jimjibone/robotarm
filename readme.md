@@ -4,8 +4,24 @@ Eye-Tracking Robotic Arm
 This project is looking at the building of a robotic arm capable of lifting objects off a table, controlled by a user using eye-tracking. The movement control of the arm is assisted using 3D vision and object detection. The eye-tracking and object detection is made possible by utilising a PS3 Eye camera and the Xbox Kinect sensor.
 
 
+Whats Here?
+-----------
+
+1. Dependencies
+1. `install.sh`?
+1. Object Detection
+1. Eye Tracking
+
+
 Install Dependencies
 ---------------------
+
+###The Dependencies###
+So far:
+
+- libfreenect (OpenKinect)
+- Point Cloud Library
+- OpenGL/GLUT (but we don't need to worry about this...)
 
 ###Ubuntu###
 In Terminal run the following commands to download and install the dependencies.
@@ -58,3 +74,10 @@ This can be done very simply by using Cmake:
 	1. For other IDE's run `cmake` and a list of Generators will appear at the bottom
 1. To make the binaries if you used `cmake ..` then run `make`
 1. Otherwise, open the project file in your IDE and build that way.
+
+
+Build `eye_tracking` files
+--------------------------
+
+Kinda need to do this...
+
