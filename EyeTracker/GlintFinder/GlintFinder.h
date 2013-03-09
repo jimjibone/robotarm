@@ -5,6 +5,7 @@
 #include "Variables/EyeRange.h"
 #include "Variables/GlintLocation.h"
 #include "Variables/Point.h"
+#include <opencv/cv.h>
 
 class GlintFinder
 {
@@ -13,7 +14,7 @@ class GlintFinder
         GlintFinder(int NumToExpect);
         virtual ~GlintFinder();
 
-        void FindGlints();
+        void FindGlints(IplImage* Image);
         GlintLocation GetGlintLocation(int Num);
     protected:
     private:
@@ -21,8 +22,8 @@ class GlintFinder
     GlintLocation* GlintsLocs;
     EyeRange CurRange;
 
-    void Around(EyePoint Loc, int From, int Num);
-    EyeRectangle ConstrainRect(EyeRectangle Rect);
+    void Around(EyePoint Loc, int From, int Num, IplImage* Image);
+    EyeRectangle ConstrainRect(EyeRectangle Rect, IplImage* Image);
 };
 
 #endif // GLINTFINDER_H
