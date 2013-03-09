@@ -60,6 +60,74 @@ unsigned int cloud_id = 0;
 
 
 /*---------------------------------------------*-
+ * Table Detection Stuff
+-*---------------------------------------------*/
+// RANSAC
+pcl::PointCloud<pcl::Normal> cloud_normals;	//normals of the point cloud
+pcl::PointIndices table_inliers;	//point indices belonging to the table plane
+pcl::ModelCoefficients table_coeffs;	//coeffs (a,b,c,d) of ax+by+cz+d=0 plane eq.
+
+// OUTPUTS
+pcl::PointCloud<pcl::PointXYZ> cloud_objects;	//points belonging to objects
+
+
+
+
+
+/*---------------------------------------------*-
+ * Table Detection Functions
+-*---------------------------------------------*/
+void tableDetect(void) {
+	pcl::SACSegmentationFromNormals<pcl::PointXYZ, pcl::Normal> segmentor;
+	segmentor.setOptimizeCoefficients(true);
+	segmentor.setModelType(pcl::SACMODEL_NORMAL_PLANE);
+	segmentor.setMethodType(pcl::SAC_RANSAC);
+	segmentor.setProbability(0.99);
+	// Points at less than 1cm over the plane are part of the table.
+	segmentor.setDistanceThreshold(0.01);
+	segmentor.setInputCloud(cloud);
+	segmentor.setInputNormals(cloud_normals);
+	segmentor.segment(table_inliers, table_coeffs);
+	
+	// Project the table inliers to the estimated plane.
+	pcl::PointCloud<pcl::PointXYZ> table_projected;
+	pcl::ProjectInliers<pcl::PointXYZ> proj;
+	proj.setInputCloud(cloud);
+	proj.setIndices(table_inliers);
+	proj.setModelCoefficients(table_coeffs);
+	proj.filter(table_projected);
+	
+	// Estimate the convex hull of the projected points.
+	pcl::PointCloud<pcl::PointXYZ> table_hull;
+	pcl::ConvexHull<pcl::PointXYZ> hull;
+	hull.setInputCloud(table_projected.makeShared());
+	hull.reconstruct(table_hull);
+	
+	// Determine the points lying in the prism.
+	pcl::PointIndices object_indices;	//points lying over the table
+	pcl::ExtractPolygonalPrismData<pcl::PointXYZ> prism;
+	prism.setHeightLimits(0.01, 0.5);	//object must lie between 1cm and 50cm over the plane.
+	prism.setInputCloud(cloud);
+	prism.setInputPlanarHull(table_hull.makeShared());
+	prism.segment(object_indices);
+	
+	// Extract the point cloud corresponding to the extracted indices.
+	pcl::ExtractedIndices<Point> extract_object_indices;
+	extract_object_indices.setInputCloud(cloud);
+	extract_object_indices.setIndices(boost::make_shared<const pcl::PointIndices>(object_indices));
+	extract_object_indices.filter(cloud_objects);
+	
+	// TODO : Now extract the individual object clusters
+	// Location: 3092 of 4458.
+}
+void tableDetectDo(void) {
+	
+}
+
+
+
+
+/*---------------------------------------------*-
  * GLUT CALLBACKS
  * There's no food here... Go home.
 -*---------------------------------------------*/
