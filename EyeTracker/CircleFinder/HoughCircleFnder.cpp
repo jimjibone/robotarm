@@ -127,7 +127,7 @@ void HoughCircleFnder::FindCircle(EyeRectangle Rect)
                     else
                     {
                         NumFound = 1;
-                        Loc = CircleLocation(X, Y, R, 0);
+                        Loc = CircleLocation(X, Y, R, -1);
                         return;
                     }
                 }

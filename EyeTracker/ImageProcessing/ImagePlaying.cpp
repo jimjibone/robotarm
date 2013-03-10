@@ -93,7 +93,7 @@ void ImagePlaying::ContourFinder(IplImage* ScrImage, IplImage* DestImage)
             {//Dont just check points next to for accuracy
                 for (int y = Y - StepSize; y < Y + StepSize; y++)
                 {
-                    if (x != X & Y != y)
+                    if (x != X && Y != y)
                     {//Dont check
                         if (CheckAgainst != ScrImage->imageData[x + y *ScrImage->width]) //If value changes, add a value to tet variable
                         {
@@ -102,7 +102,7 @@ void ImagePlaying::ContourFinder(IplImage* ScrImage, IplImage* DestImage)
                     }
                 }
             }
-            if (Num > 5) //Not sure why 5, but seems to work best
+            if (Num > 4) //Not sure why 4, but seems to work best
             {
                 DestImage->imageData[P] = (char)127;
             }

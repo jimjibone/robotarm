@@ -4,6 +4,7 @@
 #include <iostream>
 #include "Point.h"
 #include "../../CircleFinder/Variables/Rectangle.h"
+#include <opencv/cv.h>
 
 class GlintLocation
 {
@@ -17,7 +18,10 @@ class GlintLocation
         EyePoint GetMid();
 
         void FindMaxRect();
+        EyeRectangle GetMaxRect();
         bool WithinOld(EyePoint Loc);
+
+        void DrawPoints(IplImage* Image);
     protected:
     private:
     int Count;

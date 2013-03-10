@@ -62,6 +62,11 @@ void GlintLocation::FindMaxRect()
     MaxRect = EyeRectangle(MinX - 3, MinY - 3, MaxX - MinX + 6, MaxY - MinY + 6);
 }
 
+EyeRectangle GlintLocation::GetMaxRect()
+{
+    return MaxRect;
+}
+
 int GlintLocation::Min(int Num1, int Num2)
 {
     if (Num1 < Num2)
@@ -99,4 +104,14 @@ bool GlintLocation::WithinOld(EyePoint Loc)
         }
     }
     return false;
+}
+
+void GlintLocation::DrawPoints(IplImage* Image)
+{
+    for (int cnt = 0; cnt < Count; cnt++)
+    {
+        EyePoint P = Points[cnt];
+        int L = P.GetX() * Image->nChannels + P.GetY() * Image->width * 3;
+        Image->imageData[L] = (char)127;
+    }
 }

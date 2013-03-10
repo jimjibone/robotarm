@@ -10,9 +10,9 @@ EyeRange::EyeRange(char Value)
     int TempHigh = (int)Value + RangeArea;
     int TempLow = (int) Value - RangeArea;
 
-    if (TempHigh > 255)
+    if (TempHigh > 127)
     {
-        Upper = (char)255;
+        Upper = (char)127;
     }
     else
     {
@@ -36,11 +36,11 @@ EyeRange::~EyeRange()
 
 bool EyeRange::CheckWithin(char Value)
 {
-    if (Value > Upper)
+    if (Value >= Upper)
     {
         return false;
     }
-    if (Value < Lower)
+    if (Value <= Lower)
     {
         return false;
     }

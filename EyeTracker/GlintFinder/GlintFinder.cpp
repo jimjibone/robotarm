@@ -18,6 +18,26 @@ GlintFinder::~GlintFinder()
 
 void GlintFinder::FindGlints(IplImage* Image)
 {
+    FindGlints(Image, EyeRectangle(0, 0, Image->width, Image->height));
+}
+
+void GlintFinder::FindGlints(IplImage* Image, CircleLocation Location)
+{
+    FindGlints(Image, Location.BrightRectangle());
+}
+
+void GlintFinder::FindGlints(IplImage* Image, CircleLocation Location, IplImage* Draw)
+{
+    FindGlints(Image, Location.BrightRectangle(), Draw);
+}
+
+void GlintFinder::FindGlints(IplImage* Image, EyeRectangle Rect)
+{
+
+}
+
+void GlintFinder::FindGlints(IplImage* Image, EyeRectangle Rect, IplImage* DrawOnto)
+{
     for (int cnt = 0; cnt < NumToExptect; cnt++)
     {
         GlintsLocs[cnt] = GlintLocation();
@@ -25,11 +45,11 @@ void GlintFinder::FindGlints(IplImage* Image)
 
     for (int cnt = 0; cnt < NumToExptect; cnt++)
     {
-        byte Max = 0;
-        EyePoint MaxLoc;
-        for (int X = 0; X < Image->width; X++)
+        char Max = 0, Min = 0;
+        EyePoint MaxLoc, MinLoc;
+        for (int X = Rect.Left(); X < Rect.Right(); X++)
         {
-            for (int Y = 0; Y < Image->height; Y++)
+            for (int Y = Rect.Top(); Y < Rect.Bottom(); Y++)
             {
                 int P = X + Y * Image->width;
                 bool Carry = true;
@@ -48,6 +68,22 @@ void GlintFinder::FindGlints(IplImage* Image)
                         Max = Image->imageData[P];
                         MaxLoc = EyePoint(X, Y);
                     }
+
+                    if (Image->imageData[P] > 100)
+                    {
+                        //DrawOnto->imageData[P] = Image->imageData[P];
+                    }
+
+                    if (Image->imageData[P] > -50 && Image->imageData[P] < 0)
+                    {
+                        DrawOnto->imageData[P] = Image->imageData[P];
+                    }
+
+                    if (Min > Image->imageData[P])
+                    {
+                        Min = Image->imageData[P];
+                        MinLoc = EyePoint(X, Y);
+                    }
                 }
             }
         }
@@ -55,21 +91,38 @@ void GlintFinder::FindGlints(IplImage* Image)
         CurRange = EyeRange(Max);
         GlintsLocs[cnt].AddPoint(MaxLoc);
 
+        printf("Max At (%d, %d) Get %d\n", MaxLoc.GetX(), MaxLoc.GetY(), Image->imageData[MaxLoc.GetX() + MaxLoc.GetY() * Image->width]);
+        printf("Max At (%d, %d) Get %d\n", MinLoc.GetX(), MinLoc.GetY(), Image->imageData[MinLoc.GetX() + MinLoc.GetY() * Image->width]);
+
         Around(MaxLoc, 1, cnt, Image);
 
         GlintsLocs[cnt].FindMaxRect();
+        GlintsLocs[cnt].FindMid();
     }
 }
 
 GlintLocation GlintFinder::GetGlintLocation(int Num)
 {
-    return GlintsLocs[Num];
+    if (Num >= NumToExptect)
+    {
+        return GlintLocation();
+    }
+    else
+    {
+        return GlintsLocs[Num];
+    }
 }
 
 void GlintFinder::Around(EyePoint Loc, int From, int Nums, IplImage* Image)
 {
     int Num = 0;
-    EyeRectangle Rect = ConstrainRect(EyeRectangle(Loc.GetX() - From, Loc.GetY() - From, From * 2, From * 2), Image);
+    EyeRectangle Rect = EyeRectangle(Loc.GetX() - From, Loc.GetY() - From, From * 2, From * 2);
+    if (!(Rect.Left() > 0 && Rect.Right() < Image->width && Rect.Top() > 0 && Rect.Bottom() < Image->height))
+    {
+        printf("Argument Got too Large");
+        return;
+    }
+
     for (int X = Rect.Left(); X <= Rect.Right(); X++)
     {
         int P = X + Rect.Top() * Image->width;
@@ -104,6 +157,7 @@ void GlintFinder::Around(EyePoint Loc, int From, int Nums, IplImage* Image)
         }
     }
 
+    printf("NumFound = %d\n", Num);
 
     if (Num != 0)
     {
@@ -152,4 +206,14 @@ EyeRectangle GlintFinder::ConstrainRect(EyeRectangle Rect, IplImage* Image)
     }
 
     return EyeRectangle(NewX, NewY, Width, Height);
+}
+
+void GlintFinder::DrawGlints(IplImage* Image)
+{
+    for (int cnt = 0; cnt < NumToExptect; cnt++)
+    {
+        EyePoint P = GlintsLocs[cnt].GetMid();
+        //GlintsLocs[cnt].DrawPoints(Image);
+        cvCircle(Image, cvPoint(P.GetX(), P.GetY()), 1, CV_RGB(0, 0, 255), 2);
+    }
 }
