@@ -143,6 +143,6 @@ elif [[ `uname` == "Darwin" ]]; then
 	
 # or if you fail
 else
-	echo "You're trying to run this on something that isn't Linux. Aborting..."
+	echo "You're trying to run this on something that isn't OS X or Linux. Aborting..."
 fi
 cd $PREV
