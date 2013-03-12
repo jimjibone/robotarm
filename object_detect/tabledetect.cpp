@@ -62,22 +62,23 @@ unsigned int cloud_id = 0;
 /*---------------------------------------------*-
  * Table Detection Stuff
 -*---------------------------------------------*/
+bool doTableDetect = false;
 // RANSAC
 pcl::PointCloud<pcl::Normal> cloud_normals;	//normals of the point cloud
-pcl::PointIndices table_inliers;	//point indices belonging to the table plane
-pcl::ModelCoefficients table_coeffs;	//coeffs (a,b,c,d) of ax+by+cz+d=0 plane eq.
-
+pcl::PointIndices table_inliers;			//point indices belonging to the table plane
+pcl::ModelCoefficients table_coeffs;		//coeffs (a,b,c,d) of ax+by+cz+d=0 plane eq.
 // OUTPUTS
+pcl::PointCloud<pcl::PointXYZ> table_projected;	//projected table points
+pcl::PointCloud<pcl::PointXYZ> table_hull;		//estimated convex hull points
+pcl::PointIndices object_indices;				//points lying over the table (within the hull)
 pcl::PointCloud<pcl::PointXYZ> cloud_objects;	//points belonging to objects
-
-
-
-
+std::vector<pcl::PointCloud<pcl::PointXYZ>::Ptr> objects;	//vector of objects, one point cloud per object
 
 /*---------------------------------------------*-
  * Table Detection Functions
 -*---------------------------------------------*/
-void tableDetect(void) {
+void tableDetectDoRansac(void) {
+	// RANSAC
 	pcl::SACSegmentationFromNormals<pcl::PointXYZ, pcl::Normal> segmentor;
 	segmentor.setOptimizeCoefficients(true);
 	segmentor.setModelType(pcl::SACMODEL_NORMAL_PLANE);
@@ -90,39 +91,53 @@ void tableDetect(void) {
 	segmentor.segment(table_inliers, table_coeffs);
 	
 	// Project the table inliers to the estimated plane.
-	pcl::PointCloud<pcl::PointXYZ> table_projected;
 	pcl::ProjectInliers<pcl::PointXYZ> proj;
 	proj.setInputCloud(cloud);
 	proj.setIndices(table_inliers);
 	proj.setModelCoefficients(table_coeffs);
 	proj.filter(table_projected);
-	
+}
+void tableDetectDoConvexHull(void) {
 	// Estimate the convex hull of the projected points.
-	pcl::PointCloud<pcl::PointXYZ> table_hull;
 	pcl::ConvexHull<pcl::PointXYZ> hull;
 	hull.setInputCloud(table_projected.makeShared());
 	hull.reconstruct(table_hull);
-	
+}
+void tableDetectFindValidPoints(void) {
 	// Determine the points lying in the prism.
-	pcl::PointIndices object_indices;	//points lying over the table
 	pcl::ExtractPolygonalPrismData<pcl::PointXYZ> prism;
 	prism.setHeightLimits(0.01, 0.5);	//object must lie between 1cm and 50cm over the plane.
 	prism.setInputCloud(cloud);
 	prism.setInputPlanarHull(table_hull.makeShared());
 	prism.segment(object_indices);
-	
+}
+void tableDetectFindObjectCloud(void) {
 	// Extract the point cloud corresponding to the extracted indices.
 	pcl::ExtractedIndices<Point> extract_object_indices;
 	extract_object_indices.setInputCloud(cloud);
 	extract_object_indices.setIndices(boost::make_shared<const pcl::PointIndices>(object_indices));
 	extract_object_indices.filter(cloud_objects);
-	
-	// TODO : Now extract the individual object clusters
-	// Location: 3092 of 4458.
 }
-void tableDetectDo(void) {
+void tableDetectExtractObjectCluster(void) {
+	// Use Euclidean Clustering to "split-apart" the object_cloud
+	// into its separate objects.
+	pcl::EuclideanClusterExtraction<pcl::PointXYZ> cluster;
+	cluster.setInputCloud(cloud_objects);
+	std::vector<pcl::PointIndices> object_clusters;
+	cluster.extract(object_clusters);
 	
+	pcl::ExtractIndices<pcl::PointXYZ> extract_object_indices;
+	for (int i = 0; i < object_clusters.size(); ++i) {
+		pcl::PointCloud<pcl::PointXYZ>::Ptr object_cloud;
+		object_cloud = new pcl::PointCloud<pcl::PointXYZ>;
+		extract_object_indices.setInputCloud(cloud);
+		extract_object_indices.setIndices(boost::make_shared<const pcl::PointIndices>(object_clusters[i]));
+		extract_object_indices.filter(object_cloud);
+		objects.push_back(object_cloud);
+	}
 }
+// next, fitting a parametric model to a point cloud
+// book, pos. 3109 of 4458
 
 
 
@@ -201,6 +216,8 @@ void keyboardCallback(unsigned char key, int x, int y)
 		zoom /= 1.1f;
 	if (key == 'c');
 		//colour = !colour;
+	if (key == 'd')
+		doTableDetect = true;
 }
 void movementCallback(int x, int y)
 {
@@ -251,6 +268,18 @@ void glutIdleCallback()
 			}
 		}
 	}
+	
+	// Table & Object Detection
+	if (doTableDetect) {
+		tableDetectDoRansac();
+		tableDetectDoConvexHull();
+		tableDetectFindValidPoints();
+		tableDetectFindObjectCloud();
+		tableDetectExtractObjectCluster();
+		
+		doTableDetect = false;
+	}
+	
 	glutPostRedisplay();
 	//printf("End Idle\n");
 }
