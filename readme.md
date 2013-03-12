@@ -23,8 +23,8 @@ So far:
 - Point Cloud Library
 - OpenGL/GLUT (but we don't need to worry about this...)
 
-###Ubuntu###
-In Terminal run the following commands to download and install the dependencies.
+###OS X and Ubuntu##
+In the Terminal run these commands, the script will do the rest, hopefully.
 
 1. Clone source (if not already cloned). 
 1. Move into the repo.
@@ -33,11 +33,13 @@ In Terminal run the following commands to download and install the dependencies.
 ```bash
 git clone git://github.com/jimjibone/robotarm.git
 cd robotarm
-./install.sh
+./deps/install.sh
 ```
 
-###Other OS's###
+###Other OS's (Windoze)###
+
 Soz guys but there are no installs for other OS's because of the PS Eye camera being stoopid.
+Well, the PS Eye camera does not work on the latest version of OS X, *sadface* but does work on Linux and Windows reportedly. Apart from that everything works on all platforms! Except this dependency install. Maybe later.
 
 
 What does `install.sh` do?
@@ -49,15 +51,17 @@ Does that.
 
 ###OpenKinect###
 
-In order to get OK to bridge over properly with PCL we need to edit some files before OK installation. This has already been done in the jimjibone fork of libfreenect (jimjibone/libfreenect). This is then downloaded, built, installed and permissions + drivers fixed.
+In order to get OK to bridge over properly with PCL we need to edit some files before OK installation. This has already been done in the jimjibone fork of libfreenect (jimjibone/libfreenect). This is then downloaded, built, installed and permissions + drivers fixed (on Linux).
 
 ###OpenCV###
 
-Just a standard install. But it is the cutting edge version from GitHub! BEWARE!
+OS X: A simple Homebrew install :) `brew install opencv`
+Linux: Just a standard install. But it is the cutting edge version from GitHub! BEWARE!
 
 ###Point Cloud Library###
 
-Good ol' Ubuntu has a PCL install using `apt-get`. Easy.
+OS X: Not very easy. For more info see the `install.sh` script and see how I have had to modify the [Homebrew](http://mxcl.github.com/homebrew/) Formula.
+Linux: Good ol' Ubuntu has a PCL install using `apt-get`. Easy.
 
 
 Build `object_detect` files
@@ -76,7 +80,7 @@ This can be done very simply by using Cmake:
 1. Otherwise, open the project file in your IDE and build that way.
 
 
-Build `eye_tracking` files
+Build `EyeTracker` files
 --------------------------
 
 Kinda need to do this...
