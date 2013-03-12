@@ -45,7 +45,7 @@ void GlintFinder::FindGlints(IplImage* Image, EyeRectangle Rect)
                 bool Carry = true;
                 for (int ctr = 0; ctr < cnt; ctr++)
                 {
-                    if (GlintsLocs[ctr].WithinOld(EyePoint(X, Y)))
+                    if (!GlintsLocs[ctr].WithinOld(EyePoint(X, Y)))
                     {
                         Carry = false;
                         break;
@@ -90,7 +90,7 @@ void GlintFinder::Around(EyePoint Loc, int From, int Nums, IplImage* Image)
     EyeRectangle Rect = EyeRectangle(Loc.GetX() - From, Loc.GetY() - From, From * 2, From * 2);
     if (!(Rect.Left() > 0 && Rect.Right() < Image->width && Rect.Top() > 0 && Rect.Bottom() < Image->height))
     {
-        printf("Argument Got too Large");
+        //printf("Argument Got too Large\n");
         return;
     }
 

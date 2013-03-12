@@ -2,7 +2,7 @@
 
 GlintLocation::GlintLocation()
 {
-    Points = (EyePoint*)malloc(1000 * sizeof(EyePoint));
+    Points = (EyePoint*)malloc(MaxNumOfPoints * sizeof(EyePoint));
     Count = 0;
 }
 
@@ -13,15 +13,15 @@ GlintLocation::~GlintLocation()
 
 void GlintLocation::AddPoint(EyePoint Loc)
 {
-    if (Count < 999)
+    if (Count < MaxNumOfPoints - 1)
     {
         Points[Count] = Loc;
         Count++;
     }
-    if (Count >= 1000)
-    {
-        printf("Error, Too Many Points In Array");
-    }
+    //if (Count >= MaxNumOfPoints)
+    //{
+        //printf("Error, Too Many Points In Array\n");
+    //}
 }
 
 void GlintLocation::FindMid()
@@ -59,7 +59,9 @@ void GlintLocation::FindMaxRect()
         MaxY = Max(MaxY, Points[cnt].GetY());
     }
 
-    MaxRect = EyeRectangle(MinX - 3, MinY - 3, MaxX - MinX + 6, MaxY - MinY + 6);
+    int ExtraStep = 3;
+
+    MaxRect = EyeRectangle(MinX - ExtraStep, MinY - ExtraStep, MaxX - MinX + 2* ExtraStep, MaxY - MinY + 2*ExtraStep);
 }
 
 EyeRectangle GlintLocation::GetMaxRect()
@@ -93,17 +95,17 @@ int GlintLocation::Max(int Num1, int Num2)
 
 bool GlintLocation::WithinOld(EyePoint Loc)
 {
-    if (Loc.GetX() > MaxRect.Left() && Loc.GetX() < MaxRect.Right() && Loc.GetY() > MaxRect.Top() && Loc.GetY() < MaxRect.Bottom())
+    if (Loc.GetX() >= MaxRect.Left() && Loc.GetX() <= MaxRect.Right() && Loc.GetY() >= MaxRect.Top() && Loc.GetY() <= MaxRect.Bottom())
     {
-        for (int cnt = 0; cnt < Count; cnt++)
-        {
-            if (Loc.GetX() == Points[cnt].GetX() && Loc.GetY() == Points[cnt].GetY())
-            {
-                return true;
-            }
-        }
+        //for (int cnt = 0; cnt < Count; cnt++)
+        //{
+            //if (Loc.GetX() == Points[cnt].GetX() && Loc.GetY() == Points[cnt].GetY())
+            //{
+                return false;
+            //}
+        //}
     }
-    return false;
+    return true;
 }
 
 void GlintLocation::DrawPoints(IplImage* Image)
