@@ -31,6 +31,8 @@ class GlintLocation
 
     int Max(int Num1, int Num2);
     int Min(int Num1, int Num2);
+
+    static const int MaxNumOfPoints = 2000;
 };
 
 #endif // GLINTLOCATION_H
