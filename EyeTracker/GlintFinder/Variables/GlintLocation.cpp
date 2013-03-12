@@ -35,10 +35,10 @@ void GlintLocation::FindMid()
     X /= (double)Count;
     Y /= (double)Count;
 
-    Mid = EyePoint((int)X, (int)Y);
+    Mid = EyePointD(X, Y);
 }
 
-EyePoint GlintLocation::GetMid()
+EyePointD GlintLocation::GetMid()
 {
     return Mid;
 }
@@ -112,6 +112,8 @@ void GlintLocation::DrawPoints(IplImage* Image)
     {
         EyePoint P = Points[cnt];
         int L = P.GetX() * Image->nChannels + P.GetY() * Image->width * 3;
-        Image->imageData[L] = (char)127;
+        Image->imageData[L] = (char)0;
+        Image->imageData[L + 1] = (char)-1;
+        Image->imageData[L + 2] = (char)0;
     }
 }

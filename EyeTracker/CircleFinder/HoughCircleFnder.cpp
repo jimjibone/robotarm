@@ -45,23 +45,20 @@ void HoughCircleFnder::SetBooleanData(bool* Data)
 }
 
 void HoughCircleFnder::SetOpenCVImage(IplImage* Image)
-{
-    //Binary Image is required, with values of either 0 or 127
-    //Why 127? when its ment to be a 8-bit images?  not sure
+{//Binary Image is required, with values of either 0 or -1 (stupid signed char thing)
     for (int X = 0; X < Wid; X++)
     {
         for (int Y = 0; Y < Hei; Y++)
         {
             int P = Y * Wid + X;
-            Values[P] = Image->imageData[P] == 127;
+            Values[P] = Image->imageData[P] == -1;
         }
     }
 }
 
 
 void HoughCircleFnder::FindCircle()
-{
-    //Function decides if to look in a small area or scan the whole image again.
+{//Function decides if to look in a small area or scan the whole image again.
     if (NumFound != 0)
     {
         FindCircle(Loc.NextRectangle());

@@ -28,13 +28,14 @@ public:
 protected:
 private:
     //Functions
-    char Modify(char Num);
+    unsigned char Modify(unsigned char Num);
 
     //Variables
     int PNum1, PNum2;
 
     //Constants
     static const int StepSize = 2;
+    static const int PassAmount = 2;
 };
 
 #endif // IMAGEPLAYING_H

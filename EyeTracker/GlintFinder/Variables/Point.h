@@ -16,4 +16,22 @@ class EyePoint
     int X, Y;
 };
 
+class EyePointD
+{
+    public:
+        EyePointD();
+        EyePointD(double X, double Y);
+        virtual ~EyePointD();
+
+        double GetX();
+        double GetY();
+
+        int GetXint();
+        int GetYint();
+    protected:
+    private:
+    double X, Y;
+};
+
+
 #endif // POINT_H

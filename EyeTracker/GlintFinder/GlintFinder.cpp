@@ -26,17 +26,7 @@ void GlintFinder::FindGlints(IplImage* Image, CircleLocation Location)
     FindGlints(Image, Location.BrightRectangle());
 }
 
-void GlintFinder::FindGlints(IplImage* Image, CircleLocation Location, IplImage* Draw)
-{
-    FindGlints(Image, Location.BrightRectangle(), Draw);
-}
-
 void GlintFinder::FindGlints(IplImage* Image, EyeRectangle Rect)
-{
-
-}
-
-void GlintFinder::FindGlints(IplImage* Image, EyeRectangle Rect, IplImage* DrawOnto)
 {
     for (int cnt = 0; cnt < NumToExptect; cnt++)
     {
@@ -45,8 +35,8 @@ void GlintFinder::FindGlints(IplImage* Image, EyeRectangle Rect, IplImage* DrawO
 
     for (int cnt = 0; cnt < NumToExptect; cnt++)
     {
-        char Max = 0, Min = 0;
-        EyePoint MaxLoc, MinLoc;
+        unsigned char Max = 0;
+        EyePoint MaxLoc;
         for (int X = Rect.Left(); X < Rect.Right(); X++)
         {
             for (int Y = Rect.Top(); Y < Rect.Bottom(); Y++)
@@ -63,26 +53,10 @@ void GlintFinder::FindGlints(IplImage* Image, EyeRectangle Rect, IplImage* DrawO
                 }
                 if (Carry)
                 {
-                    if (Max < Image->imageData[P])
+                    if (Max < (unsigned char)Image->imageData[P])
                     {
-                        Max = Image->imageData[P];
+                        Max = (unsigned char)Image->imageData[P];
                         MaxLoc = EyePoint(X, Y);
-                    }
-
-                    if (Image->imageData[P] > 100)
-                    {
-                        //DrawOnto->imageData[P] = Image->imageData[P];
-                    }
-
-                    if (Image->imageData[P] > -50 && Image->imageData[P] < 0)
-                    {
-                        DrawOnto->imageData[P] = Image->imageData[P];
-                    }
-
-                    if (Min > Image->imageData[P])
-                    {
-                        Min = Image->imageData[P];
-                        MinLoc = EyePoint(X, Y);
                     }
                 }
             }
@@ -90,9 +64,6 @@ void GlintFinder::FindGlints(IplImage* Image, EyeRectangle Rect, IplImage* DrawO
 
         CurRange = EyeRange(Max);
         GlintsLocs[cnt].AddPoint(MaxLoc);
-
-        printf("Max At (%d, %d) Get %d\n", MaxLoc.GetX(), MaxLoc.GetY(), Image->imageData[MaxLoc.GetX() + MaxLoc.GetY() * Image->width]);
-        printf("Max At (%d, %d) Get %d\n", MinLoc.GetX(), MinLoc.GetY(), Image->imageData[MinLoc.GetX() + MinLoc.GetY() * Image->width]);
 
         Around(MaxLoc, 1, cnt, Image);
 
@@ -157,8 +128,6 @@ void GlintFinder::Around(EyePoint Loc, int From, int Nums, IplImage* Image)
         }
     }
 
-    printf("NumFound = %d\n", Num);
-
     if (Num != 0)
     {
         Around(Loc, From + 1, Nums, Image);
@@ -212,8 +181,8 @@ void GlintFinder::DrawGlints(IplImage* Image)
 {
     for (int cnt = 0; cnt < NumToExptect; cnt++)
     {
-        EyePoint P = GlintsLocs[cnt].GetMid();
-        //GlintsLocs[cnt].DrawPoints(Image);
-        cvCircle(Image, cvPoint(P.GetX(), P.GetY()), 1, CV_RGB(0, 0, 255), 2);
+        EyePointD P = GlintsLocs[cnt].GetMid();
+        GlintsLocs[cnt].DrawPoints(Image);
+        cvCircle(Image, cvPoint(P.GetXint(), P.GetYint()), 1, CV_RGB(0, 0, 255), 2);
     }
 }

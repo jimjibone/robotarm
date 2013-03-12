@@ -7,17 +7,19 @@ class EyeRange
 {
     public:
         EyeRange();
-        EyeRange(char Value);
+        EyeRange(unsigned char Value);
         virtual ~EyeRange();
 
-        bool CheckWithin(char Value);
+        bool CheckWithin(unsigned char Value);
+        unsigned char GetUpperBoundU();
         char GetUpperBound();
         char GetLowerBound();
+        unsigned char GetLowerBoundU();
     protected:
     private:
-        char Upper, Lower;
+        unsigned char Upper, Lower;
 
-        static const int RangeArea = 10;
+        static const int RangeArea = 20;
 };
 
 #endif // EYERANGE_H

@@ -63,19 +63,19 @@ void ImagePlaying::ConvertToBinary(IplImage* ScrImage, IplImage* DestImage)
     }
 }
 
-char ImagePlaying::Modify(char Num)
+unsigned char ImagePlaying::Modify(unsigned char Num)
 {//3 Point return, allows for slightly more accurate contouring it seems
     if(Num < PNum1)
     {
-        return (char)0;
+        return 0;
     }
     else if (Num < PNum2)
     {
-        return (char)55;
+        return 127;
     }
     else
     {
-        return (char)127;
+        return 255;
     }
 }
 
@@ -88,7 +88,7 @@ void ImagePlaying::ContourFinder(IplImage* ScrImage, IplImage* DestImage)
         {
             int Num = 0; //Test value, if enough points pass that is considered a valid point
             int P = X + Y * ScrImage->width;
-            byte CheckAgainst = ScrImage->imageData[P]; //Take value of the point in question to see if there are differances
+            char CheckAgainst = ScrImage->imageData[P]; //Take value of the point in question to see if there are differances
             for (int x = X - StepSize; x < X + StepSize; x++)
             {//Dont just check points next to for accuracy
                 for (int y = Y - StepSize; y < Y + StepSize; y++)
@@ -98,13 +98,20 @@ void ImagePlaying::ContourFinder(IplImage* ScrImage, IplImage* DestImage)
                         if (CheckAgainst != ScrImage->imageData[x + y *ScrImage->width]) //If value changes, add a value to tet variable
                         {
                             Num++;
+
+                            if (Num > PassAmount)
+                            {
+                                x = X + StepSize;
+                                break;
+                            }
                         }
                     }
                 }
             }
-            if (Num > 4) //Not sure why 4, but seems to work best
+
+            if (Num > PassAmount)
             {
-                DestImage->imageData[P] = (char)127;
+                DestImage->imageData[P] = (char)-1;
             }
             else
             {
@@ -128,9 +135,9 @@ void ImagePlaying::ExtendLines(IplImage* ScrImage, IplImage* DestImage, int Widt
         {
             int P = X + Y * ScrImage->width;
             char data = ScrImage->imageData[P];
-            if (data == 127)
+            if (data == -1)
             {
-                DestImage->imageData[P] = (char)127;
+                DestImage->imageData[P] = (char)-1;
             }
             else
             {
@@ -139,9 +146,9 @@ void ImagePlaying::ExtendLines(IplImage* ScrImage, IplImage* DestImage, int Widt
                 {
                     for (int y = Y - Width; y < Y + Width; y++)
                     {
-                        if (ScrImage->imageData[x + y * ScrImage->width] == 127)
+                        if (ScrImage->imageData[x + y * ScrImage->width] == -1)
                         {
-                            DestImage->imageData[P] = (char)127;
+                            DestImage->imageData[P] = (char)-1;
                             x = X + Width;
                             break;
                         }

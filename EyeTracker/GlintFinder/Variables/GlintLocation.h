@@ -15,7 +15,7 @@ class GlintLocation
         void AddPoint(EyePoint Loc);
 
         void FindMid();
-        EyePoint GetMid();
+        EyePointD GetMid();
 
         void FindMaxRect();
         EyeRectangle GetMaxRect();
@@ -26,7 +26,7 @@ class GlintLocation
     private:
     int Count;
     EyePoint* Points;
-    EyePoint Mid;
+    EyePointD Mid;
     EyeRectangle MaxRect;
 
     int Max(int Num1, int Num2);

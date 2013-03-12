@@ -17,7 +17,6 @@ class GlintFinder
 
         void FindGlints(IplImage* Image);
         void FindGlints(IplImage* Image, CircleLocation Location);
-        void FindGlints(IplImage* Image, CircleLocation Location, IplImage* Draw);
         GlintLocation GetGlintLocation(int Num);
 
         void DrawGlints(IplImage* Image);
@@ -28,7 +27,6 @@ class GlintFinder
     EyeRange CurRange;
 
     void FindGlints(IplImage* Image, EyeRectangle Rect);
-    void FindGlints(IplImage* Image, EyeRectangle Rect, IplImage* DrawOnTo);
 
     void Around(EyePoint Loc, int From, int Num, IplImage* Image);
     EyeRectangle ConstrainRect(EyeRectangle Rect, IplImage* Image);
