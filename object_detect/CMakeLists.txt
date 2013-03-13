@@ -16,6 +16,7 @@ include_directories(${USB_INCLUDE_DIRS})
 
 add_executable (simple simple.cpp)
 add_executable (simplegl simplegl.cpp ../helpers/Mutex.hpp ../helpers/Freenect.hpp)
+add_executable (tabledetect tabledetect.cpp ../helpers/Mutex.hpp ../helpers/Freenect.hpp)
 
 # Mac just has everything already
 if(APPLE)
@@ -23,6 +24,7 @@ if(APPLE)
 	
 	target_link_libraries (simple freenect ${CMAKE_THREAD_LIBS_INIT} ${MATH_LIB} ${PCL_LIBRARIES})
 	target_link_libraries (simplegl freenect ${CMAKE_THREAD_LIBS_INIT} ${MATH_LIB} ${PCL_LIBRARIES})
+	target_link_libraries (tabledetect freenect ${CMAKE_THREAD_LIBS_INIT} ${MATH_LIB} ${PCL_LIBRARIES})
 	
 # Linux, not so much
 else()
@@ -33,4 +35,5 @@ else()
 
 	target_link_libraries (simple freenect ${CMAKE_THREAD_LIBS_INIT} ${MATH_LIB} ${PCL_LIBRARIES} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY})
 	target_link_libraries (simplegl freenect ${CMAKE_THREAD_LIBS_INIT} ${MATH_LIB} ${PCL_LIBRARIES} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY})
+	target_link_libraries (tabledetect freenect ${CMAKE_THREAD_LIBS_INIT} ${MATH_LIB} ${PCL_LIBRARIES} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY})
 endif()

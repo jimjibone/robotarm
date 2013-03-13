@@ -1,0 +1,157 @@
+/Users/jimjibone/robotarm/object_detect/tabledetect.cpp:96:26: error: no viable conversion from 'shared_ptr<PointCloud<struct pcl::PointXYZRGB>>' to 'const shared_ptr<const PointCloud<struct pcl::PointXYZ>>'
+		segmentor.setInputCloud(cloud);
+								^~~~~
+/usr/local/include/boost/smart_ptr/shared_ptr.hpp:328:25: note: candidate constructor (the implicit copy constructor) not viable: no known conversion from 'pcl::PointCloud<pcl::PointXYZRGB>::Ptr' (aka 'shared_ptr<PointCloud<pcl::PointXYZRGB> >') to
+	  'const boost::shared_ptr<const pcl::PointCloud<pcl::PointXYZ> > &' for 1st argument
+template<class T> class shared_ptr
+						^
+/usr/local/include/boost/smart_ptr/shared_ptr.hpp:425:5: note: candidate template ignored: substitution failure [with Y = pcl::PointCloud<pcl::PointXYZRGB>]: no type named 'type' in 'boost::detail::sp_enable_if_convertible<pcl::PointCloud<pcl::PointXYZRGB>, const
+	  pcl::PointCloud<pcl::PointXYZ> >'
+	shared_ptr( shared_ptr<Y> const & r, typename boost::detail::sp_enable_if_convertible<Y,T>::type = boost::detail::sp_empty() )
+	^                                                                                           ~~~~
+/usr/local/include/boost/smart_ptr/detail/operator_bool.hpp:52:5: note: candidate function
+	operator unspecified_bool_type() const BOOST_NOEXCEPT
+	^
+/usr/local/include/pcl-1.6/pcl/pcl_base.h:103:48: note: passing argument to parameter 'cloud' here
+	  setInputCloud (const PointCloudConstPtr &cloud) { input_ = cloud; }
+											   ^
+/Users/jimjibone/robotarm/object_detect/tabledetect.cpp:97:28: error: no viable conversion from 'pcl::PointCloud<pcl::Normal>' to 'const PointCloudNConstPtr' (aka 'const shared_ptr<const PointCloud<pcl::Normal> >')
+		segmentor.setInputNormals(cloud_normals);
+								  ^~~~~~~~~~~~~
+/usr/local/include/boost/smart_ptr/shared_ptr.hpp:328:25: note: candidate constructor (the implicit copy constructor) not viable: no known conversion from 'pcl::PointCloud<pcl::Normal>' to 'const boost::shared_ptr<const pcl::PointCloud<pcl::Normal> > &' for 1st argument
+template<class T> class shared_ptr
+						^
+/usr/local/include/boost/smart_ptr/shared_ptr.hpp:425:5: note: candidate template ignored: failed template argument deduction
+	shared_ptr( shared_ptr<Y> const & r, typename boost::detail::sp_enable_if_convertible<Y,T>::type = boost::detail::sp_empty() )
+	^
+/usr/local/include/pcl-1.6/pcl/segmentation/sac_segmentation.h:333:51: note: passing argument to parameter 'normals' here
+	  setInputNormals (const PointCloudNConstPtr &normals) { normals_ = normals; }
+												  ^
+/Users/jimjibone/robotarm/object_detect/tabledetect.cpp:102:21: error: no viable conversion from 'shared_ptr<PointCloud<struct pcl::PointXYZRGB>>' to 'const shared_ptr<const PointCloud<struct pcl::PointXYZ>>'
+		proj.setInputCloud(cloud);
+						   ^~~~~
+/usr/local/include/boost/smart_ptr/shared_ptr.hpp:328:25: note: candidate constructor (the implicit copy constructor) not viable: no known conversion from 'pcl::PointCloud<pcl::PointXYZRGB>::Ptr' (aka 'shared_ptr<PointCloud<pcl::PointXYZRGB> >') to
+	  'const boost::shared_ptr<const pcl::PointCloud<pcl::PointXYZ> > &' for 1st argument
+template<class T> class shared_ptr
+						^
+/usr/local/include/boost/smart_ptr/shared_ptr.hpp:425:5: note: candidate template ignored: substitution failure [with Y = pcl::PointCloud<pcl::PointXYZRGB>]: no type named 'type' in 'boost::detail::sp_enable_if_convertible<pcl::PointCloud<pcl::PointXYZRGB>, const
+	  pcl::PointCloud<pcl::PointXYZ> >'
+	shared_ptr( shared_ptr<Y> const & r, typename boost::detail::sp_enable_if_convertible<Y,T>::type = boost::detail::sp_empty() )
+	^                                                                                           ~~~~
+/usr/local/include/boost/smart_ptr/detail/operator_bool.hpp:52:5: note: candidate function
+	operator unspecified_bool_type() const BOOST_NOEXCEPT
+	^
+/usr/local/include/pcl-1.6/pcl/pcl_base.h:103:48: note: passing argument to parameter 'cloud' here
+	  setInputCloud (const PointCloudConstPtr &cloud) { input_ = cloud; }
+											   ^
+/Users/jimjibone/robotarm/object_detect/tabledetect.cpp:103:7: error: no matching member function for call to 'setIndices'
+		proj.setIndices(table_inliers);
+		~~~~~^~~~~~~~~~
+/usr/local/include/pcl-1.6/pcl/pcl_base.h:113:7: note: candidate function not viable: no known conversion from 'pcl::PointIndices' to 'const IndicesPtr' (aka 'const shared_ptr<std::vector<int> >') for 1st argument
+	  setIndices (const IndicesPtr &indices)
+	  ^
+/usr/local/include/pcl-1.6/pcl/pcl_base.h:124:7: note: candidate function not viable: no known conversion from 'pcl::PointIndices' to 'const IndicesConstPtr' (aka 'const shared_ptr<const std::vector<int> >') for 1st argument
+	  setIndices (const IndicesConstPtr &indices)
+	  ^
+/usr/local/include/pcl-1.6/pcl/pcl_base.h:135:7: note: candidate function not viable: no known conversion from 'pcl::PointIndices' to 'const PointIndicesConstPtr' (aka 'const shared_ptr<const ::pcl::PointIndices>') for 1st argument
+	  setIndices (const PointIndicesConstPtr &indices)
+	  ^
+/usr/local/include/pcl-1.6/pcl/pcl_base.h:151:7: note: candidate function not viable: requires 4 arguments, but 1 was provided
+	  setIndices (size_t row_start, size_t col_start, size_t nb_rows, size_t nb_cols)
+	  ^
+/Users/jimjibone/robotarm/object_detect/tabledetect.cpp:104:28: error: no viable conversion from 'pcl::ModelCoefficients' to 'const ModelCoefficientsConstPtr' (aka 'const shared_ptr<const ::pcl::ModelCoefficients>')
+		proj.setModelCoefficients(table_coeffs);
+								  ^~~~~~~~~~~~
+/usr/local/include/boost/smart_ptr/shared_ptr.hpp:328:25: note: candidate constructor (the implicit copy constructor) not viable: no known conversion from 'pcl::ModelCoefficients' to 'const boost::shared_ptr<const pcl::ModelCoefficients> &' for 1st argument
+template<class T> class shared_ptr
+						^
+/usr/local/include/boost/smart_ptr/shared_ptr.hpp:425:5: note: candidate template ignored: failed template argument deduction
+	shared_ptr( shared_ptr<Y> const & r, typename boost::detail::sp_enable_if_convertible<Y,T>::type = boost::detail::sp_empty() )
+	^
+/usr/local/include/pcl-1.6/pcl/filters/project_inliers.h:108:62: note: passing argument to parameter 'model' here
+	  setModelCoefficients (const ModelCoefficientsConstPtr &model)
+															 ^
+/Users/jimjibone/robotarm/object_detect/tabledetect.cpp:117:22: error: no viable conversion from 'shared_ptr<PointCloud<struct pcl::PointXYZRGB>>' to 'const shared_ptr<const PointCloud<struct pcl::PointXYZ>>'
+		prism.setInputCloud(cloud);
+							^~~~~
+/usr/local/include/boost/smart_ptr/shared_ptr.hpp:328:25: note: candidate constructor (the implicit copy constructor) not viable: no known conversion from 'pcl::PointCloud<pcl::PointXYZRGB>::Ptr' (aka 'shared_ptr<PointCloud<pcl::PointXYZRGB> >') to
+	  'const boost::shared_ptr<const pcl::PointCloud<pcl::PointXYZ> > &' for 1st argument
+template<class T> class shared_ptr
+						^
+/usr/local/include/boost/smart_ptr/shared_ptr.hpp:425:5: note: candidate template ignored: substitution failure [with Y = pcl::PointCloud<pcl::PointXYZRGB>]: no type named 'type' in 'boost::detail::sp_enable_if_convertible<pcl::PointCloud<pcl::PointXYZRGB>, const
+	  pcl::PointCloud<pcl::PointXYZ> >'
+	shared_ptr( shared_ptr<Y> const & r, typename boost::detail::sp_enable_if_convertible<Y,T>::type = boost::detail::sp_empty() )
+	^                                                                                           ~~~~
+/usr/local/include/boost/smart_ptr/detail/operator_bool.hpp:52:5: note: candidate function
+	operator unspecified_bool_type() const BOOST_NOEXCEPT
+	^
+/usr/local/include/pcl-1.6/pcl/pcl_base.h:103:48: note: passing argument to parameter 'cloud' here
+	  setInputCloud (const PointCloudConstPtr &cloud) { input_ = cloud; }
+											   ^
+/Users/jimjibone/robotarm/object_detect/tabledetect.cpp:123:7: error: no member named 'ExtractedIndices' in namespace 'pcl'
+		pcl::ExtractedIndices<Point> extract_object_indices;
+		~~~~~^
+/Users/jimjibone/robotarm/object_detect/tabledetect.cpp:123:24: error: use of undeclared identifier 'Point'
+		pcl::ExtractedIndices<Point> extract_object_indices;
+							  ^
+/Users/jimjibone/robotarm/object_detect/tabledetect.cpp:123:31: error: use of undeclared identifier 'extract_object_indices'
+		pcl::ExtractedIndices<Point> extract_object_indices;
+									 ^
+/Users/jimjibone/robotarm/object_detect/tabledetect.cpp:124:2: error: use of undeclared identifier 'extract_object_indices'
+		extract_object_indices.setInputCloud(cloud);
+		^
+/Users/jimjibone/robotarm/object_detect/tabledetect.cpp:125:2: error: use of undeclared identifier 'extract_object_indices'
+		extract_object_indices.setIndices(boost::make_shared<const pcl::PointIndices>(object_indices));
+		^
+/Users/jimjibone/robotarm/object_detect/tabledetect.cpp:126:2: error: use of undeclared identifier 'extract_object_indices'
+		extract_object_indices.filter(cloud_objects);
+		^
+/Users/jimjibone/robotarm/object_detect/tabledetect.cpp:132:24: error: no viable conversion from 'pcl::PointCloud<pcl::PointXYZ>' to 'const PointCloudConstPtr' (aka 'const shared_ptr<const PointCloud<pcl::PointXYZ> >')
+		cluster.setInputCloud(cloud_objects);
+							  ^~~~~~~~~~~~~
+/usr/local/include/boost/smart_ptr/shared_ptr.hpp:328:25: note: candidate constructor (the implicit copy constructor) not viable: no known conversion from 'pcl::PointCloud<pcl::PointXYZ>' to 'const boost::shared_ptr<const pcl::PointCloud<pcl::PointXYZ> > &' for 1st
+	  argument
+template<class T> class shared_ptr
+						^
+/usr/local/include/boost/smart_ptr/shared_ptr.hpp:425:5: note: candidate template ignored: failed template argument deduction
+	shared_ptr( shared_ptr<Y> const & r, typename boost::detail::sp_enable_if_convertible<Y,T>::type = boost::detail::sp_empty() )
+	^
+/usr/local/include/pcl-1.6/pcl/pcl_base.h:103:48: note: passing argument to parameter 'cloud' here
+	  setInputCloud (const PointCloudConstPtr &cloud) { input_ = cloud; }
+											   ^
+/Users/jimjibone/robotarm/object_detect/tabledetect.cpp:136:7: error: no member named 'ExtractIndices' in namespace 'pcl'
+		pcl::ExtractIndices<pcl::PointXYZ> extract_object_indices;
+		~~~~~^
+/Users/jimjibone/robotarm/object_detect/tabledetect.cpp:136:35: error: expected '(' for function-style cast or type construction
+		pcl::ExtractIndices<pcl::PointXYZ> extract_object_indices;
+							~~~~~~~~~~~~~^
+/Users/jimjibone/robotarm/object_detect/tabledetect.cpp:136:37: error: use of undeclared identifier 'extract_object_indices'
+		pcl::ExtractIndices<pcl::PointXYZ> extract_object_indices;
+										   ^
+/Users/jimjibone/robotarm/object_detect/tabledetect.cpp:139:16: error: no viable overloaded '='
+				object_cloud = new pcl::PointCloud<pcl::PointXYZ>;
+				~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/local/include/boost/smart_ptr/shared_ptr.hpp:505:18: note: candidate function not viable: no known conversion from 'pcl::PointCloud<pcl::PointXYZ> *' to 'const boost::shared_ptr<pcl::PointCloud<pcl::PointXYZ> >' for 1st argument
+	shared_ptr & operator=( shared_ptr const & r ) BOOST_NOEXCEPT
+				 ^
+/usr/local/include/boost/smart_ptr/shared_ptr.hpp:514:18: note: candidate template ignored: failed template argument deduction
+	shared_ptr & operator=(shared_ptr<Y> const & r) BOOST_NOEXCEPT
+				 ^
+/usr/local/include/boost/smart_ptr/shared_ptr.hpp:525:18: note: candidate template ignored: failed template argument deduction
+	shared_ptr & operator=( std::auto_ptr<Y> & r )
+				 ^
+/usr/local/include/boost/smart_ptr/shared_ptr.hpp:543:77: note: candidate template ignored: substitution failure [with Ap = pcl::PointCloud<pcl::PointXYZ> *]: no type named 'type' in 'boost::detail::sp_enable_if_auto_ptr<pcl::PointCloud<pcl::PointXYZ> *,
+	  boost::shared_ptr<pcl::PointCloud<pcl::PointXYZ> > &>'
+	typename boost::detail::sp_enable_if_auto_ptr< Ap, shared_ptr & >::type operator=( Ap r )
+																	   ~~~~ ^
+/Users/jimjibone/robotarm/object_detect/tabledetect.cpp:140:3: error: use of undeclared identifier 'extract_object_indices'
+				extract_object_indices.setInputCloud(cloud);
+				^
+/Users/jimjibone/robotarm/object_detect/tabledetect.cpp:141:3: error: use of undeclared identifier 'extract_object_indices'
+				extract_object_indices.setIndices(boost::make_shared<const pcl::PointIndices>(object_clusters[i]));
+				^
+fatal error: too many errors emitted, stopping now [-ferror-limit=]
+37 warnings and 20 errors generated.
+make[2]: *** [CMakeFiles/tabledetect.dir/tabledetect.cpp.o] Error 1
+make[1]: *** [CMakeFiles/tabledetect.dir/all] Error 2
+make: *** [all] Error 2
