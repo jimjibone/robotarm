@@ -7,13 +7,10 @@ PSEyeGetter::PSEyeGetter()
 
 PSEyeGetter::PSEyeGetter(CLEyeCameraColorMode ColourMode, CLEyeCameraResolution Resolution, float FrameRate)
 {
-
     IsReady = false;
     Mode = ColourMode;
     Res = Resolution;
     Rate = FrameRate;
-    FindCam();
-    BeenGot = false;
     switch(Mode)
     {
     case CLEYE_MONO_PROCESSED:
@@ -32,35 +29,28 @@ PSEyeGetter::PSEyeGetter(CLEyeCameraColorMode ColourMode, CLEyeCameraResolution 
         Size = 1;
         break;
     }
+    if (!FindCam()) return;
+    CurrentColours = (PBYTE)malloc(W * H* Size * sizeof(byte));
 }
 
 PSEyeGetter::~PSEyeGetter()
 {
-
     if (IsReady)
     {
         CLEyeCameraLED(Cam, false);
         CLEyeCameraStop(Cam);
         CLEyeDestroyCamera(Cam);
-        if (BeenGot)
-        {
-            free(CurrentColours);
-        }
+        free(CurrentColours);
         IsReady = false;
     }
 }
 
 bool PSEyeGetter::FindCam()
 {
-
     if (IsReady)
     {
         CLEyeCameraStop(Cam);
         CLEyeDestroyCamera(Cam);
-        if (BeenGot)
-        {
-            free(CurrentColours);
-        }
         IsReady = false;
     }
 
@@ -83,20 +73,13 @@ bool PSEyeGetter::FindCam()
 
 bool PSEyeGetter::GetFrame()
 {
-
     if (!IsReady)
     {
-        if (FindCam())
+        if (!FindCam())
         {
-            return BeenGot;
+            return false;
         }
     }
-    if (BeenGot)
-    {
-        free(CurrentColours);
-    }
-    CurrentColours = (PBYTE)malloc(W * H* Size * sizeof(byte));
     CLEyeCameraGetFrame(Cam, CurrentColours);
-    BeenGot = true;
-    return BeenGot;
+    return true;
 }

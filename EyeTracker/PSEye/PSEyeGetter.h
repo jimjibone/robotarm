@@ -30,7 +30,6 @@ public:
 protected:
 
 private:
-    bool BeenGot;
 };
 
 #endif // PSEYEGETTER_H

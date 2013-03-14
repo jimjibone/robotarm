@@ -1,9 +1,10 @@
 #ifndef PSEYE_OPENCV_H
 #define PSEYE_OPENCV_H
 
-#include "../MEngProjectFiles/PSEye/PSEyeGetter.h"
+#include "PSEyeGetter.h"
+#include "EyeTimers.h"
 #include "opencv/cv.h"
-#include "pthread.h"
+#include <opencv/highgui.h>
 
 bool Something();
 
@@ -17,16 +18,24 @@ class PSEye_OpenCV
         bool StartCapture();
         void StopCapture();
 
-        void GetImage(IplImage Image);
+        void ShowImage();
+        void HideImage();
+
+        IplImage* GetImage();
     protected:
     private:
         PSEyeGetter Cam;
-        pthread_t Getter;
-        pthread_t m_thread;
+        EyeTimers ThisTimer;
 
-        static void* GetterThread(void* Data);
+        int CurImage;
+        IplImage* Img_1;
+        IplImage* Img_2;
+        IplImage* Img_3;
+
+        static void DoItFunction(void* ptr);
 
         bool StillRunning;
+        bool ShowWind;
 };
 
 #endif // PSEYE_OPENCV_H
