@@ -16,17 +16,12 @@
 #include <ctime>
 #include <boost/thread/thread.hpp>
 #include <boost/lexical_cast.hpp>
-#include <pcl/common/common_headers.h>
+
 #include <pcl/io/pcd_io.h>
 #include <pcl/console/parse.h>
-#include <pcl/point_types.h>
-#include <pcl/sample_consensus/method_types.h>
-#include <pcl/sample_consensus/model_types.h>
-#include <pcl/segmentation/sac_segmentation.h>
-#include <pcl/filters/project_inliers.h>
-#include <pcl/surface/convex_hull.h>
-#include <pcl/segmentation/extract_polygonal_prism_data.h>
-#include <pcl/segmentation/extract_clusters.h>
+#include <pcl/sample_consensus/ransac.h>
+#include <pcl/sample_consensus/sac_model_sphere.h>
+#include <pcl/sample_consensus/msac.h>
 
 #if defined(__APPLE__)
 #include <GLUT/glut.h>
@@ -40,6 +35,7 @@
 
 #include "../helpers/Mutex.hpp"
 #include "../helpers/Freenect.hpp"
+#include "table_top_detector.h"
 
 
 
@@ -63,89 +59,15 @@ bool killKinect = false;
 pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZRGB>);
 unsigned int cloud_id = 0;
 
-
-
-
 /*---------------------------------------------*-
  * Table Detection Stuff
 -*---------------------------------------------*/
-bool doTableDetect = false;
-// RANSAC
-pcl::PointCloud<pcl::Normal> cloud_normals;	//normals of the point cloud
-pcl::PointIndices table_inliers;			//point indices belonging to the table plane
-pcl::ModelCoefficients table_coeffs;		//coeffs (a,b,c,d) of ax+by+cz+d=0 plane eq.
-// OUTPUTS
-pcl::PointCloud<pcl::PointXYZ> table_projected;	//projected table points
-pcl::PointCloud<pcl::PointXYZ> table_hull;		//estimated convex hull points
-pcl::PointIndices object_indices;				//points lying over the table (within the hull)
-pcl::PointCloud<pcl::PointXYZ> cloud_objects;	//points belonging to objects
-std::vector<pcl::PointCloud<pcl::PointXYZ>::Ptr> objects;	//vector of objects, one point cloud per object
-
-/*---------------------------------------------*-
- * Table Detection Functions
--*---------------------------------------------*/
-void tableDetectDoRansac(void) {
-	// RANSAC
-	pcl::SACSegmentationFromNormals<pcl::PointXYZ, pcl::Normal> segmentor;
-	segmentor.setOptimizeCoefficients(true);
-	segmentor.setModelType(pcl::SACMODEL_NORMAL_PLANE);
-	segmentor.setMethodType(pcl::SAC_RANSAC);
-	segmentor.setProbability(0.99);
-	// Points at less than 1cm over the plane are part of the table.
-	segmentor.setDistanceThreshold(0.01);
-	segmentor.setInputCloud(cloud);
-	segmentor.setInputNormals(cloud_normals);
-	segmentor.segment(table_inliers, table_coeffs);
-	
-	// Project the table inliers to the estimated plane.
-	pcl::ProjectInliers<pcl::PointXYZ> proj;
-	proj.setInputCloud(cloud);
-	proj.setIndices(table_inliers);
-	proj.setModelCoefficients(table_coeffs);
-	proj.filter(table_projected);
-}
-void tableDetectDoConvexHull(void) {
-	// Estimate the convex hull of the projected points.
-	pcl::ConvexHull<pcl::PointXYZ> hull;
-	hull.setInputCloud(table_projected.makeShared());
-	hull.reconstruct(table_hull);
-}
-void tableDetectFindValidPoints(void) {
-	// Determine the points lying in the prism.
-	pcl::ExtractPolygonalPrismData<pcl::PointXYZ> prism;
-	prism.setHeightLimits(0.01, 0.5);	//object must lie between 1cm and 50cm over the plane.
-	prism.setInputCloud(cloud);
-	prism.setInputPlanarHull(table_hull.makeShared());
-	prism.segment(object_indices);
-}
-void tableDetectFindObjectCloud(void) {
-	// Extract the point cloud corresponding to the extracted indices.
-	pcl::ExtractedIndices<Point> extract_object_indices;
-	extract_object_indices.setInputCloud(cloud);
-	extract_object_indices.setIndices(boost::make_shared<const pcl::PointIndices>(object_indices));
-	extract_object_indices.filter(cloud_objects);
-}
-void tableDetectExtractObjectCluster(void) {
-	// Use Euclidean Clustering to "split-apart" the object_cloud
-	// into its separate objects.
-	pcl::EuclideanClusterExtraction<pcl::PointXYZ> cluster;
-	cluster.setInputCloud(cloud_objects);
-	std::vector<pcl::PointIndices> object_clusters;
-	cluster.extract(object_clusters);
-	
-	pcl::ExtractIndices<pcl::PointXYZ> extract_object_indices;
-	for (int i = 0; i < object_clusters.size(); ++i) {
-		pcl::PointCloud<pcl::PointXYZ>::Ptr object_cloud;
-		object_cloud = new pcl::PointCloud<pcl::PointXYZ>;
-		extract_object_indices.setInputCloud(cloud);
-		extract_object_indices.setIndices(boost::make_shared<const pcl::PointIndices>(object_clusters[i]));
-		extract_object_indices.filter(object_cloud);
-		objects.push_back(object_cloud);
-	}
-}
-// next, fitting a parametric model to a point cloud
-// book, pos. 3109 of 4458
-
+TableTopDetector<pcl::PointXYZRGB> detector;
+bool do_detection = 0;
+bool show_clusters = true;
+bool show_table_hull = true;
+bool show_table_cloud = false;
+bool fit_objects = false;
 
 
 
@@ -224,7 +146,7 @@ void keyboardCallback(unsigned char key, int x, int y)
 	if (key == 'c');
 		//colour = !colour;
 	if (key == 'd')
-		doTableDetect = true;
+		do_detection = true;
 }
 void movementCallback(int x, int y)
 {
@@ -277,14 +199,27 @@ void glutIdleCallback()
 	}
 	
 	// Table & Object Detection
-	if (doTableDetect) {
-		tableDetectDoRansac();
-		tableDetectDoConvexHull();
-		tableDetectFindValidPoints();
-		tableDetectFindObjectCloud();
-		tableDetectExtractObjectCluster();
+	if (do_detection) {
+#warning need to add table detect funcs here
+		detector.detect(*cloud);
 		
-		doTableDetect = false;
+		if (show_table_cloud) {
+			
+		}
+		
+		if (show_table_hull) {
+			
+		}
+		
+		if (show_clusters) {
+			
+		}
+		
+		if (fit_objects) {
+			//fit objects now. not included in table_top_detector. must do manually.
+		}
+		
+		do_detection = false;
 	}
 	
 	glutPostRedisplay();
@@ -307,6 +242,9 @@ int main (int argc, char** argv)
 	cloud->height = 480;
 	cloud->is_dense = false;
 	cloud->points.resize (cloud->width * cloud->height);
+	
+	// Initialise the detector
+	detector.initialize();
 	
 	
 	// Actually starting up the Kinect
