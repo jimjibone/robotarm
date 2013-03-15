@@ -17,6 +17,8 @@ class EyeTimers
 
         void Start(ptr2Func Func, void* SentThrough);
         void Stop();
+
+        void WaitTillNext();
     protected:
     private:
         ptr2Func Functions;

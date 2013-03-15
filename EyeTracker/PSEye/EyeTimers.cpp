@@ -10,12 +10,16 @@ EyeTimers::EyeTimers(long MillisecDelay)
 {
     Run = false;
     Every = MillisecDelay;
+
+	Next = 0L;
 }
 
 EyeTimers::EyeTimers(double Freq)
 {
     Run = false;
-    Every = (long) (int) (1 / Freq * 1000);
+    Every = (long) (1.0 / Freq * 1000.0);
+
+	Next = 0L;
 }
 
 EyeTimers::~EyeTimers()
@@ -61,4 +65,19 @@ void* EyeTimers::Running(void* ptr)
     }
 
     return NULL;
+}
+
+void EyeTimers::WaitTillNext()
+{
+    SYSTEMTIME time;
+    GetSystemTime(&time);
+    long millis = (time.wHour * 60 * 60 * 1000) + (time.wMinute * 60 * 1000) + (time.wSecond * 1000) + time.wMilliseconds;
+
+    while (millis < Next)
+    {
+        GetSystemTime(&time);
+        millis = (time.wHour * 60 * 60 * 1000) + (time.wMinute * 60 * 1000) + (time.wSecond * 1000) + time.wMilliseconds;
+    }
+
+    Next = millis + Every;
 }

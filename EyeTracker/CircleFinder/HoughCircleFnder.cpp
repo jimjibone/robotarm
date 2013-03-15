@@ -1,5 +1,10 @@
 #include "HoughCircleFnder.h"
 
+HoughCircleFnder::HoughCircleFnder()
+{
+
+}
+
 HoughCircleFnder::HoughCircleFnder(int Width, int Height, bool SecCheck)
 {
     Search = RectangleSearcher(Width, Height);

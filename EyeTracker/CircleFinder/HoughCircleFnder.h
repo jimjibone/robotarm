@@ -10,6 +10,7 @@
 class HoughCircleFnder
 {
 public:
+    HoughCircleFnder();
     HoughCircleFnder(int Width, int Height, bool SecCheck);
     virtual ~HoughCircleFnder();
 
