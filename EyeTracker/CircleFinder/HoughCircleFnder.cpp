@@ -2,7 +2,7 @@
 
 HoughCircleFnder::HoughCircleFnder()
 {
-
+    Ready = false;
 }
 
 HoughCircleFnder::HoughCircleFnder(int Width, int Height, bool SecCheck)
@@ -13,11 +13,12 @@ HoughCircleFnder::HoughCircleFnder(int Width, int Height, bool SecCheck)
     Wid = Width;
     Hei = Height;
     CheckSec = SecCheck;
+    Ready = true;
 }
 
 HoughCircleFnder::~HoughCircleFnder()
 {
-    free(Values);
+    if (Ready) free(Values);
 }
 
 

@@ -2,34 +2,30 @@
 
 Tracking::Tracking()
 {
-    Runing = false;
-}
-
-Tracking::Tracking(PSEye_OpenCV* Input)
-{
-    Runing = false;
-    InputsFrom = Input;
-    Img_proc = ImagePlaying();
-    CircleFinder = HoughCircleFnder(640, 480, true);
-    GlintsFinder = GlintFinder(1);
+    Running = false;
+    ShowWind = false;
 }
 
 Tracking::~Tracking()
 {
-    StopTracking();
+    if (ShowWind) HideWindow();
 }
 
-void Tracking::StartTracking()
+void Tracking::CreateTracking(int Width, int Height)
 {
-    Runing = true;
-    pthread_create(&bk_Process, NULL, &bk_Process_Thread, (void*) this);
+    Img_proc = ImagePlaying();
+    CircleFinder = HoughCircleFnder(Width, Height, true);
+    GlintsFinder = GlintFinder(1);
 }
 
-void Tracking::StopTracking()
+void Tracking::Track(IplImage* Image)
 {
-    bool Temp = Runing;
-    Runing = false;
-    if (Temp) pthread_exit(NULL);
+    if (!Running)
+    {
+        Running = true;
+        CurImage = Image;
+        pthread_create(&bk_Process, NULL, &bk_Process_Thread, (void*) this);
+    }
 }
 
 GlintLocation Tracking::GetCurPoint()
@@ -58,21 +54,47 @@ CircleLocation Tracking::GetCurEyePoint()
 
 void* Tracking::bk_Process_Thread(void* Input)
 {
-    Tracking* This = (Tracking*)Input;
-    IplImage* Image = cvCreateImage(cvSize(640, 480), 8, 1);
+    Tracking* This = (Tracking*) Input;
+    IplImage* CurImage = This->CurImage;
+    IplImage* Image = cvCreateImage(cvGetSize(CurImage), 8, 1);
+    IplImage* DispImg = cvCreateImage(cvGetSize(CurImage), 8, 3);
 
-    while (This->Runing)
+    if (This->ShowWind) cvCvtColor(CurImage, DispImg, CV_GRAY2BGR);
+
+    This->Img_proc.DoAllProcesses(CurImage, Image);
+
+    This->CircleFinder.SetOpenCVImage(Image);
+    This->CircleFinder.FindCircle();
+
+    if (This->CircleFinder.GetNumFound() == 1)
     {
-        IplImage* CurImg = This->InputsFrom->GetImage();
-        This->Img_proc.DoAllProcesses(CurImg, Image);
-        This->CircleFinder.SetOpenCVImage(Image);
-        This->CircleFinder.FindCircle();
-        if (This->CircleFinder.GetNumFound() == 1)
+        This->GlintsFinder.FindGlints(CurImage, This->CircleFinder.GetCircleLocation());
+
+        if (This->ShowWind)
         {
-            This->GlintsFinder.FindGlints(CurImg, This->CircleFinder.GetCircleLocation());
+            This->GlintsFinder.DrawGlints(DispImg);
+            This->CircleFinder.DrawEye(DispImg);
         }
     }
 
+    if (This->ShowWind) cvShowImage("ImageProcessing", DispImg);
+    cvReleaseImage(&DispImg);
+
     cvReleaseImage(&Image);
+    cvReleaseImage(&CurImage);
+
+    This->Running = false;
     return NULL;
+}
+
+void Tracking::ShowWindow()
+{
+    ShowWind = true;
+    cvNamedWindow("ImageProcessing", CV_WINDOW_AUTOSIZE);
+}
+
+void Tracking::HideWindow()
+{
+    ShowWind = false;
+    cvDestroyWindow("ImageProcessing");
 }

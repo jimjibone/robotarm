@@ -8,28 +8,31 @@
 #include "CircleFinder/Variables/CircleLocation.h"
 #include "GlintFinder/GlintFinder.h"
 #include "GlintFinder/Variables/Point.h"
-#include "PSEye/PSEye_OpenCV.h"
 
 class Tracking
 {
     public:
         Tracking();
-        Tracking(PSEye_OpenCV* Input);
         virtual ~Tracking();
 
-        void StartTracking();
-        void StopTracking();
+        void CreateTracking(int Height, int Width);
+
+        void Track(IplImage* Image);
 
         GlintLocation GetCurPoint();
         CircleLocation GetCurEyePoint();
+
+        void ShowWindow();
+        void HideWindow();
     protected:
     private:
         pthread_t bk_Process;
-        PSEye_OpenCV* InputsFrom;
+        IplImage* CurImage;
 
         static void* bk_Process_Thread(void* Input);
 
-        bool Runing;
+        bool ShowWind;
+        bool Running;
 
         ImagePlaying Img_proc;
         HoughCircleFnder CircleFinder;

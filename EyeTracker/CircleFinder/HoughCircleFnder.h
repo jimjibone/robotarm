@@ -38,16 +38,17 @@ private:
     int Wid, Hei;
 
     //Constants
-    static const int InnerMinR = 15;
-    static const int InnerMaxR = 25;
+    static const int InnerMinR = 9;
+    static const int InnerMaxR = 15;
     static const int CircleStep = 15;
 
-    static const int OuterMinR = 40;
-    static const int OuterMaxR = 120;
+    static const int OuterMinR = 19;
+    static const int OuterMaxR = 40;
     static const int SecStep = 2;
     static const int CircleAccept = 10;
 
     bool CheckSec;
+    bool Ready;
 
     //Functions
     int FindSecond(int X, int Y);
