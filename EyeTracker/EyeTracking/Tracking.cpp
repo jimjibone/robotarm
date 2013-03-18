@@ -15,8 +15,8 @@ Tracking::~Tracking()
 
 void Tracking::CreateTracking(int Width, int Height, PosUpdate Func, void* Data)
 {
-    Img_proc = ImagePlaying(125, 175);
-    CircleFinder = HoughCircleFnder(Width, Height, true);
+    Img_proc = ImagePlaying(100, 255);
+    CircleFinder = HoughCircleFnder(Width, Height, false);
     GlintsFinder = GlintFinder(1);
     UpdateFuncs = Func;
     SentData = Data;
@@ -100,8 +100,11 @@ void* Tracking::bk_Process_Thread(void* Input)
 
 void Tracking::ShowWindow()
 {
-    ShowWind = true;
-    cvNamedWindow("ImageProcessing", CV_WINDOW_AUTOSIZE);
+    if (!ShowWind)
+    {
+        ShowWind = true;
+        cvNamedWindow("ImageProcessing", CV_WINDOW_AUTOSIZE);
+    }
 }
 
 void Tracking::HideWindow()
@@ -116,12 +119,15 @@ void Tracking::HideWindow()
 
 void Tracking::ShowSlidersWindow()
 {
-    ShowTrackWind = true;
-    cvNamedWindow("Settings", CV_WINDOW_AUTOSIZE);
-    int Min = Img_proc.GetNum1();
-    int Max = Img_proc.GetNum2();
-    cvCreateTrackbar2("Min", "Settings", &Min, 255, &MinChange, (void*) this);
-    cvCreateTrackbar2("Max", "Settings", &Max, 255, &MaxChange, (void*) this);
+    if (!ShowTrackWind)
+    {
+        ShowTrackWind = true;
+        cvNamedWindow("Settings", CV_WINDOW_AUTOSIZE);
+        int Min = Img_proc.GetNum1();
+        int Max = Img_proc.GetNum2();
+        cvCreateTrackbar2("Min", "Settings", &Min, 255, &MinChange, (void*) this);
+        cvCreateTrackbar2("Max", "Settings", &Max, 255, &MaxChange, (void*) this);
+    }
 }
 
 void Tracking::HideSlidersWindow()

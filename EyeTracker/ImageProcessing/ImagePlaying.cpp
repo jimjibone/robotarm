@@ -46,7 +46,7 @@ void ImagePlaying::DoAllProcesses(IplImage* ScrImage, IplImage* DestImage)
     IplImage* Img2 = cvCreateImage(cvGetSize(ScrImage), 8, 1);
     ContourFinder(Img1, Img2);
     cvReleaseImage(&Img1);
-    ExtendLines(Img2, DestImage, 1);
+    ExtendLines(Img2, DestImage);
     cvReleaseImage(&Img2);
 }
 
@@ -124,7 +124,7 @@ void ImagePlaying::ContourFinder(IplImage* ScrImage, IplImage* DestImage)
 
 void ImagePlaying::ExtendLines(IplImage* ScrImage, IplImage* DestImage)
 {//Extneds lines using default size
-    ExtendLines(ScrImage, DestImage, 1);
+    ExtendLines(ScrImage, DestImage, 2);
 }
 
 void ImagePlaying::ExtendLines(IplImage* ScrImage, IplImage* DestImage, int Width)

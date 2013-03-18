@@ -33,14 +33,14 @@ private:
     RectangleSearcher Search;
 
     //Constants
-    static const int InnerMinR = 9;
+    static const int InnerMinR = 15;
     static const int InnerMaxR = 25;
     static const int CircleStep = 15;
 
     static const int OuterMinR = 30;
     static const int OuterMaxR = 60;
     static const int SecStep = 2;
-    static const int CircleAccept = 10;
+    static const int CircleAccept = 7;
 
     //Variabled
     bool CheckSec;

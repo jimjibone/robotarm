@@ -15,6 +15,8 @@ class EyeTracking
         virtual ~EyeTracking();
 
         void Run();
+        void RunBehind();
+        void StopBehind();
     protected:
     private:
         PSEye_OpenCV Cam;
@@ -23,6 +25,7 @@ class EyeTracking
 
         pthread_t bk_Runner;
         static void* bk_Working(void*);
+        bool Running;
 
         static void UpdatedImage(IplImage*, void*);
         static void UpdatedLocations(void*);

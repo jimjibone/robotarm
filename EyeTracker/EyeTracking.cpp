@@ -2,12 +2,12 @@
 
 EyeTracking::EyeTracking()
 {
-    //ctor
+    Running = false;
 }
 
 EyeTracking::~EyeTracking()
 {
-    //dtor
+    StopBehind();
 }
 
 void EyeTracking::Run()
@@ -44,8 +44,59 @@ void EyeTracking::Run()
     Cam.StopCapture();
 }
 
-void* EyeTracking::bk_Working(void*)
+void EyeTracking::RunBehind()
 {
+    Cam.FindCamera();
+    Tracker.CreateTracking(Cam.GetCameraWidth(), Cam.GetCameraHeight(), &UpdatedLocations, (void*) this);
+
+    Cam.StartCapture(&UpdatedImage, (void*)this);
+
+    Running = true;
+    pthread_create(&bk_Runner, NULL, &bk_Working, (void*) this);
+}
+
+void EyeTracking::StopBehind()
+{
+    Cam.StopCapture();
+    if (Running)
+    {
+        Running = false;
+        pthread_exit(NULL);
+    }
+}
+
+void* EyeTracking::bk_Working(void* ptr)
+{
+    EyeTracking* This = (EyeTracking*)ptr;
+    while (This->Running)
+    {
+        char c =  cvWaitKey(10);
+        switch (c)
+        {
+        case 27:
+            This->Running = false;
+            return NULL;
+        case '1':
+            This->Tracker.ShowSlidersWindow();
+            break;
+        case '2':
+            This->Tracker.HideSlidersWindow();
+            break;
+        case 'a':
+            This->Tracker.ShowWindow();
+            break;
+        case 's':
+            This->Tracker.HideWindow();
+            break;
+        case 'q':
+            This->Cam.ShowImage();
+            break;
+        case 'w':
+            This->Cam.HideImage();
+            break;
+        }
+    }
+
     return NULL;
 }
 
@@ -59,5 +110,4 @@ void EyeTracking::UpdatedLocations(void* ptr)
     EyeTracking* This = (EyeTracking*)ptr;
     CircleLocation Circle = This->Tracker.GetCircleLocation();
     GlintLocation Glint = This->Tracker.GetGlintLocation();
-    printf("Circle: (%d, %d), Glint: (%f, %f)\n", Circle.GetX(), Circle.GetY(), Glint.GetMid().GetX(), Glint.GetMid().GetY());
 }

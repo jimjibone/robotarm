@@ -62,9 +62,11 @@ void PSEye_OpenCV::DoItFunction(void* ptr)
 
 void PSEye_OpenCV::ShowImage()
 {
-    cvNamedWindow("PSCam Image", CV_WINDOW_AUTOSIZE);
-    ShowWind = true;
-
+    if (!ShowWind)
+    {
+        cvNamedWindow("PSCam Image", CV_WINDOW_AUTOSIZE);
+        ShowWind = true;
+    }
 }
 
 void PSEye_OpenCV::HideImage()
