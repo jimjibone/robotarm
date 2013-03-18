@@ -1,7 +1,7 @@
 // Author: Nicolas Burrus
 // Hacking the Kinect
 
-#include "table_top_detector.h"
+#include "TableTopDetector.h"
 
 template <class PointT>
 TableTopDetector<PointT> :: TableTopDetector()
@@ -47,11 +47,13 @@ void TableTopDetector<PointT> :: initialize()
     segmentor_.setOptimizeCoefficients (true);
     segmentor_.setModelType (pcl::SACMODEL_NORMAL_PLANE);
     segmentor_.setMethodType (pcl::SAC_RANSAC);
-    segmentor_.setProbability (0.99);
+    segmentor_.setProbability (0.70);
     segmentor_.setDistanceThreshold (plane_distance_threshold_);
-    segmentor_.setMaxIterations (10000);
+    segmentor_.setMaxIterations (100);
 
     project_inliers_.setModelType (pcl::SACMODEL_NORMAL_PLANE);
+	
+	hull_.setDimension(3);
 
     prism_.setHeightLimits (object_min_height_, object_max_height_);
 
@@ -193,6 +195,176 @@ bool TableTopDetector<PointT> :: detect(pcl::PointCloud<Point>& cloud)
 
     return true;
 }
+
+// SEPARATED METHODS
+
+template <class PointT>
+bool TableTopDetector<PointT> :: filter(pcl::PointCloud<Point>& cloud)
+{
+	printf("\tFiltering...\n");
+	objects_.clear();
+    initialize();
+	
+    printf("\t\tPointCloud with %d data points.\n", cloud.width * cloud.height);
+	
+    // Convert the dataset
+    cloud_ = cloud.makeShared();
+	
+    // Filter points outside of the defined range
+    pcl::PointCloud<Point> cloud_filtered;
+    pass_through_filter_.setInputCloud (cloud_);
+    pass_through_filter_.filter (cloud_filtered);
+    cloud_filtered_.reset (new pcl::PointCloud<Point> (cloud_filtered));
+    printf("\t\tNumber of points left after filtering (%f -> %f): %d out of %d.\n", min_z_bounds_, max_z_bounds_, (int)cloud_filtered.points.size (), (int)cloud.points.size ());
+	
+    // Downsample the point cloud.
+    pcl::PointCloud<Point> cloud_downsampled;
+    grid_.setInputCloud (cloud_filtered_);
+    grid_.filter (cloud_downsampled);
+    cloud_downsampled_.reset (new pcl::PointCloud<Point> (cloud_downsampled));
+	printf("\t\tNumber of points left after downsampling (%f -> %f): %d out of %d.\n", min_z_bounds_, max_z_bounds_, (int)cloud_downsampled.points.size (), (int)cloud.points.size ());
+	
+    if ((int)cloud_filtered_->points.size () < 10)
+    {
+        printf("\t\tWARNING Filtering returned %d points! Exiting.\n", (int)cloud_filtered_->points.size ());
+        return false;
+    }
+	
+    // Estimate the point normals
+    pcl::PointCloud<pcl::Normal> cloud_normals;
+    normal_estimator_.setInputCloud (cloud_downsampled_);
+    normal_estimator_.compute (cloud_normals);
+    cloud_normals_.reset (new pcl::PointCloud<pcl::Normal> (cloud_normals));
+    printf("\t\t%d normals estimated.\n", (int)cloud_normals.points.size ());
+	printf("\tFiltering finished.\n");
+	
+	return true;
+}
+
+template <class PointT>
+bool TableTopDetector<PointT> :: findTable()
+{
+	printf("\tFinding table...\n");
+	
+	// Perform segmentation
+	printf("\t\tSegmenting...");
+    pcl::PointIndices table_inliers; pcl::ModelCoefficients table_coefficients;
+    segmentor_.setInputCloud (cloud_downsampled_);
+    segmentor_.setInputNormals (cloud_normals_);
+    segmentor_.segment (table_inliers, table_coefficients);
+	printf("segmented the cloud.\n");
+	
+    // Store the table inliers indices.
+    table_inliers_.reset (new pcl::PointIndices (table_inliers));
+    table_coefficients_.reset (new pcl::ModelCoefficients (table_coefficients));
+    if (table_coefficients.values.size () > 3)
+        printf("\t\tModel found with %d inliers: [%f %f %f %f].\n", (int)table_inliers.indices.size (),
+                 table_coefficients.values[0], table_coefficients.values[1], table_coefficients.values[2], table_coefficients.values[3]);
+	
+    if (table_inliers_->indices.size () == 0)
+        return false;
+	
+	// Extract the table plane cloud.
+    PointCloud table_cloud;
+    extract_object_indices_.setInputCloud (cloud_downsampled_);
+    extract_object_indices_.setIndices (table_inliers_);
+    extract_object_indices_.filter (table_cloud);
+    table_cloud_.reset (new pcl::PointCloud<Point> (table_cloud));
+	
+    // Extract the points not being part of the table.
+    non_table_cloud_.reset(new PointCloud);
+    extract_object_indices_.setNegative(true);
+    extract_object_indices_.filter (*non_table_cloud_);
+    extract_object_indices_.setNegative(false);
+	
+    plane_ = Eigen::Vector4f(table_coefficients.values[0],
+                             table_coefficients.values[1],
+                             table_coefficients.values[2],
+                             table_coefficients.values[3]);
+	
+	printf("\t\tExtracted the table plane cloud.\n");
+	
+	// Project the table inliers onto the table plane.
+    pcl::PointCloud<Point> table_projected;
+    project_inliers_.setInputCloud (cloud_downsampled_);
+    project_inliers_.setIndices (table_inliers_);
+    project_inliers_.setModelCoefficients (table_coefficients_);
+    project_inliers_.filter (table_projected);
+    table_projected_.reset (new pcl::PointCloud<Point> (table_projected));
+    printf("\t\tNumber of projected inliers: %d.\n", (int)table_projected.points.size ());
+	
+	// Estimate their convex hull
+	printf("\t\tConvex Hulling...");
+    std::vector<pcl::Vertices> hull_vertices;
+    pcl::PointCloud<Point> table_hull;
+    hull_.setInputCloud (table_projected_);
+    hull_.reconstruct (table_hull, hull_vertices);
+    table_hull_mesh_.reset(new pcl::PolygonMesh);
+    pcl::toROSMsg(table_hull, table_hull_mesh_->cloud);
+    table_hull_mesh_->polygons = hull_vertices;
+    table_hull_.reset (new pcl::PointCloud<Point> (table_hull));
+	printf("complete.\n");
+	
+	printf("\tTable found.\n");
+	return true;
+}
+
+template <class PointT>
+bool TableTopDetector<PointT> :: findTableObjects()
+{
+	printf("\tFinding objects...\n");
+	// Get the objects on top of the table
+    pcl::PointIndices cloud_object_indices;
+    prism_.setInputCloud (cloud_);
+    prism_.setInputPlanarHull (table_hull_);
+    prism_.segment (cloud_object_indices);
+    printf("\t\tNumber of object point indices: %d.\n", (int)cloud_object_indices.indices.size ());
+	
+	// Extract the cloud of objects lying on the table prism.
+    pcl::PointCloud<Point> cloud_objects;
+    extract_object_indices_.setInputCloud (cloud_);
+    extract_object_indices_.setIndices (boost::make_shared<const pcl::PointIndices> (cloud_object_indices));
+    extract_object_indices_.filter (cloud_objects);
+    cloud_objects_.reset (new pcl::PointCloud<Point> (cloud_objects));
+    printf("\t\tNumber of object point candidates: %d.\n", (int)cloud_objects.points.size ());
+	
+	if (cloud_objects.points.size () == 0)
+        return false;
+	printf("\tFound objects.\n");
+	
+	return true;
+}
+
+template <class PointT>
+bool TableTopDetector<PointT> :: splitTableObjects()
+{
+	printf("\tSplitting objects...\n");
+	// Downsample the object points
+    pcl::PointCloud<Point> cloud_objects_downsampled;
+    grid_objects_.setInputCloud (cloud_objects_);
+    grid_objects_.filter (cloud_objects_downsampled);
+    cloud_objects_downsampled_.reset (new pcl::PointCloud<Point> (cloud_objects_downsampled));
+    PCL_INFO("Number of object point candidates left after downsampling: %d.\n", (int)cloud_objects_downsampled.points.size ());
+	
+    // Split the objects into Euclidean clusters
+    std::vector< pcl::PointIndices > object_clusters;
+    cluster_.setInputCloud (cloud_objects_);
+    cluster_.extract (object_clusters);
+    PCL_INFO("Number of clusters found matching the given constraints: %d.\n", (int)object_clusters.size ());
+	
+    for (size_t i = 0; i < object_clusters.size (); ++i)
+    {
+        PointCloudPtr object_cloud (new PointCloud());
+        extract_object_indices_.setInputCloud (cloud_objects_);
+        extract_object_indices_.setIndices (boost::make_shared<const pcl::PointIndices> (object_clusters[i]));
+        extract_object_indices_.filter (*object_cloud);
+        objects_.push_back(object_cloud);
+    }
+	printf("\tObjects split.\n");
+	
+	return true;
+}
+
 
 // Explicit instanciations.
 template class TableTopDetector<pcl::PointNormal>;

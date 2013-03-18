@@ -125,6 +125,7 @@ void keyboardCallback(unsigned char key, int x, int y)
 		killKinect = true;
 		device->stopVideo();
 		device->stopDepth();
+		printf("All stopped. Bye bye.");
 		exit(0);	// gonna kill the program right now! careful!
 	}
 	if (key == 'w')

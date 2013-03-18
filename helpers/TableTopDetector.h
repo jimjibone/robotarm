@@ -41,6 +41,10 @@ public:
 public:
     /*! Returns true if at least one object and plane are detected. */
     bool detect(PointCloud& cloud);
+	bool filter(pcl::PointCloud<Point>& cloud);
+	bool findTable();
+	bool findTableObjects();
+	bool splitTableObjects();
 
 public:
     const Eigen::Vector4f& plane() const { return plane_; }
@@ -63,6 +67,7 @@ private:
     pcl::ProjectInliers<Point> project_inliers_;
     pcl::ConvexHull<Point> hull_;
     pcl::ExtractPolygonalPrismData<Point> prism_;
+	pcl::ExtractIndices<Point> extract_object_indices_;
     pcl::EuclideanClusterExtraction<Point> cluster_;
 
     double background_voxel_size_, object_voxel_size_;
@@ -77,7 +82,10 @@ private:
     double object_cluster_tolerance_, object_cluster_min_size_;
 
     PointCloudConstPtr cloud_;
-    PointCloudConstPtr cloud_filtered_, cloud_downsampled_;
+    PointCloudConstPtr cloud_filtered_;
+public:
+	PointCloudConstPtr cloud_downsampled_;
+private:
     pcl::PointCloud<pcl::Normal>::ConstPtr cloud_normals_;
     pcl::PointIndices::ConstPtr table_inliers_;
     PointCloudConstPtr table_cloud_;

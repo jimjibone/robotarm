@@ -35,7 +35,8 @@
 
 #include "../helpers/Mutex.hpp"
 #include "../helpers/Freenect.hpp"
-#include "table_top_detector.h"
+#include "../helpers/CloudUtils.hpp"
+#include "../helpers/TableTopDetector.h"
 
 
 
@@ -56,14 +57,16 @@ std::vector<uint16_t> mdepth(640*480);
 std::vector<uint8_t> mrgb(640*480*4);
 bool killKinect = false;
 // point clouds 'n' that.
-pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZRGB>);
+//pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_colour (new pcl::PointCloud<pcl::PointXYZRGB>);
+pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>);
 unsigned int cloud_id = 0;
 
 /*---------------------------------------------*-
  * Table Detection Stuff
 -*---------------------------------------------*/
-TableTopDetector<pcl::PointXYZRGB> detector;
+TableTopDetector<pcl::PointXYZ> detector;
 bool do_detection = 0;
+bool done_detection = false;
 bool show_clusters = true;
 bool show_table_hull = true;
 bool show_table_cloud = false;
@@ -97,27 +100,44 @@ void drawCallback()
 	glBegin(GL_POINTS);
 	
 	for (unsigned int i = 0; i < cloud->size(); i++) {
-		glColor3ub(cloud->points[i].r, cloud->points[i].g, cloud->points[i].b);
+		//glColor3ub(cloud->points[i].r, cloud->points[i].g, cloud->points[i].b);
+		glColor3f(1.0, 1.0, 1.0);
 		glVertex3f(cloud->points[i].x, -cloud->points[i].y, -cloud->points[i].z);
 	}
 	
 	glEnd();
+	
+	
+	if (done_detection) {
+		//show downsampled cloud here
+		glPointSize(2.0f);
+		glBegin(GL_POINTS);
+		
+		for (unsigned int i = 0; i < detector.cloud_downsampled_->size(); i++) {
+			//glColor3ub(cloud->points[i].r, cloud->points[i].g, cloud->points[i].b);
+			glColor3f(1.0, 0.0, 0.0);
+			glVertex3f(detector.cloud_downsampled_->points[i].x, -detector.cloud_downsampled_->points[i].y, -detector.cloud_downsampled_->points[i].z);
+		}
+		
+		glEnd();
+	}
+	
 	// end drawing cloud
 	
 	/*printf("\tDrawing Cloud - Mid point:: x:%.3f y:%.3f z:%.3f r:%d g:%d b:%d\n",
-		   cloud->points[cloud->size()/2].x,
-		   cloud->points[cloud->size()/2].y,
-		   cloud->points[cloud->size()/2].z,
-		   cloud->points[cloud->size()/2].r,
-		   cloud->points[cloud->size()/2].g,
-		   cloud->points[cloud->size()/2].b);
+		   cloud_colour->points[cloud->size()/2].x,
+		   cloud_colour->points[cloud->size()/2].y,
+		   cloud_colour->points[cloud->size()/2].z,
+		   cloud_colour->points[cloud->size()/2].r,
+		   cloud_colour->points[cloud->size()/2].g,
+		   cloud_colour->points[cloud->size()/2].b);
 	printf("\tDrawing Cloud - Mid point:: x:%.3f y:%.3f z:%.3f r:%d g:%d b:%d    +10\n",
-		   cloud->points[cloud->size()/2+10].x,
-		   cloud->points[cloud->size()/2+10].y,
-		   cloud->points[cloud->size()/2+10].z,
-		   cloud->points[cloud->size()/2+10].r,
-		   cloud->points[cloud->size()/2+10].g,
-		   cloud->points[cloud->size()/2+10].b);
+		   cloud_colour->points[cloud->size()/2+10].x,
+		   cloud_colour->points[cloud->size()/2+10].y,
+		   cloud_colour->points[cloud->size()/2+10].z,
+		   cloud_colour->points[cloud->size()/2+10].r,
+		   cloud_colour->points[cloud->size()/2+10].g,
+		   cloud_colour->points[cloud->size()/2+10].b);
 	printf("\n");*/
 	
 	glutSwapBuffers();
@@ -132,11 +152,12 @@ void resizeCallback(int width, int height)
 }
 void keyboardCallback(unsigned char key, int x, int y)
 {
-	if (key == 27) {
+	if (key == 27 || key == 'q') {
 		glutDestroyWindow(window_id);
 		killKinect = true;
 		device->stopVideo();
 		device->stopDepth();
+		printf("All stopped. Bye bye.");
 		exit(0);	// gonna kill the program right now! careful!
 	}
 	if (key == 'w')
@@ -191,17 +212,25 @@ void glutIdleCallback()
 				cloud->points[i].x = x;
 				cloud->points[i].y = y;
 				cloud->points[i].z = iRealDepth;
-				cloud->points[i].r = mrgb[i*3];
-				cloud->points[i].g = mrgb[(i*3)+1];
-				cloud->points[i].b = mrgb[(i*3)+2];
+				//cloud->points[i].r = mrgb[i*3];
+				//cloud->points[i].g = mrgb[(i*3)+1];
+				//cloud->points[i].b = mrgb[(i*3)+2];
 			}
 		}
 	}
 	
 	// Table & Object Detection
 	if (do_detection) {
+		printf("Doing some detection...\n");
+		done_detection = false;
 #warning need to add table detect funcs here
-		detector.detect(*cloud);
+		// Create a smaller cloud and detect it!
+		//pcl::PointCloud<pcl::PointNormal>::Ptr small_cloud = preprocessImageCloud(cloud);
+		//detector.detect(*small_cloud);
+		//detector.detect(*cloud);
+		
+		detector.filter(*cloud);
+		detector.findTable();
 		
 		if (show_table_cloud) {
 			
@@ -219,7 +248,9 @@ void glutIdleCallback()
 			//fit objects now. not included in table_top_detector. must do manually.
 		}
 		
+		done_detection = true;
 		do_detection = false;
+		printf("Detection complete.\n");
 	}
 	
 	glutPostRedisplay();
@@ -244,6 +275,8 @@ int main (int argc, char** argv)
 	cloud->points.resize (cloud->width * cloud->height);
 	
 	// Initialise the detector
+	detector.setDepthLimits(10, 3000);
+	detector.setBackgroundVoxelSize(0.05);
 	detector.initialize();
 	
 	

@@ -16,7 +16,7 @@ include_directories(${USB_INCLUDE_DIRS})
 
 add_executable (simple simple.cpp)
 add_executable (simplegl simplegl.cpp ../helpers/Mutex.hpp ../helpers/Freenect.hpp)
-add_executable (tabledetect tabledetect.cpp ../helpers/Mutex.hpp ../helpers/Freenect.hpp table_top_detector.cpp table_top_detector.h)
+add_executable (tabledetect tabledetect.cpp ../helpers/Mutex.hpp ../helpers/Freenect.hpp ../helpers/TableTopDetector.cpp ../helpers/TableTopDetector.h ../helpers/CloudUtils.hpp)
 
 # Mac just has everything already
 if(APPLE)
