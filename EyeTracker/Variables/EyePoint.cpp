@@ -1,4 +1,4 @@
-#include "Point.h"
+#include "EyePoint.h"
 
 EyePoint::EyePoint()
 {

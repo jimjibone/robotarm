@@ -9,26 +9,26 @@ class ImagePlaying
 {
 public:
     ImagePlaying();
-    ImagePlaying(int Num1, int Num2);
+    ImagePlaying(int, int);
     virtual ~ImagePlaying();
 
-    void SetNum1(int Num);
-    void SetNum2(int Num);
+    void SetNum1(int);
+    void SetNum2(int);
     int GetNum1();
     int GetNum2();
 
-    void DoAllProcesses(IplImage* ScrImage, IplImage* DestImage);
+    void DoAllProcesses(IplImage*, IplImage*);
 
-    void ConvertToBinary(IplImage* ScrImage, IplImage* DestImage);
+    void ConvertToBinary(IplImage*, IplImage*);
 
-    void ContourFinder(IplImage* ScrImage, IplImage* DestImage);
+    void ContourFinder(IplImage*, IplImage*);
 
-    void ExtendLines(IplImage* ScrImage, IplImage* DestImage);
-    void ExtendLines(IplImage* ScrImage, IplImage* DestImage, int Width);
+    void ExtendLines(IplImage*, IplImage*);
+    void ExtendLines(IplImage*, IplImage*, int);
 protected:
 private:
     //Functions
-    unsigned char Modify(unsigned char Num);
+    unsigned char Modify(unsigned char);
 
     //Variables
     int PNum1, PNum2;

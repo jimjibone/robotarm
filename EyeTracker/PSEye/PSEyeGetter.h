@@ -7,10 +7,10 @@ class PSEyeGetter
 {
 public:
     PSEyeGetter();
-    PSEyeGetter(CLEyeCameraColorMode ColourMode, CLEyeCameraResolution Resolution, float FrameRate);
+    PSEyeGetter(CLEyeCameraColorMode, CLEyeCameraResolution, float);
     ~PSEyeGetter();
 
-    bool FindCam(CLEyeCameraColorMode ColourMode, CLEyeCameraResolution Resolution, float FrameRate);
+    bool FindCam(CLEyeCameraColorMode, CLEyeCameraResolution, float);
     bool GetFrame();
 
     PBYTE CurrentColours;

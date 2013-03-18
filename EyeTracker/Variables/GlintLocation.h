@@ -2,8 +2,8 @@
 #define GLINTLOCATION_H
 
 #include <iostream>
-#include "Point.h"
-#include "../../CircleFinder/Variables/Rectangle.h"
+#include "EyePoint.h"
+#include "EyeRectangle.h"
 #include <opencv/cv.h>
 
 using namespace std;
@@ -14,16 +14,16 @@ class GlintLocation
         GlintLocation();
         virtual ~GlintLocation();
 
-        void AddPoint(EyePoint Loc);
+        void AddPoint(EyePoint);
 
         void FindMid();
         EyePointD GetMid();
 
         void FindMaxRect();
         EyeRectangle GetMaxRect();
-        bool WithinOld(EyePoint Loc);
+        bool WithinOld(EyePoint);
 
-        void DrawPoints(IplImage* Image);
+        void DrawPoints(IplImage*);
     protected:
     private:
     int Count;

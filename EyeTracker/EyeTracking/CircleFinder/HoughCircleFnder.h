@@ -3,7 +3,7 @@
 
 #include <math.h>
 #include <opencv/cv.h>
-#include "Variables/CircleLocation.h"
+#include "../../Variables/CircleLocation.h"
 #include "RectangleSearcher.h"
 #define Pi 3.14159265359
 
@@ -11,30 +11,26 @@ class HoughCircleFnder
 {
 public:
     HoughCircleFnder();
-    HoughCircleFnder(int Width, int Height, bool SecCheck);
+    HoughCircleFnder(int, int, bool);
     virtual ~HoughCircleFnder();
 
-    void SetOpenCVImage(IplImage* Image);
-    void DrawImage(IplImage* Image);
+    void SetOpenCVImage(IplImage*);
+    void DrawImage(IplImage*);
 
     bool GetSecChecker();
-    void SetSecChecker(bool Check);
+    void SetSecChecker(bool);
 
     void FindCircle();
 
     CircleLocation GetCircleLocation();
     int GetNumFound();
 
-    void DrawEye(IplImage* Image);
+    void DrawEye(IplImage*);
 protected:
 private:
-    int NumFound;
+    //Clases
     CircleLocation Loc;
-
     RectangleSearcher Search;
-
-    bool* Values;
-    int Wid, Hei;
 
     //Constants
     static const int InnerMinR = 9;
@@ -46,12 +42,16 @@ private:
     static const int SecStep = 2;
     static const int CircleAccept = 10;
 
+    //Variabled
     bool CheckSec;
     bool Ready;
+    bool* Values;
+    int Wid, Hei;
+    int NumFound;
 
     //Functions
-    int FindSecond(int X, int Y);
-    void FindCircle(EyeRectangle Rect);
+    int FindSecond(int, int);
+    void FindCircle(EyeRectangle);
 };
 
 #endif // HOUGHCIRCLEFNDER_H

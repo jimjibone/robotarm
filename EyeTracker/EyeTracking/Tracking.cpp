@@ -13,12 +13,13 @@ Tracking::~Tracking()
     HideSlidersWindow();
 }
 
-void Tracking::CreateTracking(int Width, int Height, PosUpdate Func)
+void Tracking::CreateTracking(int Width, int Height, PosUpdate Func, void* Data)
 {
     Img_proc = ImagePlaying(125, 175);
     CircleFinder = HoughCircleFnder(Width, Height, true);
     GlintsFinder = GlintFinder(1);
     UpdateFuncs = Func;
+    SentData = Data;
 }
 
 void Tracking::Track(IplImage* Image)
@@ -36,7 +37,7 @@ void Tracking::Track(IplImage* Image)
     }
 }
 
-GlintLocation Tracking::GetCurPoint()
+GlintLocation Tracking::GetGlintLocation()
 {
     if (CircleFinder.GetNumFound() == 1)
     {
@@ -48,7 +49,7 @@ GlintLocation Tracking::GetCurPoint()
     }
 }
 
-CircleLocation Tracking::GetCurEyePoint()
+CircleLocation Tracking::GetCircleLocation()
 {
     if (CircleFinder.GetNumFound() == 1)
     {
@@ -77,7 +78,7 @@ void* Tracking::bk_Process_Thread(void* Input)
     {
         This->GlintsFinder.FindGlints(This->CurImage, This->CircleFinder.GetCircleLocation());
 
-        This->UpdateFuncs(This->CircleFinder.GetCircleLocation(), This->GlintsFinder.GetGlintLocation(0));
+        This->UpdateFuncs(This->SentData);
 
         if (This->ShowWind)
         {

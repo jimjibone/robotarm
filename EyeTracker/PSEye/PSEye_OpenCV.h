@@ -2,12 +2,12 @@
 #define PSEYE_OPENCV_H
 
 #include "PSEyeGetter.h"
-#include "EyeTimers.h"
+#include "../Common/EyeTimers.h"
 #include "opencv/cv.h"
 #include <opencv/highgui.h>
 #include <pthread.h>
 
-typedef void (*NewImage)(IplImage* Image);
+typedef void (*NewImage)(IplImage*, void*);
 
 class PSEye_OpenCV
 {
@@ -17,7 +17,7 @@ class PSEye_OpenCV
         virtual ~PSEye_OpenCV();
 
         bool FindCamera();
-        bool StartCapture(NewImage NewImgFunc);
+        bool StartCapture(NewImage, void*);
         void StopCapture();
 
         void ShowImage();
@@ -33,8 +33,9 @@ class PSEye_OpenCV
         EyeTimers ThisTimer;
 
         NewImage NewImgFunct;
+        void* SentData;
 
-        static void DoItFunction(void* ptr);
+        static void DoItFunction(void*);
 
         IplImage* GetImage();
 

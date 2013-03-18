@@ -7,10 +7,10 @@ class EyeRange
 {
     public:
         EyeRange();
-        EyeRange(unsigned char Value);
+        EyeRange(unsigned char);
         virtual ~EyeRange();
 
-        bool CheckWithin(unsigned char Value);
+        bool CheckWithin(unsigned char);
         unsigned char GetUpperBoundU();
         char GetUpperBound();
         char GetLowerBound();

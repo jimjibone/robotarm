@@ -20,12 +20,13 @@ bool PSEye_OpenCV::FindCamera()
     return true;
 }
 
-bool PSEye_OpenCV::StartCapture(NewImage NewImgFunc)
+bool PSEye_OpenCV::StartCapture(NewImage NewImgFunc, void* Data)
 {
     if (!Cam.CamIsReady()) if (!FindCamera()) return false;
     StillRunning = true;
     ShowImage();
     NewImgFunct = NewImgFunc;
+    SentData = Data;
     ThisTimer.Start(&DoItFunction, (void*) this);
     return true;
 }
@@ -55,7 +56,7 @@ void PSEye_OpenCV::DoItFunction(void* ptr)
         {
             cvShowImage("PSCam Image", CurImg);
         }
-        This->NewImgFunct(CurImg);
+        This->NewImgFunct(CurImg, This->SentData);
     }
 }
 

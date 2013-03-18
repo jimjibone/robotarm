@@ -1,7 +1,7 @@
 #ifndef RECTANGLESEARCHER_H
 #define RECTANGLESEARCHER_H
 
-#include "Variables/Rectangle.h"
+#include "../../Variables/EyeRectangle.h"
 #include <iostream>
 
 //Container for modified searcher
@@ -10,7 +10,7 @@ class RectangleSearcher
 {
 public:
     RectangleSearcher();
-    RectangleSearcher(int Width, int Height);
+    RectangleSearcher(int, int);
     virtual ~RectangleSearcher();
 
     EyeRectangle Rects[13];

@@ -5,23 +5,23 @@
 #include <windows.h>
 #include <pthread.h>
 
-typedef void (*ptr2Func)(void* ptr);
+typedef void (*ptr2Func)(void*);
 
 class EyeTimers
 {
     public:
         EyeTimers();
-        EyeTimers(long MillisecDelay);
-        EyeTimers(double Freq);
+        EyeTimers(long);
+        EyeTimers(double);
         virtual ~EyeTimers();
 
-        void Start(ptr2Func Func, void* SentThrough);
+        void Start(ptr2Func, void*);
         void Stop();
 
         void WaitTillNext();
 
         void Wait();
-        void Wait(long millis);
+        void Wait(long);
     protected:
     private:
         ptr2Func Functions;

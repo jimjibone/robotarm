@@ -6,7 +6,7 @@ class EyePoint
 {
     public:
         EyePoint();
-        EyePoint(int X, int Y);
+        EyePoint(int, int);
         virtual ~EyePoint();
 
         int GetX();
@@ -20,7 +20,7 @@ class EyePointD
 {
     public:
         EyePointD();
-        EyePointD(double X, double Y);
+        EyePointD(double, double);
         virtual ~EyePointD();
 
         double GetX();

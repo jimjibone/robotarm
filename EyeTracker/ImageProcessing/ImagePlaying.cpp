@@ -124,7 +124,7 @@ void ImagePlaying::ContourFinder(IplImage* ScrImage, IplImage* DestImage)
 
 void ImagePlaying::ExtendLines(IplImage* ScrImage, IplImage* DestImage)
 {//Extneds lines using default size
-    ExtendLines(ScrImage, DestImage, StepSize);
+    ExtendLines(ScrImage, DestImage, 1);
 }
 
 void ImagePlaying::ExtendLines(IplImage* ScrImage, IplImage* DestImage, int Width)

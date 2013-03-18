@@ -3,12 +3,12 @@
 
 #include <pthread.h>
 #include <opencv/cv.h>
-#include "ImageProcessing/ImagePlaying.h"
+#include "../ImageProcessing/ImagePlaying.h"
 #include "CircleFinder/HoughCircleFnder.h"
 #include "GlintFinder/GlintFinder.h"
-#include "PSEye/EyeTimers.h"
+#include "../Common/EyeTimers.h"
 
-typedef void (*PosUpdate)(CircleLocation, GlintLocation);
+typedef void (*PosUpdate)(void*);
 
 class Tracking
 {
@@ -16,12 +16,12 @@ class Tracking
         Tracking();
         virtual ~Tracking();
 
-        void CreateTracking(int, int, PosUpdate);
+        void CreateTracking(int, int, PosUpdate, void*);
 
         void Track(IplImage*);
 
-        GlintLocation GetCurPoint();
-        CircleLocation GetCurEyePoint();
+        GlintLocation GetGlintLocation();
+        CircleLocation GetCircleLocation();
 
         void ShowWindow();
         void HideWindow();
@@ -34,6 +34,7 @@ class Tracking
         IplImage* CurImage;
 
         EyeTimers Timers;
+        void* SentData;
 
         static void* bk_Process_Thread(void*);
 

@@ -1,7 +1,7 @@
 #ifndef CIRCLELOCATION_H
 #define CIRCLELOCATION_H
 
-#include "Rectangle.h"
+#include "EyeRectangle.h"
 
 //A function to hold the data for the eye location
 //Works out some future values aswell
@@ -9,8 +9,8 @@ class CircleLocation
 {
 public:
     CircleLocation();
-    CircleLocation(int MidX, int MidY, int InnerR);
-    CircleLocation(int MidX, int MidY, int InnerR, int OuterR);
+    CircleLocation(int, int, int);
+    CircleLocation(int, int, int, int);
     virtual ~CircleLocation();
 
     EyeRectangle GetInnerRectangle();
@@ -24,7 +24,6 @@ public:
     int GetY();
     int GetInnerRadius();
     int GetOutterRadius();
-    void SetOutterRadius(int Radius);
     bool IrisFound();
 protected:
 private:
@@ -36,7 +35,7 @@ private:
     static const int NewArea = 20; //How far from the old point should look next time
 
     //Functions
-    void SetRect(int MidX, int MidY, int InnerR, int OuterR);
+    void SetRect(int, int, int, int);
 };
 
 #endif // CIRCLELOCATION_H

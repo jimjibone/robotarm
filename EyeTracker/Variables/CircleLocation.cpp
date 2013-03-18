@@ -23,7 +23,8 @@ void CircleLocation::SetRect(int MidX, int MidY, int InnerR, int OuterR)
     InRect = EyeRectangle(X - InR, Y - InR, InR * 2, InR * 2);
     NewRect = EyeRectangle(InRect.Left() - NewArea, InRect.Top() - NewArea, NewArea * 2 + InR * 2, NewArea * 2 + InR * 2);
     BrightRect = EyeRectangle(X - InR * 2, Y - InR * 2, InR * 4, InR * 4);
-    SetOutterRadius(OuterR);
+    OutR = OuterR;
+    OutRect = EyeRectangle(X - OutR, Y - OutR, OutR * 2, OutR * 2);
 }
 
 CircleLocation::~CircleLocation()
@@ -81,10 +82,4 @@ int CircleLocation::GetInnerRadius()
 int CircleLocation::GetOutterRadius()
 {
     return OutR;
-}
-
-void CircleLocation::SetOutterRadius(int Radius)
-{
-    OutR = Radius;
-    OutRect = EyeRectangle(X - OutR, Y - OutR, OutR * 2, OutR * 2);
 }
