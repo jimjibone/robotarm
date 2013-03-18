@@ -2,7 +2,7 @@
 
 HoughCircleFnder::HoughCircleFnder()
 {
-
+    Ready = false;
 }
 
 HoughCircleFnder::HoughCircleFnder(int Width, int Height, bool SecCheck)
@@ -13,11 +13,12 @@ HoughCircleFnder::HoughCircleFnder(int Width, int Height, bool SecCheck)
     Wid = Width;
     Hei = Height;
     CheckSec = SecCheck;
+    Ready = true;
 }
 
 HoughCircleFnder::~HoughCircleFnder()
 {
-    free(Values);
+
 }
 
 
@@ -43,12 +44,6 @@ CircleLocation HoughCircleFnder::GetCircleLocation()
 }
 
 
-void HoughCircleFnder::SetBooleanData(bool* Data)
-{
-    //Doesn't check if sizes are the same, maybe should include?
-    Values = Data;
-}
-
 void HoughCircleFnder::SetOpenCVImage(IplImage* Image)
 {//Binary Image is required, with values of either 0 or -1 (stupid signed char thing)
     for (int X = 0; X < Wid; X++)
@@ -67,7 +62,7 @@ void HoughCircleFnder::FindCircle()
     if (NumFound != 0)
     {
         FindCircle(Loc.NextRectangle());
-        if (NumFound != 0) return; //Will scan whole image if eye not found in small search
+        return;
     }
 
     //First check middle of image then move out from that, covering all points on an image
@@ -75,7 +70,7 @@ void HoughCircleFnder::FindCircle()
     for (int i = 0; i < Search.Length; i++)
     {
         FindCircle(Search.Rects[i]);
-        if (NumFound != 0) return;
+        if (NumFound != 0) break;
     }
 }
 
@@ -129,7 +124,7 @@ void HoughCircleFnder::FindCircle(EyeRectangle Rect)
                     else
                     {
                         NumFound = 1;
-                        Loc = CircleLocation(X, Y, R, -1);
+                        Loc = CircleLocation(X, Y, R);
                         return;
                     }
                 }
@@ -158,10 +153,6 @@ int HoughCircleFnder::FindSecond(int X, int Y)
                     if (Values[TX + TY * Wid])
                     {
                         Num++;
-                    }
-                    else
-                    {
-                        Num--;
                     }
 
                     if (Num > CircleAccept)

@@ -6,6 +6,8 @@
 #include "../../CircleFinder/Variables/Rectangle.h"
 #include <opencv/cv.h>
 
+using namespace std;
+
 class GlintLocation
 {
     public:

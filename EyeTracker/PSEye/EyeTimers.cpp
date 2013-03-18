@@ -43,7 +43,8 @@ void EyeTimers::Stop()
 {
     bool WasRun = Run;
     Run = false;
-	if (WasRun) pthread_exit(NULL);
+    Sleep(100);
+	//if (WasRun) pthread_exit(NULL);
 }
 
 void* EyeTimers::Running(void* ptr)
@@ -75,9 +76,20 @@ void EyeTimers::WaitTillNext()
 
     while (millis < Next)
     {
+        Sleep(Next - millis);
         GetSystemTime(&time);
         millis = (time.wHour * 60 * 60 * 1000) + (time.wMinute * 60 * 1000) + (time.wSecond * 1000) + time.wMilliseconds;
     }
 
     Next = millis + Every;
+}
+
+void EyeTimers::Wait(long millis)
+{
+    Sleep(millis);
+}
+
+void EyeTimers::Wait()
+{
+    Sleep(Every);
 }

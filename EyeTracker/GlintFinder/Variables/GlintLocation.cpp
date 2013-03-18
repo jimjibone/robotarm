@@ -8,7 +8,7 @@ GlintLocation::GlintLocation()
 
 GlintLocation::~GlintLocation()
 {
-    //dtor
+
 }
 
 void GlintLocation::AddPoint(EyePoint Loc)
@@ -18,10 +18,6 @@ void GlintLocation::AddPoint(EyePoint Loc)
         Points[Count] = Loc;
         Count++;
     }
-    //if (Count >= MaxNumOfPoints)
-    //{
-        //printf("Error, Too Many Points In Array\n");
-    //}
 }
 
 void GlintLocation::FindMid()

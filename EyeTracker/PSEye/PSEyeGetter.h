@@ -2,7 +2,6 @@
 #define PSEYEGETTER_H
 
 #include "CLEyeMulticam.h"
-#include <iostream>
 
 class PSEyeGetter
 {
@@ -11,25 +10,33 @@ public:
     PSEyeGetter(CLEyeCameraColorMode ColourMode, CLEyeCameraResolution Resolution, float FrameRate);
     ~PSEyeGetter();
 
-    bool FindCam();
+    bool FindCam(CLEyeCameraColorMode ColourMode, CLEyeCameraResolution Resolution, float FrameRate);
     bool GetFrame();
 
     PBYTE CurrentColours;
 
-    bool IsReady;
+    int ImageWidth();
+    int ImageHeight();
+    int ImageDepth();
+    int ImageStride();
+    int TotalPixels();
+
+    float FrameRate();
+
+    bool CamIsReady();
+protected:
+
+private:
+    CLEyeCameraColorMode Mode;
+    CLEyeCameraResolution Res;
 
     CLEyeCameraInstance Cam;
     GUID guid;
 
-    int W, H, Size;
+    bool FindCam();
+    int W, H, Size, Stride, ColourSize;
     float Rate;
-
-    CLEyeCameraColorMode Mode;
-    CLEyeCameraResolution Res;
-
-protected:
-
-private:
+    bool IsReady;
 };
 
 #endif // PSEYEGETTER_H

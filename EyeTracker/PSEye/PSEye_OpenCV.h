@@ -7,7 +7,7 @@
 #include <opencv/highgui.h>
 #include <pthread.h>
 
-bool Something();
+typedef void (*NewImage)(IplImage* Image);
 
 class PSEye_OpenCV
 {
@@ -17,36 +17,29 @@ class PSEye_OpenCV
         virtual ~PSEye_OpenCV();
 
         bool FindCamera();
-        bool StartCapture();
+        bool StartCapture(NewImage NewImgFunc);
         void StopCapture();
-
-        void StartOtherCapture();
-        void StopOtherCapture();
 
         void ShowImage();
         void HideImage();
 
-        IplImage* GetImage();
+        int GetCameraWidth();
+        int GetCameraHeight();
+
+        IplImage* GetCurrentImage();
     protected:
     private:
         PSEyeGetter Cam;
         EyeTimers ThisTimer;
 
-        pthread_t Line_Thread;
-
-        int CurImage;
-        IplImage* Img_1;
-        IplImage* Img_2;
-        IplImage* Img_3;
+        NewImage NewImgFunct;
 
         static void DoItFunction(void* ptr);
 
-        static void* InLineFunnction(void* Input);
+        IplImage* GetImage();
 
         bool StillRunning;
-        bool InLineRunning;
         bool ShowWind;
-        bool Ready;
 };
 
 #endif // PSEYE_OPENCV_H

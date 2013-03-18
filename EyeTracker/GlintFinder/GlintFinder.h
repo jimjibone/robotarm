@@ -15,7 +15,6 @@ class GlintFinder
         GlintFinder(int NumToExpect);
         virtual ~GlintFinder();
 
-        void FindGlints(IplImage* Image);
         void FindGlints(IplImage* Image, CircleLocation Location);
         GlintLocation GetGlintLocation(int Num);
 

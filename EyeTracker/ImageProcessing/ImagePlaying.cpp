@@ -2,8 +2,8 @@
 
 ImagePlaying::ImagePlaying()
 {
-    PNum1 = 40;
-    PNum2 = 100;
+    PNum1 = 100;
+    PNum2 = 150;
 }
 
 ImagePlaying::ImagePlaying(int Num1, int Num2)
@@ -45,9 +45,9 @@ void ImagePlaying::DoAllProcesses(IplImage* ScrImage, IplImage* DestImage)
     ConvertToBinary(ScrImage, Img1);
     IplImage* Img2 = cvCreateImage(cvGetSize(ScrImage), 8, 1);
     ContourFinder(Img1, Img2);
-    cvFree(&Img1);
-    ExtendLines(Img2, DestImage);
-    cvFree(&Img2);
+    cvReleaseImage(&Img1);
+    ExtendLines(Img2, DestImage, 1);
+    cvReleaseImage(&Img2);
 }
 
 

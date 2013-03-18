@@ -19,6 +19,9 @@ class EyeTimers
         void Stop();
 
         void WaitTillNext();
+
+        void Wait();
+        void Wait(long millis);
     protected:
     private:
         ptr2Func Functions;
