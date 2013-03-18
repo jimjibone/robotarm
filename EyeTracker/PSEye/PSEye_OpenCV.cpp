@@ -16,15 +16,13 @@ PSEye_OpenCV::~PSEye_OpenCV()
 bool PSEye_OpenCV::FindCamera()
 {
     Cam.FindCam(CLEYE_MONO_PROCESSED, CLEYE_VGA, 30);
-    if (!Cam.CamIsReady()) return false;
-    return true;
+    return Cam.CamIsReady();
 }
 
 bool PSEye_OpenCV::StartCapture(NewImage NewImgFunc, void* Data)
 {
     if (!Cam.CamIsReady()) if (!FindCamera()) return false;
     StillRunning = true;
-    ShowImage();
     NewImgFunct = NewImgFunc;
     SentData = Data;
     ThisTimer.Start(&DoItFunction, (void*) this);
@@ -87,4 +85,16 @@ int PSEye_OpenCV::GetCameraWidth()
 int PSEye_OpenCV::GetCameraHeight()
 {
     return Cam.ImageHeight();
+}
+
+int PSEye_OpenCV::GetNumOfWindows()
+{
+    if (ShowWind)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
 }

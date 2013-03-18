@@ -12,16 +12,21 @@ EyeTracking::~EyeTracking()
 
 void EyeTracking::Run()
 {
-    Cam.FindCamera();
-    Tracker.CreateTracking(Cam.GetCameraWidth(), Cam.GetCameraHeight(), &UpdatedLocations, (void*) this);
-
-    Cam.StartCapture(&UpdatedImage, (void*)this);
+    if (Cam.FindCamera())
+    {
+        Tracker.CreateTracking(Cam.GetCameraWidth(), Cam.GetCameraHeight(), &UpdatedLocations, (void*) this);
+        Cam.StartCapture(&UpdatedImage, (void*)this);
+    }
 
     bool Carry = true;
     while (Carry)
     {
-        char c =  cvWaitKey(0);
-        switch (c)
+        if(Cam.GetNumOfWindows() + Tracker.GetNumOfWindows() + Cali.GetNumOfWindows() == 0)
+        {
+            Cam.ShowImage();
+        }
+
+        switch (cvWaitKey(0))
         {
         case 27:
             Carry = false;
@@ -37,6 +42,24 @@ void EyeTracking::Run()
             break;
         case 's':
             Tracker.HideWindow();
+            break;
+            case 'q':
+            Cam.ShowImage();
+            break;
+        case 'w':
+            Cam.HideImage();
+            break;
+        case ' ':
+            Cali.TakeCaliPoint();
+            break;
+        case 'c':
+            Cali.ShowCalibrationWindow();
+            break;
+        case 'n':
+            Cali.ShowPointWindow();
+            break;
+        case 'm':
+            Cali.HidePointWindow();
             break;
         }
     }
@@ -108,6 +131,5 @@ void EyeTracking::UpdatedImage(IplImage* Image, void* ptr)
 void EyeTracking::UpdatedLocations(void* ptr)
 {
     EyeTracking* This = (EyeTracking*)ptr;
-    CircleLocation Circle = This->Tracker.GetCircleLocation();
-    GlintLocation Glint = This->Tracker.GetGlintLocation();
+    This->Cali.NewValue(This->Tracker.GetCircleLocation(), This->Tracker.GetGlintLocation());
 }

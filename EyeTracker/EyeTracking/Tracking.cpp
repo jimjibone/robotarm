@@ -149,3 +149,13 @@ void Tracking::MaxChange(int Num, void* ptr)
 {
     ((Tracking*)ptr)->Img_proc.SetNum2(Num);
 }
+
+int Tracking::GetNumOfWindows()
+{
+    int Num = 0;
+
+    if (ShowWind) Num++;
+    if (ShowTrackWind) Num++;
+
+    return Num;
+}

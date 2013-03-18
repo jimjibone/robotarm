@@ -28,6 +28,8 @@ class Tracking
 
         void ShowSlidersWindow();
         void HideSlidersWindow();
+
+        int GetNumOfWindows();
     protected:
     private:
         pthread_t bk_Process;

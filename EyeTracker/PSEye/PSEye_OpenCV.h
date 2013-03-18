@@ -27,6 +27,8 @@ class PSEye_OpenCV
         int GetCameraHeight();
 
         IplImage* GetCurrentImage();
+
+        int GetNumOfWindows();
     protected:
     private:
         PSEyeGetter Cam;
