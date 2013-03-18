@@ -5,9 +5,10 @@
 #include <opencv/cv.h>
 #include "ImageProcessing/ImagePlaying.h"
 #include "CircleFinder/HoughCircleFnder.h"
-#include "CircleFinder/Variables/CircleLocation.h"
 #include "GlintFinder/GlintFinder.h"
-#include "GlintFinder/Variables/Point.h"
+#include "PSEye/EyeTimers.h"
+
+typedef void (*PosUpdate)(CircleLocation, GlintLocation);
 
 class Tracking
 {
@@ -15,24 +16,35 @@ class Tracking
         Tracking();
         virtual ~Tracking();
 
-        void CreateTracking(int Height, int Width);
+        void CreateTracking(int, int, PosUpdate);
 
-        void Track(IplImage* Image);
+        void Track(IplImage*);
 
         GlintLocation GetCurPoint();
         CircleLocation GetCurEyePoint();
 
         void ShowWindow();
         void HideWindow();
+
+        void ShowSlidersWindow();
+        void HideSlidersWindow();
     protected:
     private:
         pthread_t bk_Process;
         IplImage* CurImage;
 
-        static void* bk_Process_Thread(void* Input);
+        EyeTimers Timers;
+
+        static void* bk_Process_Thread(void*);
+
+        PosUpdate UpdateFuncs;
 
         bool ShowWind;
+        bool ShowTrackWind;
         bool Running;
+
+        static void MinChange(int, void*);
+        static void MaxChange(int, void*);
 
         ImagePlaying Img_proc;
         HoughCircleFnder CircleFinder;

@@ -14,7 +14,6 @@ public:
     HoughCircleFnder(int Width, int Height, bool SecCheck);
     virtual ~HoughCircleFnder();
 
-    void SetBooleanData(bool* Data);
     void SetOpenCVImage(IplImage* Image);
     void DrawImage(IplImage* Image);
 
@@ -39,11 +38,11 @@ private:
 
     //Constants
     static const int InnerMinR = 9;
-    static const int InnerMaxR = 15;
+    static const int InnerMaxR = 25;
     static const int CircleStep = 15;
 
-    static const int OuterMinR = 19;
-    static const int OuterMaxR = 40;
+    static const int OuterMinR = 30;
+    static const int OuterMaxR = 60;
     static const int SecStep = 2;
     static const int CircleAccept = 10;
 

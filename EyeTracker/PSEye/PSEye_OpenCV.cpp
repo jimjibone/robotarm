@@ -24,6 +24,7 @@ bool PSEye_OpenCV::StartCapture(NewImage NewImgFunc)
 {
     if (!Cam.CamIsReady()) if (!FindCamera()) return false;
     StillRunning = true;
+    ShowImage();
     NewImgFunct = NewImgFunc;
     ThisTimer.Start(&DoItFunction, (void*) this);
     return true;
@@ -67,8 +68,12 @@ void PSEye_OpenCV::ShowImage()
 
 void PSEye_OpenCV::HideImage()
 {
-    ShowWind = false;
-    cvDestroyWindow("PSCam Image");
+    if (ShowWind)
+    {
+        ShowWind = false;
+        cvDestroyWindow("PSCam Image");
+        ThisTimer.Wait(100);
+    }
 }
 
 int PSEye_OpenCV::GetCameraWidth()
