@@ -90,7 +90,11 @@ function installFreenectMac() {
 }
 
 function installCVMac() {
-	brew install opencv
+	# due to new happenings with Homebrew the opencv formula has been moved to
+	# homebrew/science, so we have to first to the `brew tap` command on a new system.
+	# brew tap homebrew/science
+	# or just install via the internets to save hassle.
+	brew install https://raw.github.com/Homebrew/homebrew-science/master/opencv.rb
 }
 
 function installPCLMac() {
@@ -119,27 +123,56 @@ function installPCLMac() {
 			rm deps/pcl.rb.temp-e
 		else
 			echo -e "\x1B[00;31mOh dear.\x1B[00m You need to run this command from at least inside the robotarm directory."
+			exit 1
 		fi
 	else
 		echo -e "\x1B[00;31mOh no! You need to download PCL manually first!\n\x1B[00m Sorry. Try pointclouds.org/downloads/ and keep it in your ~/Downloads folder (or root /). Run this script again and I'll do the rest."
+		exit 1
 	fi
 	cd $PREV
 }
 
+DO_FREENECT=1
+DO_CV=1
+DO_PCL=1
+
+# check what we actually want to install
+for OPT in "$@"
+do
+	if [[ $OPT == "nofreenect" ]]; then
+		DO_FREENECT=0
+	fi;if [[ $OPT == "nocv" ]]; then
+		DO_CV=0
+	fi;if [[ $OPT == "nopcl" ]]; then
+		DO_PCL=0
+	fi
+done
+
 # check that we're running Ubuntu and install
 if [[ `uname` == "Linux" ]]; then
-	installFreenectLinux
-	installCVLinux
-	installPCLLinux
+	if [[ $DO_FREENECT == 1 ]]; then
+		installFreenectLinux
+	fi
+	if [[ $DO_CV == 1 ]]; then
+		installCVLinux
+	fi
+	if [[ $DO_PCL == 1 ]]; then
+		installPCLLinux
+	fi
 	
 # or mac os x
 elif [[ `uname` == "Darwin" ]]; then
 	echo "You're going to want to accept the Java install if it appears by the way."
 	# check for homebrew
 	brew update || exit 2
-	installFreenectMac
-	installCVMac
-	installPCLMac
+	
+	if [[ $DO_FREENECT == 1 ]]; then
+		installFreenectMac
+	fi;if [[ $DO_CV == 1 ]]; then
+		installCVMac
+	fi;if [[ $DO_PCL == 1 ]]; then
+		installPCLMac
+	fi
 	
 # or if you fail
 else
