@@ -40,6 +40,7 @@
 // libfreenect
 Freenect::Freenect freenect;
 MyFreenectDevice* device;
+freenect_video_format requested_format(FREENECT_VIDEO_RGB);
 double freenect_angle(0);
 int got_frames(0),window(0);
 int g_argc;
@@ -89,6 +90,11 @@ void keyboardEventOccurred (const pcl::visualization::KeyboardEvent &event,void*
 		pcl::io::savePCDFileASCII (filename, *cloud);
 		cloud_id++;
 	}
+	if (event.getKeySym() == "d" && event.keyDown())
+	{
+		std::cout << "d was pressed => going to detect now" << std::endl;
+		do_detection = true;
+	}
 }
 
 
@@ -116,7 +122,7 @@ int main (int argc, char** argv)
 	printf("Make a viewer\n");
 	boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer (new pcl::visualization::PCLVisualizer ("3D Viewer"));
 	viewer->registerKeyboardCallback (keyboardEventOccurred, (void*)&viewer);
-	viewer->setBackgroundColor (255, 255, 255);
+	viewer->setBackgroundColor (0, 0, 0);
 	viewer->addPointCloud<pcl::PointXYZRGB> (cloud, "Kinect Cloud");
 	viewer->setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE,1, "Kinect Cloud");
 	viewer->addCoordinateSystem (1.0);
@@ -170,7 +176,7 @@ int main (int argc, char** argv)
 		}
 		
 		// Table & Object Detection
-		if (do_detection && !killKinect) {
+		if (do_detection) {
 			printf("Doing some detection...\n");
 			done_ransac = false;
 			done_detection = false;
@@ -214,7 +220,7 @@ int main (int argc, char** argv)
 			done_detection = true;
 			do_detection = false;
 			
-			viewer->addPlane(coefficients, "plane");
+			viewer->addPlane(*coefficients, "plane", 0);
 			
 			printf("Detection complete.\n");
 		}
