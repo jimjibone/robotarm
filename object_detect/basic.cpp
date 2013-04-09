@@ -20,9 +20,7 @@
 #include <pcl/common/common_headers.h>
 #include <pcl/io/pcd_io.h>
 #include <pcl/console/parse.h>
-//#include <pcl/sample_consensus/ransac.h>
-//#include <pcl/sample_consensus/sac_model_sphere.h>
-//#include <pcl/sample_consensus/msac.h>
+#include <pcl/segmentation/sac_segmentation.h>
 
 #if defined(__APPLE__)
 #include <GLUT/glut.h>
@@ -57,12 +55,16 @@ std::vector<uint8_t> mrgb(640*480*4);
 bool killKinect = false;
 // point clouds 'n' that.
 pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZRGB>);
-unsigned int cloud_id = 0;
+pcl::ModelCoefficients::Ptr coefficients (new pcl::ModelCoefficients);
+pcl::PointIndices::Ptr inliers (new pcl::PointIndices);
 
 /*---------------------------------------------*-
  * Table Detection Stuff
 -*---------------------------------------------*/
-bool do_detection = 0;
+bool print_randpoint = false; size_t randPoint = 0; bool print_lastpoint = false; bool print_midpoint = false;
+bool do_detection = false;
+bool done_ransac = false;
+
 bool done_detection = false;
 bool show_clusters = true;
 bool show_table_hull = true;
@@ -78,6 +80,7 @@ bool fit_objects = false;
 -*---------------------------------------------*/
 int window_id;
 float zoom=1.2;
+float offset[3] = {0, 0, 0};
 int mx=-1,my=-1;        // Prevous mouse coordinates
 int rotangles[2] = {0}; // Panning angles
 
@@ -89,6 +92,7 @@ void drawCallback()
 	glLoadIdentity();
 	glScalef(zoom, zoom, 1);	// Matrix tranformations to alter where the object is rendered.
 	glTranslatef(0, 0, -1000);
+	glTranslatef(offset[0], offset[1], -offset[2]);
 	glRotatef(rotangles[0], 1, 0, 0);
 	glRotatef(rotangles[1], 0, 1, 0);
 	glTranslatef(0, 0, 750);
@@ -103,6 +107,34 @@ void drawCallback()
 	}
 	
 	glEnd();
+	
+	if (done_ransac) {
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		
+		//show ransac indices
+		double boxSize = 300.0;
+		double bl_x = -boxSize, bl_y = -boxSize;
+		double tl_x = -boxSize, tl_y =  boxSize;
+		double tr_x =  boxSize, tr_y =  boxSize;
+		double br_x =  boxSize, br_y = -boxSize;
+		// ax + by + cz + d = 0
+		// ax + by + d = -cz
+		// -(ax + by + d)/c = z
+		double bl_z = -((coefficients->values[0]*bl_x) + (coefficients->values[1]*bl_y) + coefficients->values[3])/(coefficients->values[2]*1.0);
+		double tl_z = -((coefficients->values[0]*tl_x) + (coefficients->values[1]*tl_y) + coefficients->values[3])/(coefficients->values[2]*1.0);
+		double tr_z = -((coefficients->values[0]*tr_x) + (coefficients->values[1]*tr_y) + coefficients->values[3])/(coefficients->values[2]*1.0);
+		double br_z = -((coefficients->values[0]*br_x) + (coefficients->values[1]*br_y) + coefficients->values[3])/(coefficients->values[2]*1.0);
+		
+		glBegin(GL_QUADS);
+		glColor4f(.392156863, 1, .392156863, 0.3);
+		// bl, tl, tr, br
+		glVertex3d(bl_x, -bl_y, -bl_z);
+		glVertex3d(tl_x, -tl_y, -tl_z);
+		glVertex3d(tr_x, -tr_y, -tr_z);
+		glVertex3d(br_x, -br_y, -br_z);
+		glEnd();
+	}
 	
 	
 	
@@ -125,53 +157,6 @@ void drawCallback()
 	printf("\n");*/
 	
 	glutSwapBuffers();
-}
-void resizeCallback(int width, int height)
-{
-	glViewport(0, 0, width, height);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	gluPerspective(60, 4/3., 0.3, 4000);
-	glMatrixMode(GL_MODELVIEW);
-}
-void keyboardCallback(unsigned char key, int x, int y)
-{
-	if (key == 27 || key == 'q') {
-		glutDestroyWindow(window_id);
-		killKinect = true;
-		device->stopVideo();
-		device->stopDepth();
-		printf("All stopped. Bye bye.");
-		exit(0);	// gonna kill the program right now! careful!
-	}
-	if (key == 'w')
-		zoom *= 1.1f;
-	if (key == 's')
-		zoom /= 1.1f;
-	if (key == 'c');
-		//colour = !colour;
-	if (key == 'd')
-		do_detection = true;
-}
-void movementCallback(int x, int y)
-{
-	if (mx >= 0 && my >= 0) {
-		rotangles[0] += y - my;
-		rotangles[1] += x - mx;
-	}
-	mx = x;
-	my = y;
-}
-void mouseCallback(int button, int state, int x, int y)
-{
-	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
-		mx = x;
-		my = y;
-	}
-	if (button == GLUT_LEFT_BUTTON && state == GLUT_UP) {
-		mx = -1;
-		my = -1;
-	}
 }
 void glutIdleCallback()
 {
@@ -201,12 +186,72 @@ void glutIdleCallback()
 				cloud->points[i].b = mrgb[(i*3)+2];
 			}
 		}
+		
+		if (print_randpoint) {
+			print_randpoint = false;
+			randPoint = rand()%307200 - 1;
+			std::cerr << "Rand Point (" << randPoint <<
+			") is  x:" << cloud->points[randPoint].x <<
+			"  y:" << cloud->points[randPoint].y <<
+			"  z:" << cloud->points[randPoint].z << std::endl;
+		}
+		if (print_lastpoint) {
+			print_lastpoint = false;
+			std::cerr << "Last Point (" << randPoint <<
+			") is  x:" << cloud->points[randPoint].x <<
+			"  y:" << cloud->points[randPoint].y <<
+			"  z:" << cloud->points[randPoint].z << std::endl;
+		}
+		if (print_midpoint) {
+			print_midpoint = false;
+			std::cerr << "Mid Point (" << 153600 <<
+			") is  x:" << cloud->points[153600].x <<
+			"  y:" << cloud->points[153600].y <<
+			"  z:" << cloud->points[153600].z << std::endl;
+		}
 	}
 	
 	// Table & Object Detection
-	if (do_detection) {
+	if (do_detection && !killKinect) {
 		printf("Doing some detection...\n");
+		done_ransac = false;
 		done_detection = false;
+		
+		// Create the segmentation object and do RANSAC
+		pcl::SACSegmentation<pcl::PointXYZRGB> seg;
+		seg.setModelType(pcl::SACMODEL_PLANE);
+		seg.setMethodType(pcl::SAC_RANSAC);
+		seg.setDistanceThreshold(0.01);
+		seg.setInputCloud(cloud);
+		seg.segment(*inliers, *coefficients);
+		std::cerr << "PointCloud after segmentation has: " << inliers->indices.size () << " inliers." << std::endl;
+		std::cerr << "Plane coefficients:  a:" << coefficients->values[0] <<
+										"  b:" << coefficients->values[1] <<
+										"  c:" << coefficients->values[2] <<
+										"  d:" << coefficients->values[3] << std::endl;
+		done_ransac = true;
+		
+		double boxSize = 300.0;
+		double bl_x = -boxSize, bl_y = -boxSize;
+		double tl_x = -boxSize, tl_y =  boxSize;
+		double tr_x =  boxSize, tr_y =  boxSize;
+		double br_x =  boxSize, br_y = -boxSize;
+		// ax + by + cz + d = 0
+		// ax + by + d = -cz
+		// -(ax + by + d)/c = z
+		double bl_z = -((coefficients->values[0]*bl_x) + (coefficients->values[1]*bl_y) + coefficients->values[3])/(coefficients->values[2]*1.0);
+		double tl_z = -((coefficients->values[0]*tl_x) + (coefficients->values[1]*tl_y) + coefficients->values[3])/(coefficients->values[2]*1.0);
+		double tr_z = -((coefficients->values[0]*tr_x) + (coefficients->values[1]*tr_y) + coefficients->values[3])/(coefficients->values[2]*1.0);
+		double br_z = -((coefficients->values[0]*br_x) + (coefficients->values[1]*br_y) + coefficients->values[3])/(coefficients->values[2]*1.0);
+		
+		std::cerr << "Plane in 3D is  BL: x:" << bl_x << "  y:" << bl_y << "  z:" << bl_z << std::endl;
+		std::cerr << "                TL: x:" << tl_x << "  y:" << tl_y << "  z:" << tl_z << std::endl;
+		std::cerr << "                TR: x:" << tr_x << "  y:" << tr_y << "  z:" << tr_z << std::endl;
+		std::cerr << "                BR: x:" << br_x << "  y:" << br_y << "  z:" << br_z << std::endl;
+		std::cerr << "Off-Mid Point (" << (size_t)(cloud->size()/2+(640*100+46)) <<
+						") is  x:" << cloud->points[(size_t)(cloud->size()/2+(640*100+46))].x <<
+							"  y:" << cloud->points[(size_t)(cloud->size()/2+(640*100+46))].y <<
+							"  z:" << cloud->points[(size_t)(cloud->size()/2+(640*100+46))].z << std::endl;
 		
 		if (show_table_cloud) {
 			
@@ -231,6 +276,57 @@ void glutIdleCallback()
 	
 	glutPostRedisplay();
 	//printf("End Idle\n");
+}
+void resizeCallback(int width, int height)
+{
+	glViewport(0, 0, width, height);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluPerspective(60, 4/3., 0.3, 4000);
+	glMatrixMode(GL_MODELVIEW);
+}
+void keyboardCallback(unsigned char key, int x, int y)
+{
+	if (key == 27 || key == 'q') {
+		glutDestroyWindow(window_id);
+		killKinect = true;
+		device->stopVideo();
+		device->stopDepth();
+		printf("All stopped. Bye bye.");
+		exit(0);	// gonna kill the program right now! careful!
+	}
+	if (key == 'w')
+		offset[2] += 10.0f;
+	if (key == 's')
+		offset[2] -= 10.0f;
+	if (key == 'r')
+		print_randpoint = true;
+	if (key == 'l')
+		print_lastpoint = true;
+	if (key == 'm')
+		print_midpoint = true;
+	if (key == 'd')
+		do_detection = true;
+}
+void movementCallback(int x, int y)
+{
+	if (mx >= 0 && my >= 0) {
+		rotangles[0] += y - my;
+		rotangles[1] += x - mx;
+	}
+	mx = x;
+	my = y;
+}
+void mouseCallback(int button, int state, int x, int y)
+{
+	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
+		mx = x;
+		my = y;
+	}
+	if (button == GLUT_LEFT_BUTTON && state == GLUT_UP) {
+		mx = -1;
+		my = -1;
+	}
 }
 
 

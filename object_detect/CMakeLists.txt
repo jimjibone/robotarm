@@ -30,6 +30,8 @@ if(APPLE)
 	
 # Linux, not so much
 else()
+	add_executable (basiclinux basiclinux.cpp ../helpers/Mutex.hpp ../helpers/Freenect.hpp)
+	
 	find_package(OpenGL REQUIRED)
 	find_package(GLUT REQUIRED)
 
@@ -39,4 +41,5 @@ else()
 	target_link_libraries (simplegl freenect ${CMAKE_THREAD_LIBS_INIT} ${MATH_LIB} ${PCL_LIBRARIES} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY})
 	target_link_libraries (tabledetect freenect ${CMAKE_THREAD_LIBS_INIT} ${MATH_LIB} ${PCL_LIBRARIES} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY})
 	target_link_libraries (object_detect freenect ${CMAKE_THREAD_LIBS_INIT} ${MATH_LIB} ${PCL_LIBRARIES} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY})
+	target_link_libraries (basiclinux freenect ${CMAKE_THREAD_LIBS_INIT} ${MATH_LIB} ${PCL_LIBRARIES})
 endif()
