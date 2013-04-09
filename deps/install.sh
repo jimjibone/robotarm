@@ -78,15 +78,18 @@ function installPCLLinux() {
 function installFreenectMac() {
 	# get jimjibone's version of libfreenect as it works
 	# better with PCL
-	cd ~
-	git clone https://github.com/jimjibone/libfreenect.git
-	cd libfreenect
-	mkdir build
-	cd build
-	cmake ..
-	make
-	sudo make install
-	cd $PREV
+	#cd ~
+	#git clone https://github.com/jimjibone/libfreenect.git
+	#cd libfreenect
+	#mkdir build
+	#cd build
+	#cmake ..
+	#make
+	#sudo make install
+	#cd $PREV
+	
+	# now with MOAR brew!
+	brew install https://raw.github.com/jimjibone/libfreenect/master/libfreenect.rb
 }
 
 function installCVMac() {
