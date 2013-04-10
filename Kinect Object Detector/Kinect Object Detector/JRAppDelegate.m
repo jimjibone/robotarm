@@ -10,6 +10,8 @@
 #import "JRConstants.h"
 
 @interface JRAppDelegate ()
+@property (nonatomic, assign) NSMutableArray *convexHullPoints;
+
 - (void)fileNotifications;
 - (void)removeNotifications;
 - (void)objectDetectorNotificationWasReceived:(NSNotification*)aNotification;
@@ -20,6 +22,10 @@
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
     // File for notifications.
 	[self fileNotifications];
+	
+	// Alloc things.
+	_convexHullPoints = [[NSMutableArray alloc] init];
+	[self.convexHullPointsController setSelectsInsertedObjects:NO];
 	
 	// Set up and start the Object Detector.
 	isKinectConnected = NO;
@@ -43,10 +49,14 @@
 }
 - (void)dealloc {
 	[self removeNotifications];
-	if (objectDetector != NULL) {
+	if (_convexHullPoints != nil) {
+		[_convexHullPoints release];
+		_convexHullPoints = nil;
+	}
+	if (objectDetector != nil) {
 		[objectDetector stop];
 		[objectDetector release];
-		objectDetector = NULL;
+		objectDetector = nil;
 	}
     [super dealloc];
 }
@@ -108,8 +118,10 @@
 																object:nil];
 }
 - (void)objectDetectorNotificationWasReceived:(NSNotification*)aNotification {
+	static bool fieldsNeedReset = YES;
 	if ([[aNotification name] isEqualToString:nObjectDetectorDidCompleteTableDetection])
 	{
+		fieldsNeedReset = YES;
 		[self.resetTableDetectBtn setEnabled:YES];
 		
 		if ([self.tableDetectProgress isIndeterminate]) {
@@ -118,12 +130,29 @@
 		}
 		[self.tableDetectProgress setDoubleValue:0.0];
 		
-		//[speech startSpeakingString:@"I found the table for you."];
+		PlaneCoefficients coefficients = [objectDetector getPlaneCoefficients];
+		[self.tablePlaneEquation setStringValue:[NSString stringWithFormat:
+												 @"%.2fx + %.2fy + %.2fz + %.2f = 0",
+												 coefficients.a,
+												 coefficients.b,
+												 coefficients.c,
+												 coefficients.d]];
+		[self.tablePlaneConfidence setStringValue:[NSString stringWithFormat:@"%.0f", coefficients.confidence]];
+		
+		[self.convexHullPointsController removeObjects:self.convexHullPoints];
+		[self.convexHullPoints removeAllObjects];
+		[self.convexHullPoints addObjectsFromArray:[objectDetector getConvexHullPoints]];
+		[self.convexHullPointsController addObjects:self.convexHullPoints];
 	}
 	if ([[aNotification name] isEqualToString:nObjectDetectorDidFailTableDetection])
 	{
+		fieldsNeedReset = YES;
 		// Display a notification or something.
 		NSLog(@"%@ %@ Notification", NSStringFromSelector(_cmd), [aNotification name]);
+		[self.tablePlaneEquation setStringValue:@"No equation"];
+		[self.tablePlaneConfidence setStringValue:@":("];
+		[self.convexHullPointsController removeObjects:self.convexHullPoints];
+		[self.convexHullPoints removeAllObjects];
 	}
 	if ([[aNotification name] isEqualToString:nObjectDetectorDidUpdateTableDetectProgress])
 	{
@@ -141,19 +170,29 @@
 			[self.tableDetectProgress setIndeterminate:YES];
 			[self.tableDetectProgress startAnimation:self];
 		}
+		
+		if (fieldsNeedReset) {
+			fieldsNeedReset = NO;
+			[self.tablePlaneEquation setStringValue:@""];
+			[self.tablePlaneConfidence setStringValue:@""];
+			[self.convexHullPointsController removeObjects:self.convexHullPoints];
+			[self.convexHullPoints removeAllObjects];
+		}
 	}
 }
 - (void)kinectControllerNotificationWasReceived:(NSNotification*)aNotification {
 	if ([[aNotification name] isEqualToString:nKinectControllerDidUpdateStatus]) {
 		if ([[[aNotification userInfo] objectForKey:dKinectControllerStatusState] boolValue]) {
+			// Kinect is connected.
 			[self.connectKinectBtn setEnabled:NO];
+			[objectDetector resetTableDetection];
 		} else {
+			// Kinect is not connected.
 			[self.connectKinectBtn setEnabled:YES];
 		}
 	}
 	if ([[aNotification name] isEqualToString:nKinectControllerDidError]) {
-		NSLog(@"Kinect Error: %@", [[aNotification userInfo] objectForKey:dKinectControllerErrorString]);
-		//[speech startSpeakingString:[[aNotification userInfo] objectForKey:dKinectControllerErrorString]];
+		[self.connectKinectPopover showRelativeToRect:self.connectKinectBtn.frame ofView:self.window.contentView preferredEdge:NSMinYEdge];
 	}
 	if ([[aNotification name] isEqualToString:nKinectControllerDidUpdateHardware]) {
 		[self.kinectTilt setFloatValue:[[[aNotification userInfo] objectForKey:dKinectControllerOrientation] floatValue]];

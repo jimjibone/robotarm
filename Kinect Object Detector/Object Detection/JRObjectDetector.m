@@ -216,9 +216,11 @@
 	}
 		
 	if (ransacIterations == noRansacIterations && ransacComplete ==  NO) {
-		ABCDPlane plane;
-		double confidence;
-		[ransac getConfidentPlaneA:&plane.a B:&plane.b C:&plane.c D:&plane.d Confidence:&confidence];
+		[ransac getConfidentPlaneA:&ransacConfidentPlane.a
+								 B:&ransacConfidentPlane.b
+								 C:&ransacConfidentPlane.c
+								 D:&ransacConfidentPlane.d
+						Confidence:&ransacConfidentPlane.confidence];
 		[glView setPlaneData:ransacConfidentPlane];
 		//[ransac listConfidentPlanes];
 		
@@ -234,7 +236,7 @@
 	}
 	
 	if (ransacIterations > noRansacIterations) {
-		NSLog(@"confidentPlanesCount has overflown (%d) NOT GOOD!", ransacIterations);
+		NSLog(@"%s confidentPlanesCount has overflown (%d) NOT GOOD!", sel_getName(_cmd), ransacIterations);
 	}
 	
 }
@@ -316,7 +318,7 @@
 		
 		// Send the found convex hull points to the view.
 		
-		PointCH *newPoints = (PointCH*)malloc([convexHull convexHullPointsCount] * sizeof(PointCH));
+		PointXYZ *newPoints = (PointXYZ*)malloc([convexHull convexHullPointsCount] * sizeof(PointXYZ));
 		
 		for (unsigned int i = 0; i < [convexHull convexHullPointsCount]; i++) {
 			[convexHull getConvexHullPointNo:i X:&newPoints[i].x Y:&newPoints[i].y Z:&newPoints[i].z];
@@ -363,6 +365,21 @@
 		glView = NULL;
 	}
 	glView = newGLView;
+}
+- (PlaneCoefficients)getPlaneCoefficients {
+	return ransacConfidentPlane;
+}
+- (NSArray*)getConvexHullPoints {
+	NSMutableArray *newArray = [[NSMutableArray alloc] init];
+	
+	PointXYZ newPoint = (PointXYZ){0, 0, 0};
+	
+	for (unsigned int i = 0; i < [convexHull convexHullPointsCount]; i++) {
+		[convexHull getConvexHullPointNo:i X:&newPoint.x Y:&newPoint.y Z:&newPoint.z];
+		[newArray addObject:@{@"point": @(i), @"xValue": @(newPoint.x), @"yValue": @(newPoint.y), @"zValue": @(newPoint.z)}];
+	}
+	
+	return newArray;
 }
 
 

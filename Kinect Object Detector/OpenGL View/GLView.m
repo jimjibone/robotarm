@@ -658,22 +658,6 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 	printf("plane - point 2: wx=%f wy=%f wz=%f\n", _planeData.point2.x, _planeData.point2.y, _planeData.point2.z);
 	printf("plane - point 3: wx=%f wy=%f wz=%f\n\n", _planeData.point3.x, _planeData.point3.y, _planeData.point3.z);
 #endif
-	
-	XYZPoint bl = (XYZPoint){-600, 600,
-		zWorldFromPlaneAndWorldXY(_planeData, -600, -600)};
-	XYZPoint tl = (XYZPoint){600, 600,
-		zWorldFromPlaneAndWorldXY(_planeData, 600, -600)};
-	XYZPoint tr = (XYZPoint){600, -600,
-		zWorldFromPlaneAndWorldXY(_planeData, 600, 600)};
-	XYZPoint br = (XYZPoint){-600, -600,
-		zWorldFromPlaneAndWorldXY(_planeData, -600, 600)};
-	
-	printf("Plane coefficients:  a:%.3f  b:%.3f  c:%.3f  d:%.3f\n", _planeData.a,
-		   _planeData.b, _planeData.c, _planeData.d);
-	printf("Plane in 3D is  BL: x:%.1f  y:%.1f  z:%.1f\n", bl.x, bl.y, bl.z);
-	printf("                TL: x:%.1f  y:%.1f  z:%.1f\n", tl.x, tl.y, tl.z);
-	printf("                TR: x:%.1f  y:%.1f  z:%.1f\n", tr.x, tr.y, tr.z);
-	printf("                BR: x:%.1f  y:%.1f  z:%.1f\n", br.x, br.y, br.z);
 }
 - (void)showPlane:(BOOL)mode {
 	@synchronized (self) {
@@ -692,7 +676,7 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 		_drawConvexHull = NO;
 	}
 }
-- (void)setConvexHullPoints:(PointCH*)newPoints Count:(unsigned int)count {
+- (void)setConvexHullPoints:(PointXYZ*)newPoints Count:(unsigned int)count {
 	@synchronized (self) {
 		_drawConvexHull = NO;
 	}

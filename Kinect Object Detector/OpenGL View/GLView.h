@@ -19,7 +19,7 @@
 
 typedef struct {
 	double x, y, z;	// 3D points from the original->projectd-to-plane data.
-} PointCH;
+} PointXYZ;
 
 @class GLProgram;
 @class JRObjectDetector;
@@ -43,7 +43,7 @@ typedef struct {
 	
 	// Object Detection
 	_ransacConfidentPlane _planeData;
-	PointCH *_convexHullPoints;	unsigned int _convexHullPointCount;
+	PointXYZ *_convexHullPoints;	unsigned int _convexHullPointCount;
     
     // 3D navigation
     NSPoint _lastPos, _lastPosRight;
@@ -68,7 +68,7 @@ typedef struct {
 - (void)setPlaneData:(_ransacConfidentPlane)newPlane;
 - (void)showPlane:(BOOL)mode;
 - (void)resetConvexHullPoints;
-- (void)setConvexHullPoints:(PointCH*)newPoints Count:(unsigned int)count;
+- (void)setConvexHullPoints:(PointXYZ*)newPoints Count:(unsigned int)count;
 - (void)showConvexHull:(BOOL)mode;
 
 - (void)stopDrawing;

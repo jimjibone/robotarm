@@ -20,9 +20,15 @@
 
 @property (assign) IBOutlet NSWindow *window;
 @property (assign) IBOutlet NSButton *connectKinectBtn;
+@property (assign) IBOutlet NSPopover *connectKinectPopover;
 @property (assign) IBOutlet NSButton *resetTableDetectBtn;
 @property (assign) IBOutlet NSProgressIndicator *tableDetectProgress;
 @property (assign) IBOutlet NSSlider *kinectTilt;
+
+// Object detection pane
+@property (assign) IBOutlet NSTextField *tablePlaneEquation;
+@property (assign) IBOutlet NSTextField *tablePlaneConfidence;
+@property (assign) IBOutlet NSArrayController *convexHullPointsController;
 
 - (IBAction)connectKinect:(id)sender;
 - (IBAction)resetTableDetect:(id)sender;

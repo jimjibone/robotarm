@@ -11,6 +11,7 @@
 RANSAC::RANSAC(uint newMaxPoints, uint newRandomPointCount, double newDistanceTolerance) {
 	maxPoints = newMaxPoints;
 	distanceTolerance = newDistanceTolerance;
+	validDepthData = false;
 	
 	// The random point count must be a multiple of 3.
 	int remainder = newRandomPointCount % 3;
@@ -96,6 +97,7 @@ void RANSAC::updateDepthData(uint16_t *newDepth) {
 	// Iterate through the depth data that has been input and calculate the
 	// relevent world x & y coordinates.
 	
+	uint16_t depthCount = 0;
 	for (int i = 0, r = 0, o = 0; i < maxPoints; i++) {
 		// Get the relevent Point from either randomPoints or otherPoints.
 		Point *point = 0;
@@ -113,12 +115,25 @@ void RANSAC::updateDepthData(uint16_t *newDepth) {
 		
 		point->z = newDepth[i]+1.0;
 		point->z-=1.0;
+		
+		depthCount += newDepth[i];
+	}
+	if (depthCount > 0) {
+		validDepthData = true;
+	} else {
+		validDepthData = false;
+		printf("updateDepthData dataIsNotValid\n");
 	}
 	
 }
 void RANSAC::performRANSAC() {
 	// http://en.wikipedia.org/wiki/RANSAC#The_algorithm
 	// Also see Computer Vision book, pp. 305 (algorithm 10.4).
+	
+	// Only perform this algorithm if there is valid depth data.
+	if (validDepthData == false) {
+		return;
+	}
 	
 	// Grab 3 randomPoints at a time and determine the plane equation.
 	Plane currentPlane;
@@ -210,11 +225,19 @@ void RANSAC::prepareRANSAC() {
 }
 void RANSAC::getConfidentPlane(double *A, double *B, double *C, double *D, double *confidence) {
 	// Returns (via pointer) the most confident plane from the current processed set.
-	*A = confidentPlanes.front().a;
-	*B = confidentPlanes.front().b;
-	*C = confidentPlanes.front().c;
-	*D = confidentPlanes.front().d;
-	*confidence = confidentPlanes.front().confidence;
+	if (validDepthData == true) {
+		*A = confidentPlanes.front().a;
+		*B = confidentPlanes.front().b;
+		*C = confidentPlanes.front().c;
+		*D = confidentPlanes.front().d;
+		*confidence = confidentPlanes.front().confidence;
+	} else {
+		*A = 0;
+		*B = 0;
+		*C = 0;
+		*D = 0;
+		*confidence = -1;
+	}
 }
 void RANSAC::resetRANSAC() {
 	confidentPlanes.erase(confidentPlanes.begin(), confidentPlanes.end());

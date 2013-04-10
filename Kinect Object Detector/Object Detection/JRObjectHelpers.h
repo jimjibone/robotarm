@@ -18,7 +18,8 @@
 
 typedef struct {
 	double a, b, c, d, confidence;
-} _ransacConfidentPlane;
+} PlaneCoefficients;
+typedef PlaneCoefficients _ransacConfidentPlane;
 typedef struct {XYZPoint point1; XYZPoint point2; XYZPoint point3; double a; double b; double c; double d; bool isValid;} ABCDPlane;
 
 double zWorldFromPlaneAndWorldXY(_ransacConfidentPlane plane, double worldX, double worldY);

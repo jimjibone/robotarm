@@ -54,4 +54,7 @@
 
 - (void)setGLViewOutlet:(GLView*)newGLView;
 
+- (PlaneCoefficients)getPlaneCoefficients;
+- (NSArray*)getConvexHullPoints;
+
 @end

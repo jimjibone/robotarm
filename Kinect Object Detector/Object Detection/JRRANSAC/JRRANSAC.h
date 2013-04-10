@@ -43,6 +43,7 @@ class RANSAC {
 	double distanceTolerance;		// The tolerance to use when deciding if a point is on a plane or not.
 	vector<Plane> planes;			// The planes used in performRANSAC to find the most confident.
 	vector<Plane> confidentPlanes;	// A vector of the most confident planes added after each call of performRANSAC.
+	bool validDepthData;			// Is true when the input depth data actually contains data. Saves the algorithm from killing itself.
 	
 	// Function to get uniformly distributed random integers.
 	int irand(int min, int max) { return ((double)rand() / ((double)RAND_MAX + 1.0)) * (max - min + 1) + min; }
