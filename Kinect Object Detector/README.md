@@ -3,6 +3,8 @@ Kinect Object Detector
 
 Cocoa based interface utilising the libfreenect library to process and display the Kinect data, giving the ability to detect table planes and objects on its surface.
 
+![Latest build of the Kinect Object Detector application](../documentation/Kinect\ Object Detector\ Images/Screen\ Shot\ 2013-04-10\ at\ 22.07.23.png)
+
 
 Main Features
 -------------
