@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'Kinect Object Detector' target in the 'Kinect Object Detector' project
+//
+
+#ifdef __OBJC__
+    #import <Cocoa/Cocoa.h>
+#endif

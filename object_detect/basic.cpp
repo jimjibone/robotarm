@@ -20,7 +20,9 @@
 #include <pcl/common/common_headers.h>
 #include <pcl/io/pcd_io.h>
 #include <pcl/console/parse.h>
-#include <pcl/segmentation/sac_segmentation.h>
+#include <pcl/sample_consensus/ransac.h>
+#include <pcl/sample_consensus/sac_model_plane.h>
+//#include <pcl/segmentation/sac_segmentation.h>
 
 #if defined(__APPLE__)
 #include <GLUT/glut.h>
@@ -55,8 +57,9 @@ std::vector<uint8_t> mrgb(640*480*4);
 bool killKinect = false;
 // point clouds 'n' that.
 pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZRGB>);
-pcl::ModelCoefficients::Ptr coefficients (new pcl::ModelCoefficients);
-pcl::PointIndices::Ptr inliers (new pcl::PointIndices);
+pcl::PointCloud<pcl::PointXYZRGB>::Ptr table_plane_cloud (new pcl::PointCloud<pcl::PointXYZRGB>);
+//pcl::ModelCoefficients::Ptr coefficients (new pcl::ModelCoefficients);
+//pcl::PointIndices::Ptr inliers (new pcl::PointIndices);
 
 /*---------------------------------------------*-
  * Table Detection Stuff
@@ -109,7 +112,7 @@ void drawCallback()
 	glEnd();
 	
 	if (done_ransac) {
-		glEnable(GL_BLEND);
+		/*glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		
 		//show ransac indices
@@ -133,6 +136,19 @@ void drawCallback()
 		glVertex3d(tl_x, -tl_y, -tl_z);
 		glVertex3d(tr_x, -tr_y, -tr_z);
 		glVertex3d(br_x, -br_y, -br_z);
+		
+		
+		glEnd();*/
+		
+		glPointSize(1.0f);
+		glBegin(GL_POINTS);
+		
+		for (unsigned int i = 0; i < table_plane_cloud->size(); i++) {
+			//glColor3ub(table_plane_cloud->points[i].r, table_plane_cloud->points[i].g, table_plane_cloud->points[i].b);
+			glColor3f(1.0, 0.0, 0.0);
+			glVertex3f(table_plane_cloud->points[i].x, -table_plane_cloud->points[i].y, -table_plane_cloud->points[i].z);
+		}
+		
 		glEnd();
 	}
 	
@@ -218,40 +234,54 @@ void glutIdleCallback()
 		done_detection = false;
 		
 		// Create the segmentation object and do RANSAC
-		pcl::SACSegmentation<pcl::PointXYZRGB> seg;
-		seg.setModelType(pcl::SACMODEL_PLANE);
-		seg.setMethodType(pcl::SAC_RANSAC);
-		seg.setDistanceThreshold(0.01);
-		seg.setInputCloud(cloud);
-		seg.segment(*inliers, *coefficients);
-		std::cerr << "PointCloud after segmentation has: " << inliers->indices.size () << " inliers." << std::endl;
-		std::cerr << "Plane coefficients:  a:" << coefficients->values[0] <<
-										"  b:" << coefficients->values[1] <<
-										"  c:" << coefficients->values[2] <<
-										"  d:" << coefficients->values[3] << std::endl;
+		/*pcl::SACSegmentation<pcl::PointXYZRGB> seg;
+		 seg.setModelType(pcl::SACMODEL_PLANE);
+		 seg.setMethodType(pcl::SAC_RANSAC);
+		 seg.setDistanceThreshold(0.01);
+		 seg.setInputCloud(cloud);
+		 seg.segment(*inliers, *coefficients);
+		 std::cerr << "PointCloud after segmentation has: " << inliers->indices.size () << " inliers." << std::endl;
+		 std::cerr << "Plane coefficients:  a:" << coefficients->values[0] <<
+		 "  b:" << coefficients->values[1] <<
+		 "  c:" << coefficients->values[2] <<
+		 "  d:" << coefficients->values[3] << std::endl;
+		 
+		 pcl::sample
+		 
+		 done_ransac = true;
+		 
+		 double boxSize = 300.0;
+		 double bl_x = -boxSize, bl_y = -boxSize;
+		 double tl_x = -boxSize, tl_y =  boxSize;
+		 double tr_x =  boxSize, tr_y =  boxSize;
+		 double br_x =  boxSize, br_y = -boxSize;
+		 // ax + by + cz + d = 0
+		 // ax + by + d = -cz
+		 // -(ax + by + d)/c = z
+		 double bl_z = -((coefficients->values[0]*bl_x) + (coefficients->values[1]*bl_y) + coefficients->values[3])/(coefficients->values[2]*1.0);
+		 double tl_z = -((coefficients->values[0]*tl_x) + (coefficients->values[1]*tl_y) + coefficients->values[3])/(coefficients->values[2]*1.0);
+		 double tr_z = -((coefficients->values[0]*tr_x) + (coefficients->values[1]*tr_y) + coefficients->values[3])/(coefficients->values[2]*1.0);
+		 double br_z = -((coefficients->values[0]*br_x) + (coefficients->values[1]*br_y) + coefficients->values[3])/(coefficients->values[2]*1.0);
+		 
+		 std::cerr << "Plane in 3D is  BL: x:" << bl_x << "  y:" << bl_y << "  z:" << bl_z << std::endl;
+		 std::cerr << "                TL: x:" << tl_x << "  y:" << tl_y << "  z:" << tl_z << std::endl;
+		 std::cerr << "                TR: x:" << tr_x << "  y:" << tr_y << "  z:" << tr_z << std::endl;
+		 std::cerr << "                BR: x:" << br_x << "  y:" << br_y << "  z:" << br_z << std::endl;
+		 std::cerr << "Off-Mid Point (" << (size_t)(cloud->size()/2+(640*100+46)) <<
+		 ") is  x:" << cloud->points[(size_t)(cloud->size()/2+(640*100+46))].x <<
+		 "  y:" << cloud->points[(size_t)(cloud->size()/2+(640*100+46))].y <<
+		 "  z:" << cloud->points[(size_t)(cloud->size()/2+(640*100+46))].z << std::endl;*/
+		
+		// http://pointclouds.org/documentation/tutorials/random_sample_consensus.php
+		std::vector<int> inliers;
+		pcl::SampleConsensusModelPlane<pcl::PointXYZRGB>::Ptr planeModel (new pcl::SampleConsensusModelPlane<pcl::PointXYZRGB> (cloud));
+		pcl::RandomSampleConsensus<pcl::PointXYZRGB> ransac (planeModel);
+		ransac.setDistanceThreshold(0.01);
+		ransac.computeModel();
+		ransac.getInliers(inliers);
+		// copy all the inliers of the model to another point cloud.
+		pcl::copyPointCloud<pcl::PointXYZRGB>(*cloud, inliers, *table_plane_cloud);
 		done_ransac = true;
-		
-		double boxSize = 300.0;
-		double bl_x = -boxSize, bl_y = -boxSize;
-		double tl_x = -boxSize, tl_y =  boxSize;
-		double tr_x =  boxSize, tr_y =  boxSize;
-		double br_x =  boxSize, br_y = -boxSize;
-		// ax + by + cz + d = 0
-		// ax + by + d = -cz
-		// -(ax + by + d)/c = z
-		double bl_z = -((coefficients->values[0]*bl_x) + (coefficients->values[1]*bl_y) + coefficients->values[3])/(coefficients->values[2]*1.0);
-		double tl_z = -((coefficients->values[0]*tl_x) + (coefficients->values[1]*tl_y) + coefficients->values[3])/(coefficients->values[2]*1.0);
-		double tr_z = -((coefficients->values[0]*tr_x) + (coefficients->values[1]*tr_y) + coefficients->values[3])/(coefficients->values[2]*1.0);
-		double br_z = -((coefficients->values[0]*br_x) + (coefficients->values[1]*br_y) + coefficients->values[3])/(coefficients->values[2]*1.0);
-		
-		std::cerr << "Plane in 3D is  BL: x:" << bl_x << "  y:" << bl_y << "  z:" << bl_z << std::endl;
-		std::cerr << "                TL: x:" << tl_x << "  y:" << tl_y << "  z:" << tl_z << std::endl;
-		std::cerr << "                TR: x:" << tr_x << "  y:" << tr_y << "  z:" << tr_z << std::endl;
-		std::cerr << "                BR: x:" << br_x << "  y:" << br_y << "  z:" << br_z << std::endl;
-		std::cerr << "Off-Mid Point (" << (size_t)(cloud->size()/2+(640*100+46)) <<
-						") is  x:" << cloud->points[(size_t)(cloud->size()/2+(640*100+46))].x <<
-							"  y:" << cloud->points[(size_t)(cloud->size()/2+(640*100+46))].y <<
-							"  z:" << cloud->points[(size_t)(cloud->size()/2+(640*100+46))].z << std::endl;
 		
 		if (show_table_cloud) {
 			
@@ -358,11 +388,17 @@ int main (int argc, char** argv)
 	// Grab until clean returns...
 	printf("Kinect Started. Now waiting for clean depth returns.\n");
 	int DepthCount = 0;
+	int checkCount = 0;
 	while (DepthCount == 0) {
+		checkCount++;
 		device->updateState();
 		device->getDepth(mdepth);
 		device->getRGB(mrgb);
 		for (size_t i = 0;i < 480*640;i++) DepthCount+=mdepth[i];
+		if (checkCount > 10) {
+			printf("Kinect not responding correctly. Exiting.\n");
+			exit(1);
+		}
 	}
 	device->setDepthFormat(FREENECT_DEPTH_REGISTERED);
 	device->setVideoFormat(FREENECT_VIDEO_RGB);

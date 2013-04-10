@@ -1,0 +1,449 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1A1F8042165C34DA004C33EB /* JRObjectHelpers.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A1F8041165C34DA004C33EB /* JRObjectHelpers.c */; };
+		1A6F6A8F165A895E00FA3601 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A6F6A8E165A895E00FA3601 /* Cocoa.framework */; };
+		1A6F6A99165A895E00FA3601 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1A6F6A97165A895E00FA3601 /* InfoPlist.strings */; };
+		1A6F6A9B165A895E00FA3601 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6F6A9A165A895E00FA3601 /* main.m */; };
+		1A6F6A9F165A895E00FA3601 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 1A6F6A9D165A895E00FA3601 /* Credits.rtf */; };
+		1A6F6AA2165A895E00FA3601 /* JRAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6F6AA1165A895E00FA3601 /* JRAppDelegate.m */; };
+		1A6F6AA5165A895E00FA3601 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1A6F6AA3165A895E00FA3601 /* MainMenu.xib */; };
+		1A6F6AB2165A8A2B00FA3601 /* JRKinectController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6F6AAF165A8A2B00FA3601 /* JRKinectController.m */; };
+		1A6F6AB3165A8A2B00FA3601 /* JRKinectHelpers.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A6F6AB0165A8A2B00FA3601 /* JRKinectHelpers.c */; };
+		1A6F6AB7165A8A3500FA3601 /* JRObjectDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6F6AB6165A8A3500FA3601 /* JRObjectDetector.m */; };
+		1A99C67316C0982000F3677D /* JRConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A99C67216C0982000F3677D /* JRConstants.m */; };
+		1AAECABD16BC229B00412A08 /* JRConvexHull.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1AAECAB916BC229B00412A08 /* JRConvexHull.cpp */; };
+		1AAECABE16BC229B00412A08 /* JRConvexHullWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1AAECABC16BC229B00412A08 /* JRConvexHullWrapper.mm */; };
+		1AB2083B16BDF265001BFFDA /* JRRANSAC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1AB2083916BDF265001BFFDA /* JRRANSAC.cpp */; };
+		1AB2083E16BDF28D001BFFDA /* JRRANSACWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1AB2083D16BDF28D001BFFDA /* JRRANSACWrapper.mm */; };
+		1ADF88EB165AD4B0004A442B /* GLProgram.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ADF88E8165AD4B0004A442B /* GLProgram.m */; };
+		1ADF88EC165AD4B0004A442B /* GLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ADF88EA165AD4B0004A442B /* GLView.m */; };
+		1ADF88F7165AE3E2004A442B /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ADF88F6165AE3E2004A442B /* OpenGL.framework */; };
+		1ADF88F9165AE3E8004A442B /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ADF88F8165AE3E8004A442B /* GLUT.framework */; };
+		1ADF88FB165AE401004A442B /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ADF88FA165AE401004A442B /* CoreVideo.framework */; };
+		D1AD8A3717145EAE003CECDD /* libfreenect.0.1.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D1AD8A3617145EAE003CECDD /* libfreenect.0.1.2.dylib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		1A952FA116C296D000C7ACE1 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		1A1F803F165C340E004C33EB /* JRObjectHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JRObjectHelpers.h; sourceTree = "<group>"; };
+		1A1F8041165C34DA004C33EB /* JRObjectHelpers.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = JRObjectHelpers.c; sourceTree = "<group>"; };
+		1A6F6A8A165A895E00FA3601 /* Kinect Object Detector.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Kinect Object Detector.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1A6F6A8E165A895E00FA3601 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		1A6F6A91165A895E00FA3601 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		1A6F6A92165A895E00FA3601 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		1A6F6A93165A895E00FA3601 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		1A6F6A96165A895E00FA3601 /* Kinect Object Detector-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Kinect Object Detector-Info.plist"; sourceTree = "<group>"; };
+		1A6F6A98165A895E00FA3601 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		1A6F6A9A165A895E00FA3601 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		1A6F6A9C165A895E00FA3601 /* Kinect Object Detector-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Kinect Object Detector-Prefix.pch"; sourceTree = "<group>"; };
+		1A6F6A9E165A895E00FA3601 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
+		1A6F6AA0165A895E00FA3601 /* JRAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JRAppDelegate.h; sourceTree = "<group>"; };
+		1A6F6AA1165A895E00FA3601 /* JRAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JRAppDelegate.m; sourceTree = "<group>"; };
+		1A6F6AA4165A895E00FA3601 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		1A6F6AAE165A8A2B00FA3601 /* JRKinectController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JRKinectController.h; sourceTree = "<group>"; };
+		1A6F6AAF165A8A2B00FA3601 /* JRKinectController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JRKinectController.m; sourceTree = "<group>"; };
+		1A6F6AB0165A8A2B00FA3601 /* JRKinectHelpers.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = JRKinectHelpers.c; sourceTree = "<group>"; };
+		1A6F6AB1165A8A2B00FA3601 /* JRKinectHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JRKinectHelpers.h; sourceTree = "<group>"; };
+		1A6F6AB5165A8A3500FA3601 /* JRObjectDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JRObjectDetector.h; sourceTree = "<group>"; };
+		1A6F6AB6165A8A3500FA3601 /* JRObjectDetector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JRObjectDetector.m; sourceTree = "<group>"; usesTabs = 1; };
+		1A99C67116C0982000F3677D /* JRConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JRConstants.h; sourceTree = "<group>"; };
+		1A99C67216C0982000F3677D /* JRConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JRConstants.m; sourceTree = "<group>"; };
+		1AAECAB916BC229B00412A08 /* JRConvexHull.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = JRConvexHull.cpp; sourceTree = "<group>"; };
+		1AAECABA16BC229B00412A08 /* JRConvexHull.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JRConvexHull.h; sourceTree = "<group>"; };
+		1AAECABB16BC229B00412A08 /* JRConvexHullWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JRConvexHullWrapper.h; sourceTree = "<group>"; };
+		1AAECABC16BC229B00412A08 /* JRConvexHullWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = JRConvexHullWrapper.mm; sourceTree = "<group>"; };
+		1AB2083916BDF265001BFFDA /* JRRANSAC.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = JRRANSAC.cpp; sourceTree = "<group>"; };
+		1AB2083A16BDF265001BFFDA /* JRRANSAC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JRRANSAC.h; sourceTree = "<group>"; };
+		1AB2083C16BDF28D001BFFDA /* JRRANSACWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JRRANSACWrapper.h; sourceTree = "<group>"; };
+		1AB2083D16BDF28D001BFFDA /* JRRANSACWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = JRRANSACWrapper.mm; sourceTree = "<group>"; };
+		1ADF88E7165AD4B0004A442B /* GLProgram.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLProgram.h; sourceTree = "<group>"; };
+		1ADF88E8165AD4B0004A442B /* GLProgram.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLProgram.m; sourceTree = "<group>"; };
+		1ADF88E9165AD4B0004A442B /* GLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLView.h; sourceTree = "<group>"; };
+		1ADF88EA165AD4B0004A442B /* GLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLView.m; sourceTree = "<group>"; };
+		1ADF88F6165AE3E2004A442B /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
+		1ADF88F8165AE3E8004A442B /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
+		1ADF88FA165AE401004A442B /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
+		D1AD8A3617145EAE003CECDD /* libfreenect.0.1.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfreenect.0.1.2.dylib; path = ../../../../../usr/local/Cellar/libfreenect/0.1.2.1/lib/libfreenect.0.1.2.dylib; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1A6F6A87165A895E00FA3601 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D1AD8A3717145EAE003CECDD /* libfreenect.0.1.2.dylib in Frameworks */,
+				1ADF88FB165AE401004A442B /* CoreVideo.framework in Frameworks */,
+				1ADF88F9165AE3E8004A442B /* GLUT.framework in Frameworks */,
+				1ADF88F7165AE3E2004A442B /* OpenGL.framework in Frameworks */,
+				1A6F6A8F165A895E00FA3601 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1A6F6A7F165A895E00FA3601 = {
+			isa = PBXGroup;
+			children = (
+				D1AD8A3617145EAE003CECDD /* libfreenect.0.1.2.dylib */,
+				1A6F6AAD165A8A2B00FA3601 /* Kinect Control */,
+				1A6F6AB4165A8A3500FA3601 /* Object Detection */,
+				1ADF88E6165AD4B0004A442B /* OpenGL View */,
+				1A6F6A94165A895E00FA3601 /* Kinect Object Detector */,
+				1A6F6A8D165A895E00FA3601 /* Frameworks */,
+				1A6F6A8B165A895E00FA3601 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		1A6F6A8B165A895E00FA3601 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1A6F6A8A165A895E00FA3601 /* Kinect Object Detector.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1A6F6A8D165A895E00FA3601 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1ADF88FA165AE401004A442B /* CoreVideo.framework */,
+				1ADF88F8165AE3E8004A442B /* GLUT.framework */,
+				1ADF88F6165AE3E2004A442B /* OpenGL.framework */,
+				1A6F6A8E165A895E00FA3601 /* Cocoa.framework */,
+				1A6F6A90165A895E00FA3601 /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		1A6F6A90165A895E00FA3601 /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1A6F6A91165A895E00FA3601 /* AppKit.framework */,
+				1A6F6A92165A895E00FA3601 /* CoreData.framework */,
+				1A6F6A93165A895E00FA3601 /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		1A6F6A94165A895E00FA3601 /* Kinect Object Detector */ = {
+			isa = PBXGroup;
+			children = (
+				1A99C67116C0982000F3677D /* JRConstants.h */,
+				1A99C67216C0982000F3677D /* JRConstants.m */,
+				1A6F6AA0165A895E00FA3601 /* JRAppDelegate.h */,
+				1A6F6AA1165A895E00FA3601 /* JRAppDelegate.m */,
+				1A6F6AA3165A895E00FA3601 /* MainMenu.xib */,
+				1A6F6A95165A895E00FA3601 /* Supporting Files */,
+			);
+			path = "Kinect Object Detector";
+			sourceTree = "<group>";
+		};
+		1A6F6A95165A895E00FA3601 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				1A6F6A96165A895E00FA3601 /* Kinect Object Detector-Info.plist */,
+				1A6F6A97165A895E00FA3601 /* InfoPlist.strings */,
+				1A6F6A9A165A895E00FA3601 /* main.m */,
+				1A6F6A9C165A895E00FA3601 /* Kinect Object Detector-Prefix.pch */,
+				1A6F6A9D165A895E00FA3601 /* Credits.rtf */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		1A6F6AAD165A8A2B00FA3601 /* Kinect Control */ = {
+			isa = PBXGroup;
+			children = (
+				1A6F6AAE165A8A2B00FA3601 /* JRKinectController.h */,
+				1A6F6AAF165A8A2B00FA3601 /* JRKinectController.m */,
+				1A6F6AB0165A8A2B00FA3601 /* JRKinectHelpers.c */,
+				1A6F6AB1165A8A2B00FA3601 /* JRKinectHelpers.h */,
+			);
+			path = "Kinect Control";
+			sourceTree = "<group>";
+		};
+		1A6F6AB4165A8A3500FA3601 /* Object Detection */ = {
+			isa = PBXGroup;
+			children = (
+				1AB2083816BDF252001BFFDA /* JRRANSAC */,
+				1AAECAB816BC229B00412A08 /* JRConvexHull */,
+				1A6F6AB5165A8A3500FA3601 /* JRObjectDetector.h */,
+				1A6F6AB6165A8A3500FA3601 /* JRObjectDetector.m */,
+				1A1F803F165C340E004C33EB /* JRObjectHelpers.h */,
+				1A1F8041165C34DA004C33EB /* JRObjectHelpers.c */,
+			);
+			path = "Object Detection";
+			sourceTree = SOURCE_ROOT;
+		};
+		1AAECAB816BC229B00412A08 /* JRConvexHull */ = {
+			isa = PBXGroup;
+			children = (
+				1AAECAB916BC229B00412A08 /* JRConvexHull.cpp */,
+				1AAECABA16BC229B00412A08 /* JRConvexHull.h */,
+				1AAECABB16BC229B00412A08 /* JRConvexHullWrapper.h */,
+				1AAECABC16BC229B00412A08 /* JRConvexHullWrapper.mm */,
+			);
+			path = JRConvexHull;
+			sourceTree = "<group>";
+		};
+		1AB2083816BDF252001BFFDA /* JRRANSAC */ = {
+			isa = PBXGroup;
+			children = (
+				1AB2083916BDF265001BFFDA /* JRRANSAC.cpp */,
+				1AB2083A16BDF265001BFFDA /* JRRANSAC.h */,
+				1AB2083C16BDF28D001BFFDA /* JRRANSACWrapper.h */,
+				1AB2083D16BDF28D001BFFDA /* JRRANSACWrapper.mm */,
+			);
+			path = JRRANSAC;
+			sourceTree = "<group>";
+		};
+		1ADF88E6165AD4B0004A442B /* OpenGL View */ = {
+			isa = PBXGroup;
+			children = (
+				1ADF88E7165AD4B0004A442B /* GLProgram.h */,
+				1ADF88E8165AD4B0004A442B /* GLProgram.m */,
+				1ADF88E9165AD4B0004A442B /* GLView.h */,
+				1ADF88EA165AD4B0004A442B /* GLView.m */,
+			);
+			path = "OpenGL View";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1A6F6A89165A895E00FA3601 /* Kinect Object Detector */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1A6F6AA8165A895E00FA3601 /* Build configuration list for PBXNativeTarget "Kinect Object Detector" */;
+			buildPhases = (
+				1A6F6A86165A895E00FA3601 /* Sources */,
+				1A6F6A87165A895E00FA3601 /* Frameworks */,
+				1A6F6A88165A895E00FA3601 /* Resources */,
+				1A952FA116C296D000C7ACE1 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Kinect Object Detector";
+			productName = "Kinect Object Detector";
+			productReference = 1A6F6A8A165A895E00FA3601 /* Kinect Object Detector.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1A6F6A81165A895E00FA3601 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = JR;
+				LastUpgradeCheck = 0450;
+				ORGANIZATIONNAME = "James Reuss";
+			};
+			buildConfigurationList = 1A6F6A84165A895E00FA3601 /* Build configuration list for PBXProject "Kinect Object Detector" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 1A6F6A7F165A895E00FA3601;
+			productRefGroup = 1A6F6A8B165A895E00FA3601 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1A6F6A89165A895E00FA3601 /* Kinect Object Detector */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1A6F6A88165A895E00FA3601 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1A6F6A99165A895E00FA3601 /* InfoPlist.strings in Resources */,
+				1A6F6A9F165A895E00FA3601 /* Credits.rtf in Resources */,
+				1A6F6AA5165A895E00FA3601 /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1A6F6A86165A895E00FA3601 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1A6F6A9B165A895E00FA3601 /* main.m in Sources */,
+				1A6F6AA2165A895E00FA3601 /* JRAppDelegate.m in Sources */,
+				1A6F6AB2165A8A2B00FA3601 /* JRKinectController.m in Sources */,
+				1A6F6AB3165A8A2B00FA3601 /* JRKinectHelpers.c in Sources */,
+				1A6F6AB7165A8A3500FA3601 /* JRObjectDetector.m in Sources */,
+				1ADF88EB165AD4B0004A442B /* GLProgram.m in Sources */,
+				1ADF88EC165AD4B0004A442B /* GLView.m in Sources */,
+				1A1F8042165C34DA004C33EB /* JRObjectHelpers.c in Sources */,
+				1AAECABD16BC229B00412A08 /* JRConvexHull.cpp in Sources */,
+				1AAECABE16BC229B00412A08 /* JRConvexHullWrapper.mm in Sources */,
+				1AB2083B16BDF265001BFFDA /* JRRANSAC.cpp in Sources */,
+				1AB2083E16BDF28D001BFFDA /* JRRANSACWrapper.mm in Sources */,
+				1A99C67316C0982000F3677D /* JRConstants.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		1A6F6A97165A895E00FA3601 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1A6F6A98165A895E00FA3601 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		1A6F6A9D165A895E00FA3601 /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1A6F6A9E165A895E00FA3601 /* en */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+		1A6F6AA3165A895E00FA3601 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1A6F6AA4165A895E00FA3601 /* en */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		1A6F6AA6165A895E00FA3601 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		1A6F6AA7165A895E00FA3601 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		1A6F6AA9165A895E00FA3601 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Kinect Object Detector/Kinect Object Detector-Prefix.pch";
+				HEADER_SEARCH_PATHS = /usr/local/include/;
+				INFOPLIST_FILE = "Kinect Object Detector/Kinect Object Detector-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/Cellar/libfreenect/0.1.2.1/lib,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		1A6F6AAA165A895E00FA3601 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Kinect Object Detector/Kinect Object Detector-Prefix.pch";
+				HEADER_SEARCH_PATHS = /usr/local/include/;
+				INFOPLIST_FILE = "Kinect Object Detector/Kinect Object Detector-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/Cellar/libfreenect/0.1.2.1/lib,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1A6F6A84165A895E00FA3601 /* Build configuration list for PBXProject "Kinect Object Detector" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1A6F6AA6165A895E00FA3601 /* Debug */,
+				1A6F6AA7165A895E00FA3601 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1A6F6AA8165A895E00FA3601 /* Build configuration list for PBXNativeTarget "Kinect Object Detector" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1A6F6AA9165A895E00FA3601 /* Debug */,
+				1A6F6AAA165A895E00FA3601 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 1A6F6A81165A895E00FA3601 /* Project object */;
+}
