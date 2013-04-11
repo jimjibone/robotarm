@@ -3,6 +3,7 @@
 //  KinectiCopter Mark 2
 //
 //  Created by James Reuss on 02/06/2012.
+//	jamesreuss.co.uk
 //  Copyright (c) 2012 James Reuss. All rights reserved.
 //
 

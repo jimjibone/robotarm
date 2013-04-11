@@ -3,6 +3,7 @@
 //  Convex Hull Small
 //
 //  Created by James Reuss on 01/02/2013.
+//	jamesreuss.co.uk
 //  Copyright (c) 2013 James Reuss. All rights reserved.
 //
 

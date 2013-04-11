@@ -3,6 +3,7 @@
 //  Kinect Object Detector
 //
 //  Created by James Reuss on 05/02/2013.
+//	jamesreuss.co.uk
 //  Copyright (c) 2013 James Reuss. All rights reserved.
 //
 

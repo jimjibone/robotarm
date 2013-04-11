@@ -27,6 +27,7 @@
 		1ADF88F7165AE3E2004A442B /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ADF88F6165AE3E2004A442B /* OpenGL.framework */; };
 		1ADF88F9165AE3E8004A442B /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ADF88F8165AE3E8004A442B /* GLUT.framework */; };
 		1ADF88FB165AE401004A442B /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ADF88FA165AE401004A442B /* CoreVideo.framework */; };
+		D192E13817171D2600B94D3D /* JRObjectDetection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D192E13617171D2600B94D3D /* JRObjectDetection.cpp */; };
 		D1AD8A3717145EAE003CECDD /* libfreenect.0.1.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D1AD8A3617145EAE003CECDD /* libfreenect.0.1.2.dylib */; };
 /* End PBXBuildFile section */
 
@@ -81,6 +82,8 @@
 		1ADF88F6165AE3E2004A442B /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		1ADF88F8165AE3E8004A442B /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
 		1ADF88FA165AE401004A442B /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
+		D192E13617171D2600B94D3D /* JRObjectDetection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = JRObjectDetection.cpp; sourceTree = "<group>"; };
+		D192E13717171D2600B94D3D /* JRObjectDetection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JRObjectDetection.h; sourceTree = "<group>"; };
 		D1AD8A3617145EAE003CECDD /* libfreenect.0.1.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfreenect.0.1.2.dylib; path = ../../../../../usr/local/Cellar/libfreenect/0.1.2.1/lib/libfreenect.0.1.2.dylib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -182,6 +185,7 @@
 		1A6F6AB4165A8A3500FA3601 /* Object Detection */ = {
 			isa = PBXGroup;
 			children = (
+				D192E13517171D0F00B94D3D /* JRObjectDetection */,
 				1AB2083816BDF252001BFFDA /* JRRANSAC */,
 				1AAECAB816BC229B00412A08 /* JRConvexHull */,
 				1A6F6AB5165A8A3500FA3601 /* JRObjectDetector.h */,
@@ -223,6 +227,15 @@
 				1ADF88EA165AD4B0004A442B /* GLView.m */,
 			);
 			path = "OpenGL View";
+			sourceTree = "<group>";
+		};
+		D192E13517171D0F00B94D3D /* JRObjectDetection */ = {
+			isa = PBXGroup;
+			children = (
+				D192E13617171D2600B94D3D /* JRObjectDetection.cpp */,
+				D192E13717171D2600B94D3D /* JRObjectDetection.h */,
+			);
+			path = JRObjectDetection;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -304,6 +317,7 @@
 				1AB2083B16BDF265001BFFDA /* JRRANSAC.cpp in Sources */,
 				1AB2083E16BDF28D001BFFDA /* JRRANSACWrapper.mm in Sources */,
 				1A99C67316C0982000F3677D /* JRConstants.m in Sources */,
+				D192E13817171D2600B94D3D /* JRObjectDetection.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

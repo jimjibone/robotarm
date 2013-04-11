@@ -3,6 +3,7 @@
 //  Simple Kinect Viewer
 //
 //  Created by James Reuss on 25/10/2012.
+//	jamesreuss.co.uk
 //  Copyright (c) 2012 James Reuss. All rights reserved.
 //
 
