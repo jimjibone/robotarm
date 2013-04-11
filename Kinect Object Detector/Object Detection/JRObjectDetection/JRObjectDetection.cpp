@@ -9,36 +9,34 @@
 
 #include "JRObjectDetection.h"
 
-void JRObjectDetection::setCloudData(uint16_t *newDepthData)
+void ObjectDetection::prepareForNewData()
 {
-	// Iterate through the depth data that has been input and calculate the
-	// relevent world x & y coordinates.
-	
-	uint16_t depthCount = 0;
-	for (int i = 0, r = 0, o = 0; i < maxPoints; i++) {
-		// Get the relevent Point from either randomPoints or otherPoints.
-		Point *point = 0;
-		
-		if (i == randomPoints[r].index) {
-			point = &randomPoints[r];
-			r++;
-		}
-		else if (i == otherPoints[o].index) {
-			point = &otherPoints[o];
-			o++;
-		}
-		
-		worldFromIndex(&point->x, &point->y, point->index, newDepth[i]);
-		
-		point->z = newDepth[i]+1.0;
-		point->z-=1.0;
-		
-		depthCount += newDepth[i];
-	}
-	if (depthCount > 0) {
-		validDepthData = true;
-	} else {
-		validDepthData = false;
-		printf("updateDepthData dataIsNotValid\n");
-	}
+	cloud_objects.eraseAll();
 }
+
+void ObjectDetection::setPlaneCoefficients(double a, double b, double c, double d)
+{
+	plane_table.setCoefficients(a, b, c, d);
+}
+
+void ObjectDetection::addPoint(double x, double y, double z)
+{
+	cloud_objects.addPoint(x, y, z);
+}
+
+void ObjectDetection::addConvexHullPoint(double x, double y, double z)
+{
+	
+}
+
+
+
+
+
+// MAIN PROCESSING
+void ObjectDetection::determineHullCubeBounds()
+{
+	// could use the convex hull algorithm to determine whether the point is inside or outside of the hull.
+	// if the point is included in the returned indices then the point is outside the hull, else it is inside!
+}
+

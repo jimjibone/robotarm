@@ -14,28 +14,13 @@
 #include <vector>
 #include <algorithm>
 #include <math.h>
+#include "../JRPointTypes.h"
 
 using namespace std;
 
 class RANSAC {
-	struct Point {
-		uint index;
-		double x, y, z;
-		bool isValid() { return (z > 0) && (z < 10000); }
-		bool operator <(const Point &point) const {
-			return index < point.index;
-		}
-		Point(uint _index = 0, double _x = 0, double _y = 0, double _z = 0) : index(_index), x(_x), y(_y), z(_z) {};
-	};
-	struct Plane {
-		double a, b, c, d;
-		bool isValid;
-		double confidence;
-		bool operator <(const Plane &plane) const {
-			return confidence >= plane.confidence;
-		}
-		Plane(double _a = 0, double _b = 0, double _c = 0, double _d = 0, bool _isValid = false, double _confidence = 0) : a(_a), b(_b), c(_c), d(_d), isValid(_isValid), confidence(_confidence) {};
-	};
+	typedef PointXYZ Point;
+	typedef PlaneCoefficients Plane;
 	
 	vector<Point> randomPoints;		// The points to be used for possible inliers.
 	vector<Point> otherPoints;		// All the other points available from the Kinect.

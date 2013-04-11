@@ -26,7 +26,7 @@ void ConvexHull::setPlane(double newA, double newB, double newC, double newD, do
 	plane.b = newB;
 	plane.c = newC;
 	plane.d = newD;
-	plane.tolerance = newTol;
+	tolerance = newTol;
 }
 bool ConvexHull::addPoint(double newX, double newY, double newZ) {
 	bool state = false;
@@ -44,7 +44,7 @@ bool ConvexHull::addPoint(double newX, double newY, double newZ) {
 		dist /= sqrt(pow(plane.a, 2) + pow(plane.b, 2) + pow(plane.c, 2));
 		
 		dist = (dist >= 0) ? dist : -dist;	// Absolute distance.
-		if (dist > plane.tolerance) return false;	// Return false as point is outside of tolerance.
+		if (dist > tolerance) return false;	// Return false as point is outside of tolerance.
 		
 		// Find the projected coordinates.
 		// http://stackoverflow.com/questions/7565748/3d-orthogonal-projection-on-a-plane
@@ -132,4 +132,18 @@ void ConvexHull::listConvexHullPoints() {
 void ConvexHull::resetConvexHull() {
 	planePoints.erase(planePoints.begin(), planePoints.end());
 	convexHullPoints.erase(convexHullPoints.begin(), convexHullPoints.end());
+}
+
+
+
+
+// These next functions allow the processing a pre-processed convex hull and
+// individual points for the use of point-within-bounds calculations.
+void ConvexHull::addPreprocessedConvexHullPoint(PointXYZIJ aPoint)
+{
+	
+}
+bool ConvexHull::processPointWithPreprocessedHull(double x, double y, double z)
+{
+	
 }

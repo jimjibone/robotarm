@@ -14,26 +14,34 @@
 #include <vector>
 #include <algorithm>
 #include <math.h>
+#include "JRConvexHull.h"
+#include "../JRPointTypes.h"
 
-class JRObjectDetection {
-	// Point Types
-	typedef struct {
-		double x, y, z;
-	} PointXYZ;
-	typedef struct {
-		double a, b, c, d, confidence;
-	} PlaneCoeffs;
-	
+class ObjectDetection {
 	template <typename PointT>
 	struct PointCloud {
-		std::vector<size_t> indices;
 		std::vector<PointT> points;
+		void eraseAll() {
+			points.erase(points.begin(), points.end());
+		}
+		size_t addPoint(double _x, double _y, double _z) {
+			size_t _index = points.size();
+			points.emplace_back(_index, _x, _y, _z);
+		}
 	};
 	
+	ConvexHull convexHull;
 	PointCloud<PointXYZ> cloud_objects;
+	PlaneCoefficients plane_table;
 	
 public:
-	void setCloudData(uint16_t* newDepthData);
+	ObjectDetection(double maxHeight);
+	void prepareForNewData();
+	void setPlaneCoefficients(double a, double b, double c, double d);
+	void addPoint(double x, double y, double z);
+	void addConvexHullPoint(double x, double y, double z);
+	void determineHullCubeBounds();
+	
 };
 
 #endif /* defined(__Kinect_Object_Detector__JRObjectDetection__) */

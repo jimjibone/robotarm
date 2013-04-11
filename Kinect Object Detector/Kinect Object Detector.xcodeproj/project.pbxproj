@@ -85,6 +85,7 @@
 		D192E13617171D2600B94D3D /* JRObjectDetection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = JRObjectDetection.cpp; sourceTree = "<group>"; };
 		D192E13717171D2600B94D3D /* JRObjectDetection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JRObjectDetection.h; sourceTree = "<group>"; };
 		D1AD8A3617145EAE003CECDD /* libfreenect.0.1.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfreenect.0.1.2.dylib; path = ../../../../../usr/local/Cellar/libfreenect/0.1.2.1/lib/libfreenect.0.1.2.dylib; sourceTree = "<group>"; };
+		D1CB21ED171750470032334B /* JRPointTypes.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; path = JRPointTypes.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -192,6 +193,7 @@
 				1A6F6AB6165A8A3500FA3601 /* JRObjectDetector.m */,
 				1A1F803F165C340E004C33EB /* JRObjectHelpers.h */,
 				1A1F8041165C34DA004C33EB /* JRObjectHelpers.c */,
+				D1CB21ED171750470032334B /* JRPointTypes.h */,
 			);
 			path = "Object Detection";
 			sourceTree = SOURCE_ROOT;
