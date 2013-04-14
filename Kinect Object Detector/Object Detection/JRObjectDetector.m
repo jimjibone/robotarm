@@ -34,6 +34,11 @@
 - (void)performConvexHull;
 - (void)sendConvexHullPointsToView;
 
+// Object Detection
+- (void)initObjectDetection;
+- (void)freeObjectDetection;
+- (void)performFindObjectPoints;
+
 // Helpers
 @end
 
@@ -54,6 +59,7 @@
 		// Init RANSAC
 		[self initRANSAC];
 		[self initConvexHull];
+		[self initObjectDetection];
 		
 		// Setup the rest of the program ready to start
 		_runMainMethod = NO;
@@ -105,6 +111,7 @@
 	// Dealloc RANSAC
 	[self freeRANSAC];
 	[self freeConvexHull];
+	[self freeObjectDetection];
 	
     [super dealloc];
 }
@@ -121,6 +128,9 @@
 		if ([self collectNewKinectFrames]) {
 			[self performRANSAC];
 			[self performConvexHull];
+			
+			// Object detection methods
+			[self performFindObjectPoints];
 			
 			[self sendConvexHullPointsToView];
 			[self sendNewFramesToDisplay];
@@ -174,7 +184,7 @@
 	[glView showPlane:NO];
 }
 - (void)freeRANSAC {
-	// Does nothing.
+	[ransac release];
 }
 - (void)performRANSAC {
 	
@@ -255,7 +265,7 @@
 	convexHullShowChanged = YES;
 }
 - (void)freeConvexHull {
-	// Not needed.
+	[convexHull release];
 }
 - (void)performConvexHull {
 	
@@ -332,6 +342,25 @@
 		sentShow = YES;
 		[glView showConvexHull:convexHullComplete];
 	}
+}
+
+
+
+
+#pragma mark - 
+#pragma mark Object Detection Methods
+- (void)initObjectDetection
+{
+	objectPointsCHull = [[JRConvexHullWrapper alloc] init];
+}
+- (void)freeObjectDetection
+{
+	[objectPointsCHull release];
+}
+- (void)performFindObjectPoints
+{
+	// Steps for object detection:
+	// 1. Use convexHull with the preprocessed points to find the points that are on the table.
 }
 
 

@@ -8,6 +8,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "../JRPointTypes.h"
 
 struct JRConvexHullWrapperOpaque;
 
@@ -24,5 +25,10 @@ struct JRConvexHullWrapperOpaque;
 - (void)performConvexHull;
 - (void)listConvexHullPoints;
 - (void)resetConvexHull;
+
+// These next functions allow the processing a pre-processed convex hull and
+// individual points for the use of point-within-bounds calculations.
+- (void) addPreprocessedConvexHullPoint:(PointXYZIJ)aPoint;
+- (bool) processPointWithPreprocessedHullX:(double)x Y:(double)y Z:(double)z;	// true = outside, false = inside.
 
 @end

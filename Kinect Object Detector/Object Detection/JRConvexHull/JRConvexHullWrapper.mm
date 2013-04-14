@@ -69,4 +69,14 @@ public:
 	self.cpp->wrapper.resetConvexHull();
 }
 
+#pragma mark - Point-Within-Bounds Functions
+- (void) addPreprocessedConvexHullPoint:(PointXYZIJ)aPoint
+{
+	self.cpp->wrapper.addPreprocessedConvexHullPoint(aPoint);
+}
+- (bool) processPointWithPreprocessedHullX:(double)x Y:(double)y Z:(double)z
+{
+	return self.cpp->wrapper.processPointWithPreprocessedHull(x, y, z);
+}
+
 @end

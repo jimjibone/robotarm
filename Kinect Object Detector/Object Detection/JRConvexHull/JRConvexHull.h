@@ -19,17 +19,17 @@
 using namespace std;
 
 class ConvexHull {
-	typedef PointXYZIJ PointCH;
-	typedef PlaneCoefficients PlaneCH;
+	typedef PointXYZIJ PointCH;	// conversion to new point types
+	typedef PlaneCoefficients PlaneCH; // conversion to new point types
 	
-	vector<PointCH> planePoints;
-	PlaneCH plane;
+	vector<PointXYZIJ> planePoints;
+	PlaneCoefficients plane;
 	double tolerance;
 	
 	double cross(const PointCH &o, const PointCH &a, const PointCH &b);
 	
 public:
-	vector<PointCH> convexHullPoints;
+	vector<PointXYZIJ> convexHullPoints;
 	
 	ConvexHull();
 	~ConvexHull();
@@ -43,7 +43,7 @@ public:
 	// These next functions allow the processing a pre-processed convex hull and
 	// individual points for the use of point-within-bounds calculations.
 	void addPreprocessedConvexHullPoint(PointXYZIJ aPoint);
-	bool processPointWithPreprocessedHull(double x, double y, double z);
+	bool processPointWithPreprocessedHull(double x, double y, double z);	// true = outside, false = inside.
 };
 
 #endif /* defined(__Convex_Hull_Small__JRConvexHull__) */

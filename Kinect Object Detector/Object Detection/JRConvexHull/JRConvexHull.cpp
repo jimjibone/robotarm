@@ -139,11 +139,81 @@ void ConvexHull::resetConvexHull() {
 
 // These next functions allow the processing a pre-processed convex hull and
 // individual points for the use of point-within-bounds calculations.
+// Follow the order of these functions for proper operation.
+// First call resetConvexHull().
+// Then call setPlane() with the RANSAC found plane coefficients.
 void ConvexHull::addPreprocessedConvexHullPoint(PointXYZIJ aPoint)
 {
-	
+	planePoints.emplace_back(aPoint);
 }
 bool ConvexHull::processPointWithPreprocessedHull(double x, double y, double z)
 {
+	// Now calculate the convex hull by using the same monotone convex hull algorithm as before.
 	
+	// Add the new point to the plane points.
+	addPoint(x, y, z);
+	// Get a copy of plane points for later.
+	vector<PointXYZIJ> planePointsHolder (planePoints);
+	
+	// Clear all the convex hull points to begin a new scan.
+	convexHullPoints.erase(convexHullPoints.begin(), convexHullPoints.end());
+	
+	int n = (int)planePoints.size();
+	int k = 0;
+	bool error = false;
+	bool pointOutside = false;
+	convexHullPoints.resize(2*n);
+	
+	// Sort the points lexicographically.
+	sort(planePoints.begin(), planePoints.end());
+	
+	// Build the lower hull.
+	for (int i = 0; i < n; i++) {
+		while (k >= 2 && cross(convexHullPoints[k-2], convexHullPoints[k-1], planePoints[i]) <= 0) {
+			k--;
+		}
+		convexHullPoints[k++] = planePoints[i];
+		
+		// Find out if this added point is our one we're checking.
+		if (planePoints[i].x == x && planePoints[i].y == y && planePoints[i].z == z) {
+			pointOutside = true;	// yes
+			break;	// in that case we're all done.
+		}
+		if (k >= 640*480) { error = true; break; }
+	}
+	
+	// Only do this section if we really need to.
+	if (pointOutside == false) {
+		// Build the upper hull.
+		for (int i = n-2, t = k+1; i >= 0; i--) {
+			while (k >= t && cross(convexHullPoints[k-2], convexHullPoints[k-1], planePoints[i]) <= 0) {
+				k--;
+			}
+			convexHullPoints[k++] = planePoints[i];
+			
+			// Find out if this added point is our one we're checking.
+			if (planePoints[i].x == x && planePoints[i].y == y && planePoints[i].z == z) {
+				pointOutside = true;	// yes
+				break;	// in that case we're all done.
+			}
+			if (k >= 640*480) { error = true; break; }
+		}
+	}
+	
+	convexHullPoints.resize(k);
+	
+	if (k >= 640*480 || error) {
+		convexHullPoints.clear();
+		cout << "Invalid data points. The plane may be erroneous. Deleted all convex hull data.\n";
+	}
+	
+	// Now before we finish, we want to reset the planePoints back to normal,
+	// without the new point.
+	planePoints.erase(planePoints.begin(), planePoints.end());
+	planePoints = planePointsHolder;	// copy
+	
+	// Now return whether the point is inside the hull or outside.
+	// True = outside.
+	// False = inside.
+	return pointOutside;
 }

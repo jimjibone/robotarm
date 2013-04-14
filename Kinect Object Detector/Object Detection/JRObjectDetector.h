@@ -41,6 +41,9 @@
 	BOOL convexHullShow;
 	BOOL convexHullShowChanged;
 	
+	// Object Detection Data
+	//JRConvexHullWrapper *objectPointsCHull; - actually, use JRObjectDetection once it's done.
+	
 }
 @property (readonly) BOOL isRunning;
 
