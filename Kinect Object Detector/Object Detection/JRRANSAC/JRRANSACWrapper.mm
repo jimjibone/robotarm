@@ -68,8 +68,8 @@ public:
 - (void)prepareRANSAC {
 	self.cpp->wrapper.prepareRANSAC();
 }
-- (void)getConfidentPlaneA:(double*)a B:(double*)b C:(double*)c D:(double*)d Confidence:(double*)confidence {
-	self.cpp->wrapper.getConfidentPlane(a, b, c, d, confidence);
+- (void)getConfidentPlaneA:(double*)a B:(double*)b C:(double*)c D:(double*)d Confidence:(double*)confidence Inverted:(bool*)needsInvert {
+	self.cpp->wrapper.getConfidentPlane(a, b, c, d, confidence, needsInvert);
 }
 - (void)resetRANSAC {
 	self.cpp->wrapper.resetRANSAC();

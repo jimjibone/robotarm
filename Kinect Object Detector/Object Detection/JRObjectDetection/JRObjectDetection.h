@@ -16,31 +16,33 @@
 #include <math.h>
 #include "JRConvexHull.h"
 #include "../JRPointTypes.h"
+#include "JRKinectHelpers.h"
+
+#define OBJECT_MAX_HEIGHT 500	// mm above table
+#define OBJECT_MIN_HEIGHT 10	// mm above table
 
 class ObjectDetection {
-	template <typename PointT>
-	struct PointCloud {
-		std::vector<PointT> points;
-		void eraseAll() {
-			points.erase(points.begin(), points.end());
-		}
-		size_t addPoint(double _x, double _y, double _z) {
-			size_t _index = points.size();
-			points.emplace_back(_index, _x, _y, _z);
-		}
-	};
+	ConvexHull objectPointFinder;	// To help find objects that lie on the table plane within the table surface.
 	
-	ConvexHull convexHull;
-	PointCloud<PointXYZ> cloud_objects;
-	PlaneCoefficients plane_table;
+	uint maxPoints;					// The maximum number of points in the data.
+	double maxHeight;				// The max height a point can be above the table.
+	double minHeight;				// The min height a point can be above the table.
+	bool validDepthData;			// Is true when the input depth data actually contains data. Saves the algorithm from killing itself.
+	
+	PlaneCoefficients plane_table;	// The plane coefficients for the table found using RANSAC.
+	PointCloud<PointXYZ> cloud;		// The complete cloud of valid data points.
 	
 public:
-	ObjectDetection(double maxHeight);
+	PointCloud<PointXYZIJ> cloud_objects;	// The cloud containing all points that lie within the table surface.
+	
+	ObjectDetection(uint newMaxPoints, double newMaxHeight, double newMinHeight);
+	void setPlaneCoefficients(double a, double b, double c, double d, bool invert);
+	void addPreprocessedConvexHullPoint(PointXYZIJ aPoint);
+	
+	void updateDepthData(uint16_t *newDepth);
+	void performObjectDetection();
 	void prepareForNewData();
-	void setPlaneCoefficients(double a, double b, double c, double d);
-	void addPoint(double x, double y, double z);
-	void addConvexHullPoint(double x, double y, double z);
-	void determineHullCubeBounds();
+	
 	
 };
 

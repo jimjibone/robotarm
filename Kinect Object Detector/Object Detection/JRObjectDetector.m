@@ -10,7 +10,8 @@
 #import "JRObjectDetector.h"
 #import "JRConstants.h"
 
-#define MAIN_TIME_INTERVAL 0.1
+#define START_TIME_INTERVAL 0.1
+#define MAIN_TIME_INTERVAL 0.3
 
 @interface JRObjectDetector ()
 //- (void)start;
@@ -76,13 +77,21 @@
 	}
 }
 - (void)addTimerForMainMethod {
-	if (_runMainMethod) {
-		[[NSRunLoop currentRunLoop] addTimer:[NSTimer timerWithTimeInterval:MAIN_TIME_INTERVAL
+	if (_runMainMethod && !convexHullComplete) {
+		[[NSRunLoop currentRunLoop] addTimer:[NSTimer timerWithTimeInterval:START_TIME_INTERVAL
 																  target:self
 																selector:@selector(mainMethod)
 																userInfo:nil
 																 repeats:NO]
 								  forMode:NSDefaultRunLoopMode];
+		_isRunning = YES;
+	} else if (_runMainMethod && ransacComplete && convexHullComplete) {
+		[[NSRunLoop currentRunLoop] addTimer:[NSTimer timerWithTimeInterval:MAIN_TIME_INTERVAL
+																	 target:self
+																   selector:@selector(mainMethod)
+																   userInfo:nil
+																	repeats:NO]
+									 forMode:NSDefaultRunLoopMode];
 		_isRunning = YES;
 	} else {
 		_isRunning = NO;
@@ -174,7 +183,7 @@
 - (void)initRANSAC {
 	ransac = [[JRRANSACWrapper alloc] initWithMaxPoints:FREENECT_FRAME_PIX RandomPoints:noRandomPoints DistanceTolerance:pointToTableTolerance];
 	
-	ransacConfidentPlane = (_ransacConfidentPlane){0, 0, 0, 0, 0};
+	ransacConfidentPlane = (PlaneCoefficients){0, 0, 0, 0, 0};
 	
 	ransacReset = NO;
 	ransacIterations = 0;
@@ -196,8 +205,8 @@
 	}
 	
 	if (ransacIterations < noRansacIterations) {
-		uint16_t *newDepth = (uint16_t*)malloc(FREENECT_FRAME_PIX * sizeof(uint16_t));
-		memcpy(newDepth, _kinectDepth, FREENECT_FRAME_PIX * sizeof(uint16_t));
+		//uint16_t *newDepth = (uint16_t*)malloc(FREENECT_FRAME_PIX * sizeof(uint16_t));
+		//memcpy(newDepth, _kinectDepth, FREENECT_FRAME_PIX * sizeof(uint16_t));
 		[ransac updateDepthData:_kinectDepth];
 		
 		[ransac performRANSAC];
@@ -206,7 +215,8 @@
 								 B:&ransacConfidentPlane.b
 								 C:&ransacConfidentPlane.c
 								 D:&ransacConfidentPlane.d
-						Confidence:&ransacConfidentPlane.confidence];
+						Confidence:&ransacConfidentPlane.confidence
+						  Inverted:&ransacConfidentPlane.needsInvert];
 		[glView setPlaneData:ransacConfidentPlane];
 		//[ransac listConfidentPlanes];
 		
@@ -231,7 +241,9 @@
 								 B:&ransacConfidentPlane.b
 								 C:&ransacConfidentPlane.c
 								 D:&ransacConfidentPlane.d
-						Confidence:&ransacConfidentPlane.confidence];
+						Confidence:&ransacConfidentPlane.confidence
+						  Inverted:&ransacConfidentPlane.needsInvert];
+		NSLog(@"%@ set coeffs with A:%f B:%f C:%f D:%f", NSStringFromSelector(_cmd), ransacConfidentPlane.a, ransacConfidentPlane.b, ransacConfidentPlane.c, ransacConfidentPlane.d);
 		[glView setPlaneData:ransacConfidentPlane];
 		//[ransac listConfidentPlanes];
 		
@@ -288,7 +300,8 @@
 								B:ransacConfidentPlane.b
 								C:ransacConfidentPlane.c
 								D:ransacConfidentPlane.d
-						Tolerance:pointToTableTolerance];
+						Tolerance:pointToTableTolerance
+						   Invert:ransacConfidentPlane.needsInvert];
 			
 			// Iterate through all points and send them for Convex Hull'ing.
 			double wx, wy = 0;
@@ -349,18 +362,63 @@
 
 #pragma mark - 
 #pragma mark Object Detection Methods
+
+#define OBJECT_MAX_HEIGHT 500	// mm above table
+#define OBJECT_MIN_HEIGHT 10	// mm above table
 - (void)initObjectDetection
 {
-	objectPointsCHull = [[JRConvexHullWrapper alloc] init];
+	objectDetector = [[JRObjectDetectionWrapper alloc] initWithMaxPoints:FREENECT_FRAME_PIX MaxHeight:OBJECT_MAX_HEIGHT MinHeight:OBJECT_MIN_HEIGHT];
+	objectDetectionReset = YES;
+	objectDetectionComplete = NO;
 }
 - (void)freeObjectDetection
 {
-	[objectPointsCHull release];
+	[objectDetector release];
 }
 - (void)performFindObjectPoints
 {
-	// Steps for object detection:
-	// 1. Use convexHull with the preprocessed points to find the points that are on the table.
+//	void setPlaneCoefficients(double a, double b, double c, double d);
+//	void addPreprocessedConvexHullPoint(PointXYZIJ aPoint);
+//	
+//	void updateDepthData(uint16_t *newDepth);
+//	void performObjectDetection();
+//	void prepareForNewData();
+	if (objectDetectionReset && ransacComplete && convexHullComplete) {
+		objectDetectionReset = NO;
+		objectDetectionComplete = NO;
+		
+		[objectDetector setPlaneCoefficientsA:ransacConfidentPlane.a B:ransacConfidentPlane.b C:ransacConfidentPlane.c D:ransacConfidentPlane.d Invert:ransacConfidentPlane.needsInvert];
+		
+		// Send the found convex hull points to the object detector.
+		for (unsigned int i = 0; i < [convexHull convexHullPointsCount]; i++) {
+			PointXYZIJ newPoint;
+			[convexHull getConvexHullPointNo:i X:&newPoint.x Y:&newPoint.y Z:&newPoint.z I:&newPoint.i J:&newPoint.j];
+			[objectDetector addPreprocessedConvexHullPointX:newPoint.x Y:newPoint.y Z:newPoint.z I:newPoint.i J:newPoint.j];
+		}
+	}
+	
+	if (ransacComplete && convexHullComplete) {
+		//NSLog(@"%@ started", NSStringFromSelector(_cmd));
+		
+		[objectDetector updateDepthData:_kinectDepth];
+		[objectDetector performObjectDetection];
+		
+		
+		
+		// Send the found object points to the view.
+		PointXYZ *newPoints = (PointXYZ*)malloc([objectDetector objectsCloudPointsCount] *sizeof(PointXYZ));
+		//NSLog(@"%@ DEBUG 1 noOfPoints = %d", NSStringFromSelector(_cmd), [objectDetector objectsCloudPointsCount]);
+		for (unsigned int i = 0; i < [objectDetector objectsCloudPointsCount]; i++) {
+			[objectDetector getObjectsCloudPointNo:i X:&newPoints[i].x Y:&newPoints[i].y Z:&newPoints[i].z];
+		}
+		//NSLog(@"%@ DEBUG 2 noOfPoints = %d", NSStringFromSelector(_cmd), [objectDetector objectsCloudPointsCount]);
+		[glView setObjectsCloudPoints:newPoints Count:[objectDetector objectsCloudPointsCount]];
+		[glView showObjectsCloud:YES];
+		
+		[objectDetector prepareForNewData];
+		objectDetectionComplete = YES;
+		//NSLog(@"%@ completed", NSStringFromSelector(_cmd));
+	}
 }
 
 
@@ -378,6 +436,7 @@
 - (void)resetTableDetection {
 	ransacReset = YES;
 	convexHullReset = YES;
+	objectDetectionReset = YES;
 }
 - (BOOL)setPlaneViewingState:(BOOL)aState {
 	ransacShow = aState;

@@ -18,8 +18,9 @@ struct JRConvexHullWrapperOpaque;
 
 - (unsigned int)convexHullPointsCount;
 - (void)getConvexHullPointNo:(unsigned int)i X:(double*)outX Y:(double*)outY Z:(double*)outZ;
+- (void)getConvexHullPointNo:(unsigned int)i X:(double*)outX Y:(double*)outY Z:(double*)outZ I:(double*)outI J:(double*)outJ;
 
-- (void)setPlaneA:(double)newA B:(double)newB C:(double)newC D:(double)newD Tolerance:(double)newTol;
+- (void)setPlaneA:(double)newA B:(double)newB C:(double)newC D:(double)newD Tolerance:(double)newTol Invert:(bool)newInvert;
 - (bool)addPointX:(double)newX Y:(double)newY Z:(double)newZ;
 - (void)listPlanePoints;
 - (void)performConvexHull;

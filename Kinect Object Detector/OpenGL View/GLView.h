@@ -17,10 +17,8 @@
 #import "JRKinectHelpers.h"
 #import "JRObjectDetector.h"
 #import "JRObjectHelpers.h"
-
-typedef struct {
-	double x, y, z;	// 3D points from the original->projectd-to-plane data.
-} PointXYZ;
+#import "JRPointTypes.h"
+//#import "JRPointRotationXYZ.h"
 
 @class GLProgram;
 @class JRObjectDetector;
@@ -45,16 +43,19 @@ typedef struct {
 	// Object Detection
 	_ransacConfidentPlane _planeData;
 	PointXYZ *_convexHullPoints;	unsigned int _convexHullPointCount;
+	PointXYZ *_objectsCloudPoints;	uint _objectsCloudPointCount;
     
     // 3D navigation
     NSPoint _lastPos, _lastPosRight;
     float _offset[3];
     float _angle, _tilt, _roll;
+	//JRPointRotationXYZ *_rotation;
 	
 	// Draw Modes
 	BOOL _drawFrustrum;
 	BOOL _drawPlane;
 	BOOL _drawConvexHull;
+	BOOL _drawObjectsCloud;
 	BOOL _normals;
     BOOL _mirror;
     BOOL _natural;
@@ -71,6 +72,8 @@ typedef struct {
 - (void)resetConvexHullPoints;
 - (void)setConvexHullPoints:(PointXYZ*)newPoints Count:(unsigned int)count;
 - (void)showConvexHull:(BOOL)mode;
+- (void)setObjectsCloudPoints:(PointXYZ*)newPoints Count:(uint)count;
+- (void)showObjectsCloud:(BOOL)mode;
 
 - (void)stopDrawing;
 

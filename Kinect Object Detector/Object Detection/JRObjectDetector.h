@@ -13,6 +13,8 @@
 #import "JRObjectHelpers.h"
 #import "JRConvexHullWrapper.h"
 #import "JRRANSACWrapper.h"
+#import "JRObjectDetectionWrapper.h"
+#import "JRPointTypes.h"
 
 @class GLView;
 @interface JRObjectDetector : NSObject {
@@ -27,7 +29,7 @@
 	
 	// RANSAC
 	JRRANSACWrapper *ransac;
-	_ransacConfidentPlane ransacConfidentPlane;
+	PlaneCoefficients ransacConfidentPlane;
 	BOOL ransacReset;
 	uint ransacIterations;
 	BOOL ransacComplete;
@@ -42,7 +44,9 @@
 	BOOL convexHullShowChanged;
 	
 	// Object Detection Data
-	//JRConvexHullWrapper *objectPointsCHull; - actually, use JRObjectDetection once it's done.
+	JRObjectDetectionWrapper *objectDetector;
+	BOOL objectDetectionReset;
+	BOOL objectDetectionComplete;
 	
 }
 @property (readonly) BOOL isRunning;

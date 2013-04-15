@@ -19,7 +19,7 @@
 using namespace std;
 
 class RANSAC {
-	typedef PointXYZ Point;
+	typedef PointIXYZ Point;
 	typedef PlaneCoefficients Plane;
 	
 	vector<Point> randomPoints;		// The points to be used for possible inliers.
@@ -88,7 +88,7 @@ public:
 	void updateDepthData(uint16_t* newDepth);
 	void performRANSAC();
 	void prepareRANSAC();
-	void getConfidentPlane(double *A, double *B, double *C, double *D, double *confidence);
+	void getConfidentPlane(double *A, double *B, double *C, double *D, double *confidence, bool *needsInvert);
 	void resetRANSAC();
 };
 

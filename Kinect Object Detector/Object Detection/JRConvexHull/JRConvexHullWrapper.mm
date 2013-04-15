@@ -47,10 +47,17 @@ public:
 	*outY = self.cpp->wrapper.convexHullPoints[i].y;
 	*outZ = self.cpp->wrapper.convexHullPoints[i].z;
 }
+- (void)getConvexHullPointNo:(unsigned int)i X:(double*)outX Y:(double*)outY Z:(double*)outZ I:(double*)outI J:(double*)outJ {
+	*outX = self.cpp->wrapper.convexHullPoints[i].x;
+	*outY = self.cpp->wrapper.convexHullPoints[i].y;
+	*outZ = self.cpp->wrapper.convexHullPoints[i].z;
+	*outI = self.cpp->wrapper.convexHullPoints[i].i;
+	*outJ = self.cpp->wrapper.convexHullPoints[i].j;
+}
 
 #pragma mark - Main C++ Wrapped Functions
-- (void)setPlaneA:(double)newA B:(double)newB C:(double)newC D:(double)newD Tolerance:(double)newTol {
-	self.cpp->wrapper.setPlane(newA, newB, newC, newD, newTol);
+- (void)setPlaneA:(double)newA B:(double)newB C:(double)newC D:(double)newD Tolerance:(double)newTol Invert:(bool)newInvert {
+	self.cpp->wrapper.setPlane(newA, newB, newC, newD, newTol, newInvert);
 }
 - (bool)addPointX:(double)newX Y:(double)newY Z:(double)newZ {
 	// Returns bool indicating wasAdded. Relating to tolerance.

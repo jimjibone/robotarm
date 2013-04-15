@@ -115,7 +115,7 @@ void RANSAC::updateDepthData(uint16_t *newDepth) {
 		worldFromIndex(&point->x, &point->y, point->index, newDepth[i]);
 		
 		point->z = newDepth[i]+1.0;
-		point->z-=1.0;
+		point->z -= 1.0;
 		
 		depthCount += newDepth[i];
 	}
@@ -224,20 +224,38 @@ void RANSAC::prepareRANSAC() {
 		otherPoints.emplace_back(i);
 	}
 }
-void RANSAC::getConfidentPlane(double *A, double *B, double *C, double *D, double *confidence) {
+void RANSAC::getConfidentPlane(double *A, double *B, double *C, double *D, double *confidence, bool *needsInvert) {
 	// Returns (via pointer) the most confident plane from the current processed set.
 	if (validDepthData == true) {
+		// Determine the proper orientation of the calculated plane. For use with distance calcs.
+		// Point with small z should give a positive value, assuming that the table is positioned
+		// below the Kinect sensor physically.
+		double dist = 0;
+		// http://mathworld.wolfram.com/Point-PlaneDistance.html
+		dist  = 0.0 * confidentPlanes.front().a;
+		dist += 0.0 * confidentPlanes.front().b;
+		dist += 100.0 * confidentPlanes.front().c;
+		dist += confidentPlanes.front().d;
+		dist /= sqrt(pow(confidentPlanes.front().a, 2) + pow(confidentPlanes.front().b, 2) + pow(confidentPlanes.front().c, 2));
+		if (dist >= 0) {
+			confidentPlanes.front().needsInvert = false;
+		} else {
+			confidentPlanes.front().needsInvert = true;
+		}
+		
 		*A = confidentPlanes.front().a;
 		*B = confidentPlanes.front().b;
 		*C = confidentPlanes.front().c;
 		*D = confidentPlanes.front().d;
 		*confidence = confidentPlanes.front().confidence;
+		*needsInvert = confidentPlanes.front().needsInvert;
 	} else {
 		*A = 0;
 		*B = 0;
 		*C = 0;
 		*D = 0;
 		*confidence = -1;
+		*needsInvert = false;
 	}
 }
 void RANSAC::resetRANSAC() {

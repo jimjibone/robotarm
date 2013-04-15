@@ -333,6 +333,8 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 	
 	glEnable(GL_BLEND); //Enable alpha blending
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); //Set the blend function
+	
+	//_rotation = [[JRPointRotationXYZ alloc] initWithRotationX:0 Y:0 Z:0];
 }
 - (void)closeScene {
     glDeleteTextures(1, &_depthTex);
@@ -346,6 +348,8 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
     
     [_depthProgram release];
     [_pointProgram release];
+	
+	//[_rotation release];
 }
 - (void)drawFrustrum {
     struct glf3 {
@@ -425,6 +429,23 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 	
 	glLineWidth(prevLineWidth);
 }
+- (void)drawObjectsCloud {
+	GLfloat prevPointSize = 0;
+	glGetFloatv(GL_POINT_SIZE, &prevPointSize);
+	glPointSize(8);
+	
+	if (_objectsCloudPointCount > 0) {
+		glBegin(GL_POINTS);
+		glColor4f(0, 0, 1, 0.8);
+		for (int i = 0; i < _objectsCloudPointCount-1; i++) {
+			// Don't draw the last point because it is the same as the last.
+			glVertex3d(_objectsCloudPoints[i].x, -_objectsCloudPoints[i].y, -_objectsCloudPoints[i].z-2);
+		}
+		glEnd();
+	}
+	
+	glPointSize(prevPointSize);
+}
 - (void)drawGLStringX:(GLfloat)x Y:(GLfloat)y Z:(GLfloat)z String:(NSString*)string {
 	//glColor3f(255, 255, 255);
 	glRasterPos3f(x, y, -z);
@@ -495,9 +516,15 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 		
 		glTranslatef(0.0, 0.0, -1000.0*s);
         glTranslatef(_offset[0], _offset[1], -_offset[2]);
-        glRotatef(_angle, 0, 1, 0);
+		glRotatef(_angle, 0, 1, 0);
         glRotatef(_tilt, -1, 0, 0);
 		glRotatef(_roll, 0, 0, -1);
+		
+		//PointXYZ rot = [_rotation rotation];
+		//glRotatef(rot.y, 0, 1, 0);
+        //glRotatef(rot.x, -1, 0, 0);
+		//glRotatef(rot.z, 0, 0, -1);
+		
 		glTranslatef(0.0, 0.0, 1000.0*s);
         
         glScalef(_mirror?-s:s, -s, s); // flip y,  flipping the scene x is an incredibly stupid way to mirror
@@ -536,7 +563,7 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
         glActiveTexture(GL_TEXTURE0);
         glDisable(GL_TEXTURE_2D);
 		
-		GLint prevDepthMask, prevDepthFunc = 0;
+		GLint prevDepthMask = 0, prevDepthFunc = 0;
 		
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -558,6 +585,7 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
         
         if (_drawFrustrum) [self drawFrustrum];
 		if (_drawConvexHull) [self drawConvexHull];
+		if (_drawObjectsCloud) [self drawObjectsCloud];
 		
 		glDisable(GL_POINT_SMOOTH);
 		glDisable(GL_LINE_SMOOTH);
@@ -706,6 +734,38 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 		_drawConvexHull = mode;
 	}
 }
+- (void)setObjectsCloudPoints:(PointXYZ*)newPoints Count:(uint)count
+{
+	@synchronized (self) {
+		_drawObjectsCloud = NO;
+	}
+	
+	if (_objectsCloudPoints) {
+		// If there is previous convexHullPoints data then remove it all, ready to create the new array.
+		free(_objectsCloudPoints);
+		_objectsCloudPoints = NULL;
+		_objectsCloudPointCount = 0;
+		_drawObjectsCloud = NO;
+	}
+	if (!_objectsCloudPoints && count > 0) {
+		// There is nothing contained in convexHullPoints so let's:
+		// 1. Initialise it with the size we need for all the points.
+		// 2. Add all the points.
+		// 3. Get the view ready to show the points.
+		
+		_objectsCloudPoints = newPoints;
+		
+		_objectsCloudPointCount = count;
+		
+		_drawObjectsCloud = YES;
+	}
+}
+- (void)showObjectsCloud:(BOOL)mode
+{
+	@synchronized (self) {
+		_drawObjectsCloud = mode;
+	}
+}
 
 
 #pragma mark event handling
@@ -725,6 +785,9 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
     } else {
         _angle += 50*delta.x;
         _tilt  += 50*delta.y;
+		
+		//[_rotation rotateByX:(50*delta.x) Y:(50*delta.y) Z:0];
+		//NSLog(@"%@ newX:%f  newY:%f  newZ:%f", NSStringFromSelector(_cmd), [_rotation rotation].x, [_rotation rotation].y, [_rotation rotation].z);
     }
 }
 - (void)rightMouseDragged:(NSEvent *)theEvent {

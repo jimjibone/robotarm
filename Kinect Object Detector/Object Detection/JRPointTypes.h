@@ -10,14 +10,29 @@
 #ifndef Kinect_Object_Detector_JRPointTypes_h
 #define Kinect_Object_Detector_JRPointTypes_h
 
-struct PointXYZ {
+
+
+#ifdef __cplusplus
+
+
+#include <iostream>
+#include <vector>
+
+struct PointIXYZ {
 	uint index;
 	double x, y, z;
 	bool isValid() { return (z > 0) && (z < 10000); }
-	bool operator <(const PointXYZ &point) const {
+	bool operator <(const PointIXYZ &point) const {
 		return index < point.index;
 	}
-	PointXYZ(uint _index = 0, double _x = 0, double _y = 0, double _z = 0) : index(_index), x(_x), y(_y), z(_z) {};
+	PointIXYZ(uint _index = 0, double _x = 0, double _y = 0, double _z = 0) : index(_index), x(_x), y(_y), z(_z) {};
+	PointIXYZ(double _x = 0, double _y = 0, double _z = 0) : index(0), x(_x), y(_y), z(_z) {};
+};
+
+struct PointXYZ {
+	double x, y, z;
+	bool isValid() { return (z > 0) && (z < 10000); }
+	PointXYZ(double _x = 0, double _y = 0, double _z = 0) : x(_x), y(_y), z(_z) {};
 };
 
 struct PointXYZIJ {
@@ -34,6 +49,7 @@ struct PlaneCoefficients {
 	double a, b, c, d;
 	bool isValid;
 	double confidence;
+	bool needsInvert;	// determines whether a calculated distance value should be inverted.
 	bool operator <(const PlaneCoefficients &plane) const {
 		return confidence >= plane.confidence;
 	}
@@ -61,9 +77,46 @@ struct PlaneCoefficients {
 		c = _c;
 		d = _d;
 	}
-	PlaneCoefficients(double _a = 0, double _b = 0, double _c = 0, double _d = 0, bool _isValid = false, double _confidence = 0) : a(_a), b(_b), c(_c), d(_d), isValid(_isValid), confidence(_confidence) {};
+	PlaneCoefficients(double _a = 0, double _b = 0, double _c = 0, double _d = 0, bool _isValid = false, double _confidence = 0) : a(_a), b(_b), c(_c), d(_d), isValid(_isValid), confidence(_confidence), needsInvert(false) {};
+};
+
+template <typename PointT>
+struct PointCloud {
+	std::vector<PointT> points;
+	void eraseAll() {
+		points.erase(points.begin(), points.end());
+	}
+	void addPoint(PointT aPoint) {
+		points.emplace_back(aPoint);
+	}
+	size_t size() {
+		printf("template PointCloud.size(); = %ld\n", points.size());
+		return points.size();
+	}
 };
 
 
+#else
+
+
+typedef struct {
+	//uint index;
+	double x, y, z;
+} PointXYZ;
+
+typedef struct {
+	double x, y, z;	// 3D points from the original->projectd-to-plane data.
+	double i, j;	// 2D points once 3D->2D conversion has been completed.
+} PointXYZIJ;
+
+typedef struct {
+	double a, b, c, d;
+	bool isValid;
+	double confidence;
+	bool needsInvert;	// determines whether a calculated distance value should be inverted.
+} PlaneCoefficients;
+
+
+#endif
 
 #endif

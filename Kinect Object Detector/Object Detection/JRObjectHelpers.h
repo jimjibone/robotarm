@@ -13,13 +13,11 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include "JRKinectHelpers.h"
+#include "JRPointTypes.h"
 
 #define PI_VAL 3.141592654
 //(103993/33102)
 
-typedef struct {
-	double a, b, c, d, confidence;
-} PlaneCoefficients;
 typedef PlaneCoefficients _ransacConfidentPlane;
 typedef struct {XYZPoint point1; XYZPoint point2; XYZPoint point3; double a; double b; double c; double d; bool isValid;} ABCDPlane;
 

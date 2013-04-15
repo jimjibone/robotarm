@@ -25,7 +25,7 @@ struct JRRANSACWrapperOpaque;
 - (void)updateDepthData:(uint16_t*)depthData;
 - (void)performRANSAC;
 - (void)prepareRANSAC;
-- (void)getConfidentPlaneA:(double*)a B:(double*)b C:(double*)c D:(double*)d Confidence:(double*)confidence;
+- (void)getConfidentPlaneA:(double*)a B:(double*)b C:(double*)c D:(double*)d Confidence:(double*)confidence Inverted:(bool*)needsInvert;
 - (void)resetRANSAC;
 
 @end
