@@ -243,7 +243,6 @@
 								 D:&ransacConfidentPlane.d
 						Confidence:&ransacConfidentPlane.confidence
 						  Inverted:&ransacConfidentPlane.needsInvert];
-		NSLog(@"%@ set coeffs with A:%f B:%f C:%f D:%f", NSStringFromSelector(_cmd), ransacConfidentPlane.a, ransacConfidentPlane.b, ransacConfidentPlane.c, ransacConfidentPlane.d);
 		[glView setPlaneData:ransacConfidentPlane];
 		//[ransac listConfidentPlanes];
 		

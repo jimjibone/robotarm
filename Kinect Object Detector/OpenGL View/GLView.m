@@ -609,7 +609,7 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		
-		if (_drawPlane) //[self drawPlane];
+		//if (_drawPlane) [self drawPlane];
 		
 		glGetIntegerv(GL_DEPTH_WRITEMASK, &prevDepthMask);
 		glGetIntegerv(GL_DEPTH_FUNC, &prevDepthFunc);
