@@ -142,7 +142,8 @@ void RANSAC::performRANSAC() {
 		currentPlane = getPlane(randomPoints[i], randomPoints[i+1], randomPoints[i+2]);
 		// Only add the plane to the planes vector if it is valid.
 		if (currentPlane.isValid) {
-			planes.emplace_back(currentPlane.a, currentPlane.b, currentPlane.c, currentPlane.d, currentPlane.isValid, 0);
+			//planes.emplace_back(currentPlane.a, currentPlane.b, currentPlane.c, currentPlane.d, currentPlane.isValid, 0);
+			planes.emplace_back(currentPlane);
 		}
 	}
 	

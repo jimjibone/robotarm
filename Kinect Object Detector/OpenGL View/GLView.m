@@ -429,6 +429,47 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 	
 	glLineWidth(prevLineWidth);
 }
+- (void)drawBoundedPlaneHull {
+	// Draw points of the hull
+	GLfloat prevPointSize = 0;
+	glGetFloatv(GL_POINT_SIZE, &prevPointSize);
+	glPointSize(8);
+	
+	glBegin(GL_POINTS);
+	glColor4f(1, 0, 0, 0.8);
+	for (int i = 0; i < _convexHullPointCount-1; i++) {
+		// Don't draw the last point because it is the same as the last.
+		glVertex3d(_convexHullPoints[i].x, -_convexHullPoints[i].y, -_convexHullPoints[i].z+2);
+	}
+	glEnd();
+	
+	glPointSize(prevPointSize);
+	
+	// Draw the hull lines and fill
+	GLfloat prevLineWidth = 0;
+	glGetFloatv(GL_LINE_WIDTH, &prevLineWidth);
+	glLineWidth(2);
+	
+	glColor4f(.392156863, 1, .392156863, 0.3);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glBegin(GL_TRIANGLE_FAN);
+	for (int i = 0; i < _convexHullPointCount-1; i++) {
+		// Don't draw the last point because it is the same as the last.
+		glVertex3d(_convexHullPoints[i].x, -_convexHullPoints[i].y, -_convexHullPoints[i].z+2);
+	}
+	glEnd();
+	
+	glColor4f(1, 1, 0, 0.6);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glBegin(GL_LINE_LOOP);
+	for (int i = 0; i < _convexHullPointCount-1; i++) {
+		// Don't draw the last point because it is the same as the last.
+		glVertex3d(_convexHullPoints[i].x, -_convexHullPoints[i].y, -_convexHullPoints[i].z+2);
+	}
+	glEnd();
+	
+	glLineWidth(prevLineWidth);
+}
 - (void)drawObjectsCloud {
 	GLfloat prevPointSize = 0;
 	glGetFloatv(GL_POINT_SIZE, &prevPointSize);
@@ -568,7 +609,7 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		
-		if (_drawPlane) [self drawPlane];
+		if (_drawPlane) //[self drawPlane];
 		
 		glGetIntegerv(GL_DEPTH_WRITEMASK, &prevDepthMask);
 		glGetIntegerv(GL_DEPTH_FUNC, &prevDepthFunc);
@@ -584,7 +625,7 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 		glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
         
         if (_drawFrustrum) [self drawFrustrum];
-		if (_drawConvexHull) [self drawConvexHull];
+		if (_drawConvexHull) [self drawBoundedPlaneHull];//[self drawConvexHull];
 		if (_drawObjectsCloud) [self drawObjectsCloud];
 		
 		glDisable(GL_POINT_SMOOTH);

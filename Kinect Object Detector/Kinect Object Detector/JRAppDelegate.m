@@ -207,7 +207,13 @@
 - (IBAction)connectKinect:(id)sender {
 	if (!isKinectConnected) {
 		[[objectDetector getKinectController] startKinectSoon];
-		[self.connectKinectBtn setEnabled:NO];
+		//[self.connectKinectBtn setEnabled:NO];//original
+		[self.connectKinectBtn setEnabled:YES];
+		[self.connectKinectBtn setTitle:@"Disconnect"];
+	} else {
+		[[objectDetector getKinectController] stopKinectSoon];
+		[self.connectKinectBtn setEnabled:YES];
+		[self.connectKinectBtn setTitle:@"Connect"];
 	}
 }
 - (IBAction)resetTableDetect:(id)sender {
