@@ -90,6 +90,7 @@ public:
 	void prepareRANSAC();
 	void getConfidentPlane(double *A, double *B, double *C, double *D, double *confidence, bool *needsInvert);
 	void resetRANSAC();
+	PointXYZ determinePlaneRotation();
 };
 
 #endif /* defined(__RANSAC_CPP__JRRANSAC__) */

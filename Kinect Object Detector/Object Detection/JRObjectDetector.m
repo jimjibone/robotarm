@@ -11,7 +11,7 @@
 #import "JRConstants.h"
 
 #define START_TIME_INTERVAL 0.1
-#define MAIN_TIME_INTERVAL 0.3
+#define MAIN_TIME_INTERVAL 0.2
 
 @interface JRObjectDetector ()
 //- (void)start;

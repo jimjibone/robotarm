@@ -262,3 +262,8 @@ void RANSAC::getConfidentPlane(double *A, double *B, double *C, double *D, doubl
 void RANSAC::resetRANSAC() {
 	confidentPlanes.erase(confidentPlanes.begin(), confidentPlanes.end());
 }
+
+PointXYZ RANSAC::determinePlaneRotation()
+{
+	return PointXYZ();
+}
