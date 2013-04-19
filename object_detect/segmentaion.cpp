@@ -73,6 +73,20 @@ bool fit_objects = false;
 
 
 /*---------------------------------------------*-
+ * Object Detection
+ -*---------------------------------------------*/
+virtual bool compare (int idx1, int idx2) const
+{
+	float threshold = 0;
+}
+
+
+
+
+
+
+
+/*---------------------------------------------*-
  * KEYBOARD EVENT TRACKING
  * Keys we like: (* = all PCL owned)
  * 'q' = quit*

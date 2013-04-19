@@ -27,7 +27,7 @@ So far:
 In the Terminal run these commands, the script will do the rest, hopefully.
 
 1. Clone source (if not already cloned). 
-1. Move into the repo.
+1. `cd` into the repo.
 1. Install deps.
 
 ```bash

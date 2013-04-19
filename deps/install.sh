@@ -102,7 +102,10 @@ function installCVMac() {
 
 function installPCLMac() {
 	# homebrew just fails to download pcl :( this is very sad
-	
+
+	# use new homebrew-science for the installs that have been moved there
+	brew tap homebrew/science
+
 	# try this way instead
 	# ask the user to download PCL manually, then move the file and do brewing
 	if [ -e ~/Downloads/PCL* ]; then
