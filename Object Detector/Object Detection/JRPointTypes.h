@@ -17,6 +17,14 @@
 
 #include <iostream>
 #include <vector>
+#include <libfreenect/libfreenect.h>
+
+struct PointIndices {
+	std::vector<size_t> indices;
+	PointIndices(std::vector<size_t> _indices) : indices(_indices) {};
+	PointIndices(size_t index) { indices.emplace_back(index); };
+	PointIndices();
+};
 
 struct PointIXYZ {
 	uint index;
@@ -31,7 +39,7 @@ struct PointIXYZ {
 
 struct PointXYZ {
 	double x, y, z;
-	bool isValid() { return (z > 0) && (z < 10000); }
+	bool isValid() { return (z > FREENECT_DEPTH_MM_NO_VALUE) && (z < FREENECT_DEPTH_MM_MAX_VALUE); }
 	PointXYZ(double _x = 0, double _y = 0, double _z = 0) : x(_x), y(_y), z(_z) {};
 };
 
@@ -48,7 +56,7 @@ struct PointXYZIJ {
 struct PlaneCoefficients {
 	double a, b, c, d;
 	bool isSet() {
-		return a || b || c || d;
+		return (fabs(a) > 0) || (fabs(b) > 0) || (fabs(c) > 0) || (fabs(d) > 0);
 	}
 	double xFromYZ(double y, double z) {
 		// ax + by + cz + d = 0
@@ -64,12 +72,6 @@ struct PlaneCoefficients {
 		// ax + by + cz + d = 0
 		// -(ax + by + d)/c = z
 		return -(a*x + b*y + d)/c;
-	}
-	void setCoefficients(double _a, double _b, double _c, double _d) {
-		a = _a;
-		b = _b;
-		c = _c;
-		d = _d;
 	}
 	PlaneCoefficients(double _a = 0, double _b = 0, double _c = 0, double _d = 0) : a(_a), b(_b), c(_c), d(_d) {};
 };

@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "1A6F6A89165A895E00FA3601"
-               BuildableName = "Kinect Object Detector.app"
+               BuildableName = "Object Detector.app"
                BlueprintName = "Object Detector"
                ReferencedContainer = "container:Object Detector.xcodeproj">
             </BuildableReference>
@@ -33,7 +33,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1A6F6A89165A895E00FA3601"
-            BuildableName = "Kinect Object Detector.app"
+            BuildableName = "Object Detector.app"
             BlueprintName = "Object Detector"
             ReferencedContainer = "container:Object Detector.xcodeproj">
          </BuildableReference>
@@ -52,7 +52,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1A6F6A89165A895E00FA3601"
-            BuildableName = "Kinect Object Detector.app"
+            BuildableName = "Object Detector.app"
             BlueprintName = "Object Detector"
             ReferencedContainer = "container:Object Detector.xcodeproj">
          </BuildableReference>
@@ -70,7 +70,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1A6F6A89165A895E00FA3601"
-            BuildableName = "Kinect Object Detector.app"
+            BuildableName = "Object Detector.app"
             BlueprintName = "Object Detector"
             ReferencedContainer = "container:Object Detector.xcodeproj">
          </BuildableReference>

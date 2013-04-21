@@ -20,14 +20,21 @@
 
 #define OBJECT_MAX_HEIGHT 500	// mm above table
 #define OBJECT_MIN_HEIGHT 10	// mm above table
+#define PI_VALUE 3.141592654
 
 class ObjectDetection {
 	
+	bool compareAngle(size_t a, size_t b);
 	
 public:
 	
+	vector<PointXYZ> input_cloud;
+	vector<PlaneCoefficients> input_cloud_normals;
+	vector<PointIndices> plane_clusters;
 	
-	
+	void setZPoints(uint16_t* zPoints, size_t size);
+	void calculateSurfaceNormals();
+	void segmentPlanes();
 };
 
 #endif /* defined(__Kinect_Object_Detector__JRObjectDetection__) */
