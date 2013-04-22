@@ -16,9 +16,9 @@ GlintFinder::~GlintFinder()
     //dtor
 }
 
-void GlintFinder::FindGlints(IplImage* Image, CircleLocation Location)
+void GlintFinder::FindGlints(IplImage* Image, MultiCircleLocations Location)
 {
-    FindGlints(Image, Location.BrightRectangle());
+    FindGlints(Image, Location.GlintSearchRectangle());
 }
 
 void GlintFinder::FindGlints(IplImage* Image, EyeRectangle Rect)

@@ -2,7 +2,7 @@
 
 HoughCircleFnder::HoughCircleFnder()
 {
-    Ready = false;
+
 }
 
 HoughCircleFnder::HoughCircleFnder(int Width, int Height, bool SecCheck)
@@ -13,7 +13,6 @@ HoughCircleFnder::HoughCircleFnder(int Width, int Height, bool SecCheck)
     Wid = Width;
     Hei = Height;
     CheckSec = SecCheck;
-    Ready = true;
 }
 
 HoughCircleFnder::~HoughCircleFnder()
@@ -38,14 +37,15 @@ int HoughCircleFnder::GetNumFound()
     return NumFound;
 }
 
-CircleLocation HoughCircleFnder::GetCircleLocation()
+MultiCircleLocations HoughCircleFnder::GetCircleLocation()
 {
-    return Loc;
+    return Locs;
 }
 
 
 void HoughCircleFnder::SetOpenCVImage(IplImage* Image)
-{//Binary Image is required, with values of either 0 or -1 (stupid signed char thing)
+{
+    //Binary Image is required, with values of either 0 or -1 (stupid signed char thing)
     for (int X = 0; X < Wid; X++)
     {
         for (int Y = 0; Y < Hei; Y++)
@@ -58,10 +58,13 @@ void HoughCircleFnder::SetOpenCVImage(IplImage* Image)
 
 
 void HoughCircleFnder::FindCircle()
-{//Function decides if to look in a small area or scan the whole image again.
+{
+    //Function decides if to look in a small area or scan the whole image again.
+    Locs = MultiCircleLocations();
+
     if (NumFound != 0)
     {
-        FindCircle(Loc.NextRectangle());
+        FindCircle(Locs.NextSearchRectangle());
         return;
     }
 
@@ -78,53 +81,29 @@ void HoughCircleFnder::FindCircle(EyeRectangle Rect)
 {
     NumFound = 0;
     for (int R = InnerMinR; R <= InnerMaxR; R++)
-    { //R first in hope its a bit quicker to scan
+    {
+        //R first in hope its a bit quicker to scan
         for (int X = Rect.Left(); X < Rect.Right(); X++)
         {
             for (int Y = Rect.Top(); Y < Rect.Bottom(); Y++)
             {
-                bool Found = true; //Define circle to be found, and only discount when proven
-                int Test = 0;
-                for (int P = 0; P < 360; P += CircleStep)
-                {//Using Houghs Transformations Circle Theroem to find points on a circle
-                    double Theta = (double)P * Pi / 180.0;
-                    int TX = X + (int)((double)R * cos(Theta));
-                    int TY = Y + (int)((double)R * sin(Theta));
-                    if (TX > 0 && TX < Wid && TY > 0 && TY < Hei)
-                    { // Check if point is within image size
-                        if (!Values[TX + TY * Wid])
-                        { // Allows 2 points on the circle to be missed for robustness
-                            Test++;
-                        }
-                    }
-                    else
-                    {
-                        Found = false;
-                        break;
-                    }
-
-                    if (Test > 2)
-                    { // If 2 points are missed, breaks and tries next point
-                        Found = false;
-                        break;
-                    }
-                }
-                if (Found)
-                {//When circle not discounted either define as or check if a 2nd circle representing iris if found
+                if (CheckCircle(X, Y, R))
+                {
+                    //When circle not discounted either define as or check if a 2nd circle representing iris if found
                     if (CheckSec)
                     {
                         int Sec = FindSecond(X, Y);
                         if (Sec != -1)
                         {
                             NumFound = 1;
-                            Loc = CircleLocation(X, Y, R, Sec);
+                            FindAllCircles(X, Y, R, Sec);
                             return;
                         }//If 2nd circle not found move on as normal and try again
                     }
                     else
                     {
                         NumFound = 1;
-                        Loc = CircleLocation(X, Y, R);
+                        FindAllCircles(X, Y, R);
                         return;
                     }
                 }
@@ -133,8 +112,82 @@ void HoughCircleFnder::FindCircle(EyeRectangle Rect)
     }
 }
 
+bool HoughCircleFnder::CheckCircle(int X, int Y, int R)
+{
+    bool Found = true; //Define circle to be found, and only discount when proven
+    int Test = 0;
+    for (int P = 0; P < 360; P += CircleStep)
+    {
+        //Using Houghs Transformations Circle Theroem to find points on a circle
+        double Theta = (double)P * Pi / 180.0;
+        int TX = X + (int)((double)R * cos(Theta));
+        int TY = Y + (int)((double)R * sin(Theta));
+        if (TX > 0 && TX < Wid && TY > 0 && TY < Hei)
+        {
+            // Check if point is within image size
+            if (!Values[TX + TY * Wid])
+            {
+                // Allows 2 points on the circle to be missed for robustness
+                Test++;
+            }
+        }
+        else
+        {
+            Found = false;
+            break;
+        }
+
+        if (Test > 2)
+        {
+            // If 2 points are missed, breaks and tries next point
+            Found = false;
+            break;
+        }
+    }
+    return Found;
+}
+
+void HoughCircleFnder::FindAllCircles(int X, int Y, int InR)
+{
+    for (int r = InR - CheckStep; r < InR + CheckStep; r++)
+    {
+        for (int x = X - CheckStep; x < X + CheckStep; x++)
+        {
+            for (int y = Y - CheckStep; y < Y + CheckStep; y++)
+            {
+                if (CheckCircle(x, y, r))
+                {
+                    Locs.AddCircle(CircleLocation(x, y, r));
+                }
+            }
+        }
+    }
+
+    Locs.AverageCircles();
+}
+
+void HoughCircleFnder::FindAllCircles(int X, int Y, int InR, int OutR)
+{
+    for (int r = InR - CheckStep; r < InR + CheckStep; r++)
+    {
+        for (int x = X - CheckStep; x < X + CheckStep; x++)
+        {
+            for (int y = Y - CheckStep; y < Y + CheckStep; y++)
+            {
+                if (CheckCircle(x, y, r))
+                {
+                    Locs.AddCircle(CircleLocation(x, y, r));
+                }
+            }
+        }
+    }
+
+    Locs.AverageCircles();
+}
+
 int HoughCircleFnder::FindSecond(int X, int Y)
-{//Checking a small area around the point for robustness
+{
+    //Checking a small area around the point for robustness
     for (int x = X - SecStep; x < X + SecStep; x++)
     {
         for (int y = Y - SecStep; y < Y + SecStep; y++)
@@ -156,7 +209,8 @@ int HoughCircleFnder::FindSecond(int X, int Y)
                     }
 
                     if (Num > CircleAccept)
-                    {//When circle is found to be correct return radius of that circle
+                    {
+                        //When circle is found to be correct return radius of that circle
                         return R;
                     }
                 }
@@ -168,7 +222,8 @@ int HoughCircleFnder::FindSecond(int X, int Y)
 
 
 void HoughCircleFnder::DrawImage(IplImage* Image)
-{//Image draws the bool data onto a defined image, to check it is setting cirrectly
+{
+    //Image draws the bool data onto a defined image, to check it is setting cirrectly
     //Image needs to be B&W
     for (int X = 0; X < Wid ; X++)
     {
@@ -188,13 +243,14 @@ void HoughCircleFnder::DrawImage(IplImage* Image)
 }
 
 void HoughCircleFnder::DrawEye(IplImage* Image)
-{//Image needs to be RGB or ARGB
+{
+    //Image needs to be RGB or ARGB
     if (GetNumFound() == 1)
     {
-        if (Loc.IrisFound())
+        if (Locs.IrisFound())
         {
-            cvCircle(Image, cvPoint(Loc.GetX(), Loc.GetY()), Loc.GetOutterRadius(), CV_RGB(0,255,0), 2, 8, 0);
+            cvCircle(Image, cvPoint(Locs.CircleCenter().GetXint(), Locs.CircleCenter().GetYint()), (int)Locs.GetIrisRadius(), CV_RGB(0,255,0), 2, 8, 0);
         }
-        cvCircle(Image, cvPoint(Loc.GetX(), Loc.GetY()), Loc.GetInnerRadius(), CV_RGB(255,0,0), 2, 8, 0);
+        cvCircle(Image, cvPoint(Locs.CircleCenter().GetXint(), Locs.CircleCenter().GetYint()), (int)Locs.GetPupilRadious(), CV_RGB(255,0,0), 2, 8, 0);
     }
 }
