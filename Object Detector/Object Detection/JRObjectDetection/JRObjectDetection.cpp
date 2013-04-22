@@ -137,7 +137,7 @@ void ObjectDetection::calculateSurfaceNormals()
 		}
 		
 		cout << "calculateSurfaceNormals completed." << endl;
-	}
+	}/* END validDepthData */
 }
 
 void ObjectDetection::segmentPlanes_old_old()
@@ -198,7 +198,7 @@ void ObjectDetection::segmentPlanes_old_old()
 		}
 		
 		cout << "segmentPlanes completed. Found " << plane_clusters.size() << " clusters." << endl;
-	}
+	}/* END validDepthData */
 }
 
 void ObjectDetection::segmentPlanes_old()
@@ -322,7 +322,7 @@ void ObjectDetection::segmentPlanes_old()
 		}
 		
 		cout << "segmentPlanes completed. Found " << plane_clusters.size() << " clusters, of which " << goodClusters << "are over the threshold of 1000 points." << endl;
-	}
+	}/* END validDepthData */
 }
 
 
@@ -341,7 +341,7 @@ void ObjectDetection::segmentPlanes()
 		
 		// Remove all the current points from the plane_cluster_nodes and reserve the size we need.
 		// Also, set all the node values to -1 to show that they are all unassigned.
-		plane_cluster_nodes.erase(plane_cluster_nodes.begin(), plane_cluster_nodes.end());
+		vector<int> plane_cluster_nodes;
 		plane_cluster_nodes.assign(FREENECT_FRAME_PIX, NODE_UNASSIGNED);
 		
 		int current_segment_id = -1;
@@ -419,21 +419,21 @@ void ObjectDetection::segmentPlanes()
 			}
 		}
 		
+		// Find all the clusters that have a point count greater than the threshold.
+		plane_clusters.erase(plane_clusters.begin(), plane_clusters.end());
 		size_t bigClusterCount = 0;
 		for (size_t i = 0; i < all_clusters.size(); i++) {
-			if (all_clusters[i].indices.size() > 1000) {
+			if (all_clusters[i].indices.size() > PLANE_CLUSTER_THRESHOLD) {
 				bigClusterCount++;
+				// Add this cluster to the plane_clusters.
+				plane_clusters.emplace_back(all_clusters.at(i));
 			}
 		}
-		cout << "segmentPlanes Filtered clusters down to " << bigClusterCount << " clusters." << endl;
-	}
+		cout << "segmentPlanes Filtered clusters down to " << bigClusterCount << " clusters. new plane_clusters.size = " << plane_clusters.size() << "." << endl;
+	}/* END validDepthData */
 }
 
-void ObjectDetection::filterPlanes()
-{
-	if (validDepthData) {
-		
-	}
-}
+
+
 
 

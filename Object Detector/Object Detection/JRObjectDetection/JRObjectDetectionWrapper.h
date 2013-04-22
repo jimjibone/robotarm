@@ -22,4 +22,9 @@ struct JRObjectDetectionWrapperOpaque;
 - (void)calculateSurfaceNormals;
 - (void)segmentPlanes;
 
+- (size_t)getNumberOfPlaneClusters;
+- (size_t)getNumberOfIndicesInPlaneCluster:(size_t)cluster;
+- (void)getX:(double*)x Y:(double*)y Z:(double*)z forPoint:(size_t)point forPlaneCluster:(size_t)cluster;
+- (void)getA:(double*)a B:(double*)b C:(double*)c D:(double*)d forPlaneCluster:(size_t)cluster;
+
 @end

@@ -16,6 +16,7 @@
 #import "GLProgram.h"
 #import "JRKinectHelpers.h"
 #import "JRObjectDetector.h"
+#import "JRObjectDetectionWrapper.h"
 #import "JRObjectHelpers.h"
 #import "JRPointTypes.h"
 //#import "JRPointRotationXYZ.h"
@@ -44,6 +45,8 @@
 	//_ransacConfidentPlane _planeData;
 	//PointXYZ *_convexHullPoints;	unsigned int _convexHullPointCount;
 	//PointXYZ *_objectsCloudPoints;	uint _objectsCloudPointCount;
+	PlaneCoefficients *_segmented_planes;
+	size_t _segmented_planes_count;
     
     // 3D navigation
     NSPoint _lastPos, _lastPosRight;
@@ -56,6 +59,7 @@
 	BOOL _drawPlane;
 	BOOL _drawConvexHull;
 	BOOL _drawObjectsCloud;
+	BOOL _drawSegmentedPlanes;
 	BOOL _normals;
     BOOL _mirror;
     BOOL _natural;
@@ -74,6 +78,7 @@
 - (void)showConvexHull:(BOOL)mode;
 - (void)setObjectsCloudPoints:(PointXYZ*)newPoints Count:(uint)count;
 - (void)showObjectsCloud:(BOOL)mode;
+- (void)setObjectDetectionData:(JRObjectDetectionWrapper*)objectDetector;
 
 - (void)stopDrawing;
 

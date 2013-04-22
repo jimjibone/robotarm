@@ -69,4 +69,35 @@ public:
 
 
 
+#pragma mark -
+#pragma mark Get Data Methods
+
+- (size_t)getNumberOfPlaneClusters
+{
+	return self.cpp->wrapper.plane_clusters.size();
+}
+- (size_t)getNumberOfIndicesInPlaneCluster:(size_t)cluster
+{
+	return self.cpp->wrapper.plane_clusters[cluster].indices.size();
+}
+- (void)getX:(double*)x Y:(double*)y Z:(double*)z forPoint:(size_t)point forPlaneCluster:(size_t)cluster
+{
+	size_t index = self.cpp->wrapper.plane_clusters[cluster].indices[point];
+	*x = self.cpp->wrapper.input_cloud[index].x;
+	*y = self.cpp->wrapper.input_cloud[index].y;
+	*z = self.cpp->wrapper.input_cloud[index].z;
+}
+- (void)getA:(double*)a B:(double*)b C:(double*)c D:(double*)d forPlaneCluster:(size_t)cluster
+{
+	size_t midPoint = (size_t)(self.cpp->wrapper.plane_clusters[cluster].indices.size() / 2);
+	size_t index = self.cpp->wrapper.plane_clusters[cluster].indices[midPoint];
+	*a = self.cpp->wrapper.input_cloud_normals[index].a;
+	*b = self.cpp->wrapper.input_cloud_normals[index].b;
+	*c = self.cpp->wrapper.input_cloud_normals[index].c;
+	*d = self.cpp->wrapper.input_cloud_normals[index].d;
+}
+
+
+
+
 @end

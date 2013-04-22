@@ -21,6 +21,7 @@
 #define OBJECT_MIN_HEIGHT (10)	// mm above table
 #define PI_VALUE (3.141592654)
 #define NODE_UNASSIGNED (-1)
+#define PLANE_CLUSTER_THRESHOLD 1000
 
 using namespace std;
 
@@ -34,15 +35,14 @@ public:
 	
 	vector<PointXYZ> input_cloud;
 	vector<PlaneCoefficients> input_cloud_normals;
-	vector<PointIndices> plane_clusters;	//currently only used in old segmentation methods
-	vector<int> plane_cluster_nodes;
+	vector<PointIndices> plane_clusters;
 	
 	void setZPoints(uint16_t* zPoints, size_t size);
 	void calculateSurfaceNormals();
 	void segmentPlanes_old_old();
 	void segmentPlanes_old();
 	void segmentPlanes();
-	void filterPlanes();
+	
 };
 
 #endif /* defined(__Kinect_Object_Detector__JRObjectDetection__) */

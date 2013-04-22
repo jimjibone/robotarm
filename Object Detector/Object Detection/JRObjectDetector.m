@@ -178,6 +178,8 @@
 		objectDetectionComplete = YES;
 		[[[NSWorkspace sharedWorkspace] notificationCenter] postNotificationName:nObjectDetectorDidCompleteTableDetection
 																		  object:self];
+		
+		[glView setObjectDetectionData:objectDetector];
 	}
 }
 

@@ -487,6 +487,34 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 	
 	glPointSize(prevPointSize);*/
 }
+- (void)drawSegmentedPlanes
+{
+	if (_segmented_planes_count > 0) {
+		for (size_t i = 0; i < _segmented_planes_count; i++) {
+			
+			XYZPoint bl = (XYZPoint){-600, 600,
+				zWorldFromPlaneAndWorldXY(_segmented_planes[i], -600, -600)};
+			XYZPoint tl = (XYZPoint){600, 600,
+				zWorldFromPlaneAndWorldXY(_segmented_planes[i], 600, -600)};
+			XYZPoint tr = (XYZPoint){600, -600,
+				zWorldFromPlaneAndWorldXY(_segmented_planes[i], 600, 600)};
+			XYZPoint br = (XYZPoint){-600, -600,
+				zWorldFromPlaneAndWorldXY(_segmented_planes[i], -600, 600)};
+			
+			float randColour = arc4random_uniform(255) / 255;
+			
+			glBegin(GL_QUADS);
+			glColor4f(.392156863, randColour, .392156863, 0.3);
+			// bl, tl, tr, br
+			glVertex3d(bl.x, bl.y, -bl.z);
+			glVertex3d(tl.x, tl.y, -tl.z);
+			glVertex3d(tr.x, tr.y, -tr.z);
+			glVertex3d(br.x, br.y, -br.z);
+			glEnd();
+			
+		}
+	}
+}
 - (void)drawGLStringX:(GLfloat)x Y:(GLfloat)y Z:(GLfloat)z String:(NSString*)string {
 	//glColor3f(255, 255, 255);
 	glRasterPos3f(x, y, -z);
@@ -627,6 +655,7 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
         if (_drawFrustrum) [self drawFrustrum];
 		if (_drawConvexHull) [self drawBoundedPlaneHull];//[self drawConvexHull];
 		if (_drawObjectsCloud) [self drawObjectsCloud];
+		if (_drawSegmentedPlanes) [self drawSegmentedPlanes];
 		
 		glDisable(GL_POINT_SMOOTH);
 		glDisable(GL_LINE_SMOOTH);
@@ -806,6 +835,26 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 	@synchronized (self) {
 		_drawObjectsCloud = mode;
 	}
+}
+- (void)setObjectDetectionData:(JRObjectDetectionWrapper*)objectDetector
+{
+//	- (size_t)getNumberOfPlaneClusters;
+//	- (size_t)getNumberOfIndicesInPlaneCluster:(size_t)cluster;
+//	- (void)getX:(double*)x Y:(double*)y Z:(double*)z forPoint:(size_t)point forPlaneCluster:(size_t)cluster;
+//	- (void)getA:(double*)a B:(double*)b C:(double*)c D:(double*)d forPlaneCluster:(size_t)cluster;
+	@synchronized (self) {
+		_drawSegmentedPlanes = NO;
+	}
+	
+	_segmented_planes_count = [objectDetector getNumberOfPlaneClusters];
+	free(_segmented_planes);
+	_segmented_planes = (PlaneCoefficients*)malloc(_segmented_planes_count * sizeof(PlaneCoefficients));
+	
+	for (size_t i = 0; i < _segmented_planes_count; i++) {
+		[objectDetector getA:&_segmented_planes[i].a B:&_segmented_planes[i].b C:&_segmented_planes[i].c D:&_segmented_planes[i].d forPlaneCluster:i];
+	}
+	
+	_drawSegmentedPlanes = YES;
 }
 
 
