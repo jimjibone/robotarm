@@ -26,6 +26,8 @@ using namespace std;
 
 class ObjectDetection {
 	
+	bool validDepthData;
+	
 	bool compareNormalAngle(size_t a, size_t b);
 	
 public:

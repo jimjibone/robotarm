@@ -176,6 +176,8 @@
 		[objectDetector segmentPlanes];
 		
 		objectDetectionComplete = YES;
+		[[[NSWorkspace sharedWorkspace] notificationCenter] postNotificationName:nObjectDetectorDidCompleteTableDetection
+																		  object:self];
 	}
 }
 
