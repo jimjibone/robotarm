@@ -35,7 +35,7 @@
 	[objectDetector setGLViewOutlet:glView];
 	[objectDetector start];
 	
-	[_resetTableDetectBtn setEnabled:NO];
+	[_resetTableDetectBtn setEnabled:YES];
 }
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)sender {
     return YES;
@@ -131,7 +131,7 @@
 		}
 		[self.tableDetectProgress setDoubleValue:0.0];
 		
-		PlaneCoefficients coefficients = [objectDetector getPlaneCoefficients];
+		/*PlaneCoefficients coefficients = [objectDetector getPlaneCoefficients];
 		[self.tablePlaneEquation setStringValue:[NSString stringWithFormat:
 												 @"%.2fx + %.2fy + %.2fz + %.2f = 0",
 												 coefficients.a,
@@ -143,7 +143,7 @@
 		[self.convexHullPointsController removeObjects:self.convexHullPoints];
 		[self.convexHullPoints removeAllObjects];
 		[self.convexHullPoints addObjectsFromArray:[objectDetector getConvexHullPoints]];
-		[self.convexHullPointsController addObjects:self.convexHullPoints];
+		[self.convexHullPointsController addObjects:self.convexHullPoints];*/
 	}
 	if ([[aNotification name] isEqualToString:nObjectDetectorDidFailTableDetection])
 	{
@@ -186,7 +186,7 @@
 		if ([[[aNotification userInfo] objectForKey:dKinectControllerStatusState] boolValue]) {
 			// Kinect is connected.
 			[self.connectKinectBtn setEnabled:NO];
-			[objectDetector resetTableDetection];
+			//[objectDetector resetTableDetection];
 		} else {
 			// Kinect is not connected.
 			[self.connectKinectBtn setEnabled:YES];

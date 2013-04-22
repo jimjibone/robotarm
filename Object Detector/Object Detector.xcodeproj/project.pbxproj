@@ -18,10 +18,6 @@
 		1A6F6AB3165A8A2B00FA3601 /* JRKinectHelpers.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A6F6AB0165A8A2B00FA3601 /* JRKinectHelpers.c */; };
 		1A6F6AB7165A8A3500FA3601 /* JRObjectDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6F6AB6165A8A3500FA3601 /* JRObjectDetector.m */; };
 		1A99C67316C0982000F3677D /* JRConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A99C67216C0982000F3677D /* JRConstants.m */; };
-		1AAECABD16BC229B00412A08 /* JRConvexHull.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1AAECAB916BC229B00412A08 /* JRConvexHull.cpp */; };
-		1AAECABE16BC229B00412A08 /* JRConvexHullWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1AAECABC16BC229B00412A08 /* JRConvexHullWrapper.mm */; };
-		1AB2083B16BDF265001BFFDA /* JRRANSAC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1AB2083916BDF265001BFFDA /* JRRANSAC.cpp */; };
-		1AB2083E16BDF28D001BFFDA /* JRRANSACWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1AB2083D16BDF28D001BFFDA /* JRRANSACWrapper.mm */; };
 		1ADF88EB165AD4B0004A442B /* GLProgram.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ADF88E8165AD4B0004A442B /* GLProgram.m */; };
 		1ADF88EC165AD4B0004A442B /* GLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ADF88EA165AD4B0004A442B /* GLView.m */; };
 		1ADF88F7165AE3E2004A442B /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ADF88F6165AE3E2004A442B /* OpenGL.framework */; };
@@ -69,14 +65,6 @@
 		1A6F6AB6165A8A3500FA3601 /* JRObjectDetector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JRObjectDetector.m; sourceTree = "<group>"; usesTabs = 1; };
 		1A99C67116C0982000F3677D /* JRConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JRConstants.h; sourceTree = "<group>"; };
 		1A99C67216C0982000F3677D /* JRConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JRConstants.m; sourceTree = "<group>"; };
-		1AAECAB916BC229B00412A08 /* JRConvexHull.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = JRConvexHull.cpp; sourceTree = "<group>"; };
-		1AAECABA16BC229B00412A08 /* JRConvexHull.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JRConvexHull.h; sourceTree = "<group>"; };
-		1AAECABB16BC229B00412A08 /* JRConvexHullWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JRConvexHullWrapper.h; sourceTree = "<group>"; };
-		1AAECABC16BC229B00412A08 /* JRConvexHullWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = JRConvexHullWrapper.mm; sourceTree = "<group>"; };
-		1AB2083916BDF265001BFFDA /* JRRANSAC.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = JRRANSAC.cpp; sourceTree = "<group>"; };
-		1AB2083A16BDF265001BFFDA /* JRRANSAC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JRRANSAC.h; sourceTree = "<group>"; };
-		1AB2083C16BDF28D001BFFDA /* JRRANSACWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JRRANSACWrapper.h; sourceTree = "<group>"; };
-		1AB2083D16BDF28D001BFFDA /* JRRANSACWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = JRRANSACWrapper.mm; sourceTree = "<group>"; };
 		1ADF88E7165AD4B0004A442B /* GLProgram.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLProgram.h; sourceTree = "<group>"; };
 		1ADF88E8165AD4B0004A442B /* GLProgram.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLProgram.m; sourceTree = "<group>"; };
 		1ADF88E9165AD4B0004A442B /* GLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLView.h; sourceTree = "<group>"; };
@@ -193,8 +181,6 @@
 			isa = PBXGroup;
 			children = (
 				D192E13517171D0F00B94D3D /* JRObjectDetection */,
-				1AB2083816BDF252001BFFDA /* JRRANSAC */,
-				1AAECAB816BC229B00412A08 /* JRConvexHull */,
 				1A6F6AB5165A8A3500FA3601 /* JRObjectDetector.h */,
 				1A6F6AB6165A8A3500FA3601 /* JRObjectDetector.m */,
 				1A1F803F165C340E004C33EB /* JRObjectHelpers.h */,
@@ -203,28 +189,6 @@
 			);
 			path = "Object Detection";
 			sourceTree = SOURCE_ROOT;
-		};
-		1AAECAB816BC229B00412A08 /* JRConvexHull */ = {
-			isa = PBXGroup;
-			children = (
-				1AAECAB916BC229B00412A08 /* JRConvexHull.cpp */,
-				1AAECABA16BC229B00412A08 /* JRConvexHull.h */,
-				1AAECABB16BC229B00412A08 /* JRConvexHullWrapper.h */,
-				1AAECABC16BC229B00412A08 /* JRConvexHullWrapper.mm */,
-			);
-			path = JRConvexHull;
-			sourceTree = "<group>";
-		};
-		1AB2083816BDF252001BFFDA /* JRRANSAC */ = {
-			isa = PBXGroup;
-			children = (
-				1AB2083916BDF265001BFFDA /* JRRANSAC.cpp */,
-				1AB2083A16BDF265001BFFDA /* JRRANSAC.h */,
-				1AB2083C16BDF28D001BFFDA /* JRRANSACWrapper.h */,
-				1AB2083D16BDF28D001BFFDA /* JRRANSACWrapper.mm */,
-			);
-			path = JRRANSAC;
-			sourceTree = "<group>";
 		};
 		1ADF88E6165AD4B0004A442B /* OpenGL View */ = {
 			isa = PBXGroup;
@@ -324,10 +288,6 @@
 				1ADF88EB165AD4B0004A442B /* GLProgram.m in Sources */,
 				1ADF88EC165AD4B0004A442B /* GLView.m in Sources */,
 				1A1F8042165C34DA004C33EB /* JRObjectHelpers.c in Sources */,
-				1AAECABD16BC229B00412A08 /* JRConvexHull.cpp in Sources */,
-				1AAECABE16BC229B00412A08 /* JRConvexHullWrapper.mm in Sources */,
-				1AB2083B16BDF265001BFFDA /* JRRANSAC.cpp in Sources */,
-				1AB2083E16BDF28D001BFFDA /* JRRANSACWrapper.mm in Sources */,
 				1A99C67316C0982000F3677D /* JRConstants.m in Sources */,
 				D192E13817171D2600B94D3D /* JRObjectDetection.cpp in Sources */,
 				D19413F6171B4B67005EDC0D /* JRObjectDetectionWrapper.mm in Sources */,

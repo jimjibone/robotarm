@@ -14,6 +14,10 @@
 #include <math.h>
 #include <libfreenect/libfreenect.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define FREENECT_FRAME_W 640
 #define FREENECT_FRAME_H 480
 #define FREENECT_FRAME_PIX (FREENECT_FRAME_H*FREENECT_FRAME_W)
@@ -63,5 +67,8 @@ void indexFromWorld(unsigned int* index, double wx, double wy, int z);
 void swapPtr16(uint16_t **firstPtr, uint16_t **secondPtr);
 void swapPtr8(uint8_t **firstPtr, uint8_t **secondPtr);
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif

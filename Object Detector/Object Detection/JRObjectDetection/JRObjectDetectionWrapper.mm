@@ -19,18 +19,21 @@
 
 struct JRObjectDetectionWrapperOpaque {
 public:
-	JRObjectDetectionWrapperOpaque(uint newMaxPoints, double newMaxHeight, double newMinHeight) : wrapper(newMaxPoints, newMaxHeight, newMinHeight) {};
+	JRObjectDetectionWrapperOpaque() {};
 	ObjectDetection::ObjectDetection wrapper;
 };
+
+
+
 
 #pragma mark -
 #pragma mark Objective-C Methods
 
-- (id)initWithMaxPoints:(uint)newMaxPoints MaxHeight:(double)newMaxHeight MinHeight:(double)newMinHeight
+- (id)init
 {
 	self = [super init];
 	if (self) {
-		self.cpp = new JRObjectDetectionWrapperOpaque(newMaxPoints, newMaxHeight, newMinHeight);
+		self.cpp = new JRObjectDetectionWrapperOpaque();
 	}
 	return self;
 }
@@ -45,47 +48,25 @@ public:
 
 
 
-#pragma mark -
-#pragma mark Initialisation Methods
-
-- (void)setPlaneCoefficientsA:(double)a B:(double)b C:(double)c D:(double)d Invert:(bool)invert
-{
-	self.cpp->wrapper.setPlaneCoefficients(a, b, c, d, invert);
-}
-- (void)addPreprocessedConvexHullPointX:(double)x Y:(double)y Z:(double)z I:(double)i J:(double)j
-{
-	PointXYZIJ aPoint (x, y, z, i, j);
-	self.cpp->wrapper.addPreprocessedConvexHullPoint(aPoint);
-}
-
-
-
 
 #pragma mark -
 #pragma mark Each 'New Frame' Functions
 // Execute in order shown.
 
-- (void)updateDepthData:(uint16_t*)newDepth
+- (void)setZPoints:(uint16_t*)zPoints size:(size_t)size
 {
-	self.cpp->wrapper.updateDepthData(newDepth);
+	self.cpp->wrapper.setZPoints(zPoints, size);
 }
-- (void)performObjectDetection
+- (void)calculateSurfaceNormals
 {
-	self.cpp->wrapper.performObjectDetection();
+	self.cpp->wrapper.calculateSurfaceNormals();
 }
-- (unsigned int)objectsCloudPointsCount
+- (void)segmentPlanes
 {
-	return (unsigned int)self.cpp->wrapper.cloud_objects.points.size();
+	self.cpp->wrapper.segmentPlanes();
 }
-- (void)getObjectsCloudPointNo:(unsigned int)i X:(double*)outX Y:(double*)outY Z:(double*)outZ
-{
-	*outX = self.cpp->wrapper.cloud_objects.points[i].x;
-	*outY = self.cpp->wrapper.cloud_objects.points[i].y;
-	*outZ = self.cpp->wrapper.cloud_objects.points[i].z;
-}
-- (void)prepareForNewData
-{
-	self.cpp->wrapper.prepareForNewData();
-}
+
+
+
 
 @end

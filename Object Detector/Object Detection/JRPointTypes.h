@@ -23,7 +23,7 @@ struct PointIndices {
 	std::vector<size_t> indices;
 	PointIndices(std::vector<size_t> _indices) : indices(_indices) {};
 	PointIndices(size_t index) { indices.emplace_back(index); };
-	PointIndices();
+	PointIndices() { /*indices.erase(indices.begin(), indices.end());*/ };
 };
 
 struct PointIXYZ {

@@ -114,7 +114,7 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
     _natural = NO;
     _drawMode = MODE_POINTS;
 	
-	_planeData = (_ransacConfidentPlane){0, 0, 0, 0, 0};
+	//_planeData = (_ransacConfidentPlane){0, 0, 0, 0, 0};
     
 	_intDepth = (uint16_t*)malloc(FREENECT_DEPTH_11BIT_SIZE);
 	_intRGB = (uint8_t*)malloc(FREENECT_VIDEO_RGB_SIZE);
@@ -382,7 +382,7 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
     glDisableClientState(GL_VERTEX_ARRAY);
 }
 - (void)drawPlane {
-	XYZPoint bl = (XYZPoint){-600, 600,
+	/*XYZPoint bl = (XYZPoint){-600, 600,
 		zWorldFromPlaneAndWorldXY(_planeData, -600, -600)};
 	XYZPoint tl = (XYZPoint){600, 600,
 		zWorldFromPlaneAndWorldXY(_planeData, 600, -600)};
@@ -398,10 +398,10 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 	glVertex3d(tl.x, tl.y, -tl.z);
 	glVertex3d(tr.x, tr.y, -tr.z);
 	glVertex3d(br.x, br.y, -br.z);
-	glEnd();
+	glEnd();*/
 }
 - (void)drawConvexHull {
-	GLfloat prevPointSize = 0;
+	/*GLfloat prevPointSize = 0;
 	glGetFloatv(GL_POINT_SIZE, &prevPointSize);
 	glPointSize(8);
 	
@@ -427,11 +427,11 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 	}
 	glEnd();
 	
-	glLineWidth(prevLineWidth);
+	glLineWidth(prevLineWidth);*/
 }
 - (void)drawBoundedPlaneHull {
 	// Draw points of the hull
-	GLfloat prevPointSize = 0;
+	/*GLfloat prevPointSize = 0;
 	glGetFloatv(GL_POINT_SIZE, &prevPointSize);
 	glPointSize(8);
 	
@@ -468,10 +468,10 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 	}
 	glEnd();
 	
-	glLineWidth(prevLineWidth);
+	glLineWidth(prevLineWidth);*/
 }
 - (void)drawObjectsCloud {
-	GLfloat prevPointSize = 0;
+	/*GLfloat prevPointSize = 0;
 	glGetFloatv(GL_POINT_SIZE, &prevPointSize);
 	glPointSize(8);
 	
@@ -485,7 +485,7 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 		glEnd();
 	}
 	
-	glPointSize(prevPointSize);
+	glPointSize(prevPointSize);*/
 }
 - (void)drawGLStringX:(GLfloat)x Y:(GLfloat)y Z:(GLfloat)z String:(NSString*)string {
 	//glColor3f(255, 255, 255);
@@ -713,9 +713,9 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 	}
 }
 - (void)setPlaneData:(_ransacConfidentPlane)newPlane {
-	@synchronized (self) {
-		_planeData = newPlane;
-	}
+	//@synchronized (self) {
+	//	_planeData = newPlane;
+	//}
 //#define GLViewSetPlaneDEBUG
 #ifdef GLViewSetPlaneDEBUG
 	printf("GLView:\n");
@@ -735,7 +735,7 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 	}
 }
 - (void)resetConvexHullPoints {
-	@synchronized (self) {
+	/*@synchronized (self) {
 		_drawConvexHull = NO;
 	}
 	if (_convexHullPoints) {
@@ -744,10 +744,10 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 		_convexHullPoints = NULL;
 		_convexHullPointCount = 0;
 		_drawConvexHull = NO;
-	}
+	}*/
 }
 - (void)setConvexHullPoints:(PointXYZ*)newPoints Count:(unsigned int)count {
-	@synchronized (self) {
+	/*@synchronized (self) {
 		_drawConvexHull = NO;
 	}
 	if (_convexHullPoints) {
@@ -768,7 +768,7 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 		_convexHullPointCount = count;
 		
 		_drawConvexHull = YES;
-	}
+	}*/
 }
 - (void)showConvexHull:(BOOL)mode {
 	@synchronized (self) {
@@ -777,7 +777,7 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 }
 - (void)setObjectsCloudPoints:(PointXYZ*)newPoints Count:(uint)count
 {
-	@synchronized (self) {
+	/*@synchronized (self) {
 		_drawObjectsCloud = NO;
 	}
 	
@@ -799,7 +799,7 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 		_objectsCloudPointCount = count;
 		
 		_drawObjectsCloud = YES;
-	}
+	}*/
 }
 - (void)showObjectsCloud:(BOOL)mode
 {

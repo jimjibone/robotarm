@@ -41,9 +41,9 @@
     GLProgram *_depthProgram;
 	
 	// Object Detection
-	_ransacConfidentPlane _planeData;
-	PointXYZ *_convexHullPoints;	unsigned int _convexHullPointCount;
-	PointXYZ *_objectsCloudPoints;	uint _objectsCloudPointCount;
+	//_ransacConfidentPlane _planeData;
+	//PointXYZ *_convexHullPoints;	unsigned int _convexHullPointCount;
+	//PointXYZ *_objectsCloudPoints;	uint _objectsCloudPointCount;
     
     // 3D navigation
     NSPoint _lastPos, _lastPosRight;

@@ -16,15 +16,10 @@ struct JRObjectDetectionWrapperOpaque;
 	struct JRObjectDetectionWrapperOpaque *_cpp;
 }
 
-- (id)initWithMaxPoints:(uint)newMaxPoints MaxHeight:(double)newMaxHeight MinHeight:(double)newMinHeight;
+- (id)init;
 
-- (void)setPlaneCoefficientsA:(double)a B:(double)b C:(double)c D:(double)d Invert:(bool)invert;
-- (void)addPreprocessedConvexHullPointX:(double)x Y:(double)y Z:(double)z I:(double)i J:(double)j;
-
-- (void)updateDepthData:(uint16_t*)newDepth;
-- (void)performObjectDetection;
-- (unsigned int)objectsCloudPointsCount;
-- (void)getObjectsCloudPointNo:(unsigned int)i X:(double*)outX Y:(double*)outY Z:(double*)outZ;
-- (void)prepareForNewData;
+- (void)setZPoints:(uint16_t*)zPoints size:(size_t)size;
+- (void)calculateSurfaceNormals;
+- (void)segmentPlanes;
 
 @end

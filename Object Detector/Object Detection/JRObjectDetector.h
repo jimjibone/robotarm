@@ -11,8 +11,6 @@
 #import "JRKinectController.h"
 #import "GLView.h"
 #import "JRObjectHelpers.h"
-#import "JRConvexHullWrapper.h"
-#import "JRRANSACWrapper.h"
 #import "JRObjectDetectionWrapper.h"
 #import "JRPointTypes.h"
 
@@ -27,23 +25,7 @@
 	uint16_t *_kinectDepth;
 	uint8_t  *_kinectRGB;
 	
-	// RANSAC
-	JRRANSACWrapper *ransac;
-	PlaneCoefficients ransacConfidentPlane;
-	BOOL ransacReset;
-	uint ransacIterations;
-	BOOL ransacComplete;
-	BOOL ransacShow;
-	BOOL ransacShowChanged;
-	
-	// Convex Hull Data
-	JRConvexHullWrapper *convexHull;
-	BOOL convexHullReset;
-	BOOL convexHullComplete;
-	BOOL convexHullShow;
-	BOOL convexHullShowChanged;
-	
-	// Object Detection Data
+	// Object Detection
 	JRObjectDetectionWrapper *objectDetector;
 	BOOL objectDetectionReset;
 	BOOL objectDetectionComplete;
@@ -57,12 +39,9 @@
 - (JRKinectController*)getKinectController;
 
 - (void)resetTableDetection;
-- (BOOL)setPlaneViewingState:(BOOL)aState;
-- (BOOL)setConvexHullViewingState:(BOOL)aState;
 
 - (void)setGLViewOutlet:(GLView*)newGLView;
 
-- (PlaneCoefficients)getPlaneCoefficients;
-- (NSArray*)getConvexHullPoints;
+//- (NSArray*)getConvexHullPoints;
 
 @end
