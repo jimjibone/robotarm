@@ -21,7 +21,7 @@ class Tracking
         void Track(IplImage*);
 
         GlintLocation GetGlintLocation();
-        CircleLocation GetCircleLocation();
+        MultiCircleLocations GetCircleLocation();
 
         void ShowWindow();
         void HideWindow();

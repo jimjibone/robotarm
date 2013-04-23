@@ -5,7 +5,7 @@
 #include "../../Variables/EyeRange.h"
 #include "../../Variables/GlintLocation.h"
 #include "../../Variables/EyePoint.h"
-#include "../../Variables/CircleLocation.h"
+#include "../../Variables/MultiCircleLocations.h"
 #include <opencv/cv.h>
 
 class GlintFinder
@@ -15,7 +15,7 @@ class GlintFinder
         GlintFinder(int);
         virtual ~GlintFinder();
 
-        void FindGlints(IplImage*, CircleLocation);
+        void FindGlints(IplImage*, MultiCircleLocations);
         GlintLocation GetGlintLocation(int);
 
         void DrawGlints(IplImage*);

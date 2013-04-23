@@ -4,7 +4,7 @@
 #include <opencv/cv.h>
 #include <opencv/highgui.h>
 #include <pthread.h>
-#include "../Variables/CircleLocation.h"
+#include "../Variables/MultiCircleLocations.h"
 #include "../Variables/GlintLocation.h"
 #include "../Common/EyeTimers.h"
 #include "WindowsSizer.h"
@@ -16,7 +16,7 @@ class Calibration
         Calibration();
         virtual ~Calibration();
 
-        void NewValue(CircleLocation, GlintLocation);
+        void NewValue(MultiCircleLocations, GlintLocation);
 
         void ShowCalibrationWindow();
         void HideCalibrationWindow();

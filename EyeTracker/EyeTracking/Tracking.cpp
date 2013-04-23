@@ -49,7 +49,7 @@ GlintLocation Tracking::GetGlintLocation()
     }
 }
 
-CircleLocation Tracking::GetCircleLocation()
+MultiCircleLocations Tracking::GetCircleLocation()
 {
     if (CircleFinder.GetNumFound() == 1)
     {
@@ -57,7 +57,7 @@ CircleLocation Tracking::GetCircleLocation()
     }
     else
     {
-        return CircleLocation();
+        return MultiCircleLocations();
     }
 }
 

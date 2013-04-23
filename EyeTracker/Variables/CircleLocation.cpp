@@ -2,29 +2,36 @@
 
 CircleLocation::CircleLocation()
 {
-    SetRect(0, 0, 0, -1);
+    SetRect(EyePoint(), 0, -1);
 }
 
 CircleLocation::CircleLocation(int MidX, int MidY, int InnerR)
 {
-    SetRect(MidX, MidY, InnerR, -1);
+    SetRect(EyePoint(MidX, MidY), InnerR, -1);
 }
 
 CircleLocation::CircleLocation(int MidX, int MidY, int InnerR, int OuterR)
 {
-    SetRect(MidX, MidY, InnerR, OuterR);
+    SetRect(EyePoint(MidX, MidY), InnerR, OuterR);
 }
 
-void CircleLocation::SetRect(int MidX, int MidY, int InnerR, int OuterR)
+CircleLocation::CircleLocation(EyePoint Center, int InnerR)
 {
-    X = MidX;
-    Y = MidY;
+    SetRect(Center, InnerR, -1);
+}
+
+CircleLocation::CircleLocation(EyePoint Center, int InnerR, int OuterR)
+{
+    SetRect(Center, InnerR, OuterR);
+}
+
+void CircleLocation::SetRect(EyePoint Point, int InnerR, int OuterR)
+{
+    Center = Point;
     InR = InnerR;
-    InRect = EyeRectangle(X - InR, Y - InR, InR * 2, InR * 2);
-    NewRect = EyeRectangle(InRect.Left() - NewArea, InRect.Top() - NewArea, NewArea * 2 + InR * 2, NewArea * 2 + InR * 2);
-    BrightRect = EyeRectangle(X - InR * 2, Y - InR * 2, InR * 4, InR * 4);
+    InRect = EyeRectangle(Point.GetX() - InR, Point.GetY() - InR, InR * 2, InR * 2);
     OutR = OuterR;
-    OutRect = EyeRectangle(X - OutR, Y - OutR, OutR * 2, OutR * 2);
+    OutRect = EyeRectangle(Point.GetX() - OutR, Point.GetY() - OutR, OutR * 2, OutR * 2);
 }
 
 CircleLocation::~CircleLocation()
@@ -42,23 +49,6 @@ EyeRectangle CircleLocation::GetOutterRectangle()
     return OutRect;
 }
 
-EyeRectangle CircleLocation::NextRectangle()
-{
-    return NewRect;
-}
-
-EyeRectangle CircleLocation::BrightRectangle()
-{
-    if (IrisFound())
-    {
-        return OutRect;
-    }
-    else
-    {
-        return BrightRect;
-    }
-}
-
 bool CircleLocation::IrisFound()
 {
     return OutR != -1;
@@ -66,12 +56,17 @@ bool CircleLocation::IrisFound()
 
 int CircleLocation::GetX()
 {
-    return X;
+    return Center.GetX();
 }
 
 int CircleLocation::GetY()
 {
-    return Y;
+    return Center.GetY();
+}
+
+EyePoint CircleLocation::CentreLoc()
+{
+    return Center;
 }
 
 int CircleLocation::GetInnerRadius()

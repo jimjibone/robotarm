@@ -65,11 +65,11 @@ void ImagePlaying::ConvertToBinary(IplImage* ScrImage, IplImage* DestImage)
 
 unsigned char ImagePlaying::Modify(unsigned char Num)
 {//3 Point return, allows for slightly more accurate contouring it seems
-    if(Num < PNum1)
+    if(Num < PNum1) //Default value for PNum1 is 100
     {
         return 0;
     }
-    else if (Num < PNum2)
+    else if (Num < PNum2) //Default value for PNum2 is 150
     {
         return 127;
     }
@@ -94,12 +94,12 @@ void ImagePlaying::ContourFinder(IplImage* ScrImage, IplImage* DestImage)
                 for (int y = Y - StepSize; y < Y + StepSize; y++)
                 {
                     if (x != X && Y != y)
-                    {//Dont check
-                        if (CheckAgainst != ScrImage->imageData[x + y *ScrImage->width]) //If value changes, add a value to tet variable
+                    {//Dont check the point in question
+                        if (CheckAgainst != ScrImage->imageData[x + y *ScrImage->width]) //If value changes, add a value to the Num variable
                         {
                             Num++;
-
-                            if (Num > PassAmount)
+							//Check if point passes condition to speed up processing
+                            if (Num > PassAmount) //Default value for PassAmount is 2
                             {
                                 x = X + StepSize;
                                 break;

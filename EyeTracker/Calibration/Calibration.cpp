@@ -13,7 +13,7 @@ Calibration::~Calibration()
     HidePointWindow();
 }
 
-void Calibration::NewValue(CircleLocation, GlintLocation)
+void Calibration::NewValue(MultiCircleLocations, GlintLocation)
 {
 
 }
