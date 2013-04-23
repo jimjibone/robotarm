@@ -18,13 +18,13 @@ public:
     void SetOpenCVImage(IplImage*);
     void DrawImage(IplImage*);
 
-    bool GetSecChecker();
-    void SetSecChecker(bool);
+    bool GetIrisChecker();
+    void SetIrisChecker(bool);
 
     void FindCircle();
 
     MultiCircleLocations GetCircleLocation();
-    int GetNumFound();
+    bool Found();
 
     void DrawEye(IplImage*);
 protected:
@@ -34,28 +34,31 @@ private:
     RectangleSearcher Search;
 
     //Constants
-    static const int InnerMinR = 15;
-    static const int InnerMaxR = 40;
-    static const int CircleStep = 15;
-    static const int CheckStep = 4;
+    static const int PupilMinR = 15;
+    static const int PupilMaxR = 40;
+    static const int PupilAccept = 1;
 
-    static const int OuterMinR = 45;
-    static const int OuterMaxR = 100;
-    static const int SecStep = 2;
-    static const int CircleAccept = 7;
+    static const int IrisMinR = 45;
+    static const int IrisMaxR = 100;
+    static const int IrisStep = 2;
+    static const int IrisAccept = 8;
+
+    static const int CircleStep = 15;
+
+    static const int AllStep = 3;
 
     //Variabled
-    bool CheckSec;
+    bool IrisCheck;
     bool* Values;
     int Wid, Hei;
-    int NumFound;
+    bool found;
 
     //Functions
-    int FindSecond(int, int);
-    void FindCircle(EyeRectangle);
+    void FindPupil(EyeRectangle);
+    bool CheckPupil(int, int, int);
+    int FindIris(int, int);
+    bool CheckIris(int, int, int);
 
-    bool CheckCircle(int, int, int);
-    void FindAllCircles(int, int, int);
     void FindAllCircles(int, int, int, int);
 };
 

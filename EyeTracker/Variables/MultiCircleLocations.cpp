@@ -2,8 +2,12 @@
 
 MultiCircleLocations::MultiCircleLocations()
 {
-    Circles = (CircleLocation*)malloc(sizeof(CircleLocation) * MaxCircles);
-    Count = 0;
+    Centers = (EyePoint*)malloc(sizeof(EyePoint) * MaxCircles);
+    Pupils = (int*)malloc(sizeof(int) * MaxCircles);
+    Irises = (int*)malloc(sizeof(int) * MaxCircles);
+    CountCentre = 0;
+    CountIris = 0;
+    CountPupil = 0;
 }
 
 MultiCircleLocations::~MultiCircleLocations()
@@ -11,29 +15,66 @@ MultiCircleLocations::~MultiCircleLocations()
     //dtor
 }
 
-void MultiCircleLocations::AddCircle(CircleLocation New)
+void MultiCircleLocations::AddCentre(int X, int Y)
 {
-    if (Count < MaxCircles - 1)
+    AddCentre(EyePoint(X, Y));
+}
+
+void MultiCircleLocations::AddCentre(EyePoint Loc)
+{
+    if (CountCentre < MaxCircles - 1)
     {
-        Circles[Count] = New;
-        Count++;
+        Centers[CountCentre] = Loc;
+        CountCentre++;
+    }
+}
+
+void MultiCircleLocations::AddIrisRadius(int Radius)
+{
+    if (CountIris < MaxCircles - 1)
+    {
+        Irises[CountIris] = Radius;
+        CountIris++;
+    }
+}
+
+void MultiCircleLocations::AddPupilRadius(int Radius)
+{
+    if (CountPupil < MaxCircles - 1)
+    {
+        Pupils[CountPupil] = Radius;
+        CountPupil++;
     }
 }
 
 void MultiCircleLocations::AverageCircles()
 {
     int IrisTotal = 0, PupilTotal = 0, XTotal = 0, YTotal = 0;
-    for (int cnt = 0; cnt < Count; cnt++)
+
+    //printf("Iris Total: %d\nPupil Total: %d\nCenter Total: %d", CountIris, CountPupil, CountCentre);
+
+    for (int cnt = 0; cnt < CountCentre; cnt++)
     {
-        IrisTotal += Circles[cnt].GetOutterRadius();
-        PupilTotal += Circles[cnt].GetInnerRadius();
-        XTotal += Circles[cnt].GetX();
-        YTotal += Circles[cnt].GetY();
+        XTotal += Centers[cnt].GetX();
+        YTotal += Centers[cnt].GetY();
     }
-    IrisRadius = (double)IrisTotal / (double)Count;
-    PupilRadius = (double)PupilTotal / (double)Count;
-    double XAv = (double)XTotal / (double)Count;
-    double YAv = (double)YTotal / (double)Count;
+
+    for (int cnt = 0; cnt < CountIris; cnt++)
+    {
+        IrisTotal += Irises[cnt];
+    }
+
+    for (int cnt = 0; cnt < CountPupil; cnt++)
+    {
+        PupilTotal += Pupils[cnt];
+    }
+
+    IrisRadius = (double)IrisTotal / (double)CountIris;
+    PupilRadius = (double)PupilTotal / (double)CountPupil;
+    double XAv = (double)XTotal / (double)CountCentre;
+    double YAv = (double)YTotal / (double)CountCentre;
+
+    //printf("Centre (%0.3f, %0.3f)\nPupil Radius: %0.3f, Iris Radius: %0.3f", XAv, YAv, PupilRadius, IrisRadius);
 
     Center = EyePointD(XAv, YAv);
     PupilRect = EyeRectangleD(XAv - PupilRadius, YAv - PupilRadius, PupilRadius * 2.0, PupilRadius * 2.0);

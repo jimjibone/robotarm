@@ -12,7 +12,10 @@ public:
     MultiCircleLocations();
     virtual ~MultiCircleLocations();
 
-    void AddCircle(CircleLocation);
+    void AddCentre(int, int);
+    void AddCentre(EyePoint);
+    void AddPupilRadius(int);
+    void AddIrisRadius(int);
     void AverageCircles();
 
     EyeRectangleD PupilRectangleD();
@@ -29,14 +32,16 @@ public:
     bool IrisFound();
 protected:
 private:
-    CircleLocation* Circles;
+    EyePoint* Centers;
+    int* Irises;
+    int* Pupils;
 
     EyeRectangleD PupilRect, IrisRect;
     EyeRectangle BrightRect, NextRect;
 
     EyePointD Center;
 
-    int Count;
+    int CountCentre, CountPupil, CountIris;
 
     double IrisRadius, PupilRadius;
 
