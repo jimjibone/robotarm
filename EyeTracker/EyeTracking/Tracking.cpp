@@ -39,7 +39,7 @@ void Tracking::Track(IplImage* Image)
 
 GlintLocation Tracking::GetGlintLocation()
 {
-    if (CircleFinder.GetNumFound() == 1)
+    if (CircleFinder.Found())
     {
         return GlintsFinder.GetGlintLocation(0);
     }
@@ -51,7 +51,7 @@ GlintLocation Tracking::GetGlintLocation()
 
 MultiCircleLocations Tracking::GetCircleLocation()
 {
-    if (CircleFinder.GetNumFound() == 1)
+    if (CircleFinder.Found())
     {
         return CircleFinder.GetCircleLocation();
     }
@@ -74,7 +74,7 @@ void* Tracking::bk_Process_Thread(void* Input)
     This->CircleFinder.SetOpenCVImage(Image);
     This->CircleFinder.FindCircle();
 
-    if (This->CircleFinder.GetNumFound() == 1)
+    if (This->CircleFinder.Found())
     {
         This->GlintsFinder.FindGlints(This->CurImage, This->CircleFinder.GetCircleLocation());
 

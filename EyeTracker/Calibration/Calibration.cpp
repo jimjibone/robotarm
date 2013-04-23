@@ -4,7 +4,8 @@ Calibration::Calibration()
 {
     CaliWindow = false;
     PointWindow = false;
-    CalibrationPoints = (EyePointD*)malloc(9 * sizeof(EyePointD));
+    bk_Run = false;
+    CaliPoints = (EyeDifferance*)malloc(9 * sizeof(EyeDifferance));
 }
 
 Calibration::~Calibration()
@@ -13,21 +14,39 @@ Calibration::~Calibration()
     HidePointWindow();
 }
 
-void Calibration::NewValue(MultiCircleLocations, GlintLocation)
+void Calibration::NewValue(MultiCircleLocations Circle, GlintLocation Glint)
 {
+    if (!bk_Run)
+    {
+        CurDiff = EyeDifferance(Circle.CircleCenter(), Glint.GetMid());
+        if (!CaliWindow)
+        {
+            bk_Run = true;
+            pthread_create(&bk_Process, NULL, &bk_Process_Thread, (void*) this);
+        }
+    }
+}
 
+void* Calibration::bk_Process_Thread(void* Input)
+{
+    Calibration* This = (Calibration*) Input;
+    return NULL;
 }
 
 EyePointD Calibration::GetCurrentPoint()
 {
-    return EyePointD();
+    return CurPoint;
+}
+
+EyeDifferance Calibration::GetCurrentDifferance()
+{
+    return CurDiff;
 }
 
 void Calibration::ShowCalibrationWindow()
 {
     if (!CaliWindow)
     {
-        NumOfCalis = 0;
         cvNamedWindow("Calibration", CV_WINDOW_FULLSCREEN);
         cvMoveWindow("Calibration", 0, 0);
         Sizer.SetWindowToFullScreen("Calibration");
@@ -52,7 +71,7 @@ void Calibration::TakeCaliPoint()
 {
     if (CaliWindow)
     {
-        CalibrationPoints[CaliImage.CurPoint()] = GetCurrentPoint();
+        CaliPoints[CaliImage.CurPoint()] = GetCurrentDifferance();
 
         if (CaliImage.NextPoint())
         {
