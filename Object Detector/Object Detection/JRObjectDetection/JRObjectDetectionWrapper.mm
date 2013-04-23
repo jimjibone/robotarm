@@ -91,6 +91,10 @@ public:
 {
 	size_t midPoint = (size_t)(self.cpp->wrapper.plane_clusters[cluster].indices.size() / 2);
 	size_t index = self.cpp->wrapper.plane_clusters[cluster].indices[midPoint];
+	
+	//printf("ObjectDetectionWrapper getPlane gives a midpoint of %zd and index of %zd for cluster %zd:\n", midPoint, index, cluster);
+	//printf("\tCoefficients are A = %.3f  B = %.3f  C = %.3f  D = %.3f.\n", self.cpp->wrapper.input_cloud_normals[index].a, self.cpp->wrapper.input_cloud_normals[index].b, self.cpp->wrapper.input_cloud_normals[index].c, self.cpp->wrapper.input_cloud_normals[index].d);
+	
 	*a = self.cpp->wrapper.input_cloud_normals[index].a;
 	*b = self.cpp->wrapper.input_cloud_normals[index].b;
 	*c = self.cpp->wrapper.input_cloud_normals[index].c;

@@ -47,6 +47,8 @@
 	//PointXYZ *_objectsCloudPoints;	uint _objectsCloudPointCount;
 	PlaneCoefficients *_segmented_planes;
 	size_t _segmented_planes_count;
+	PointXYZ *_segmented_planes_points;
+	size_t *_segmented_planes_points_counts;
     
     // 3D navigation
     NSPoint _lastPos, _lastPosRight;

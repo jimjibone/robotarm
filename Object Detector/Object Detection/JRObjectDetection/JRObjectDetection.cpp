@@ -49,6 +49,19 @@ double dot(PlaneCoefficients a, PlaneCoefficients b)
 	return a.a*b.a + a.b*b.b + a.c*b.c;
 }
 
+double mod(PlaneCoefficients a)
+{
+	return sqrt( a.a*a.a + a.b*a.b + a.c*a.c );
+}
+
+double theta(PlaneCoefficients a, PlaneCoefficients b)
+{
+	// theta = acos ( a . b / ||a|| ||b|| )
+	double moda = mod(a);
+	double modb = mod(b);
+	return (moda == 0 || modb == 0) ? 0 : acos( dot(a, b) / (moda * modb) );
+}
+
 // To normalise a normal equation you can do this
 //	CombinedSquares = (Normal.x * Normal.x) +
 //	(Normal.y * Normal.y) +
@@ -67,15 +80,40 @@ double dot(PlaneCoefficients a, PlaneCoefficients b)
 
 bool ObjectDetection::compareNormalAngle(size_t a, size_t b)
 {
-	const float thresholdDistance = 5; // 5mm.
-	const float thresholdAngle = PI_VALUE/36; // 5 deg in radians.
+	const double thresholdDistance = 10.0; // 10mm.
+	const double thresholdAngle = PI_VALUE/9; // 20 deg in radians.
 	
 	// Compare the difference between the d component of the two points.
-	bool distance = fabs(input_cloud_normals[a].d - input_cloud_normals[b].d) < thresholdDistance;
+	//double distanceVal = fabs(input_cloud_normals[a].d - input_cloud_normals[b].d);
+	double distanceVal = fabs(input_cloud[a].z - input_cloud[b].z);
+	//double distanceVal = 0;
+	bool distance = distanceVal < thresholdDistance;
+	
 	// Compare the angle between normal vectors by doing the dot product.
-	// Also this but not used [ theta = acos ( a . b / ||a|| ||b|| ) ].
-	bool angle = dot(input_cloud_normals[a], input_cloud_normals[b]) < thresholdAngle;
-	return distance && angle;
+	//double angleVal = dot(input_cloud_normals[a], input_cloud_normals[b]);
+	double angleVal = theta(input_cloud_normals[a], input_cloud_normals[b]);
+	bool angle = angleVal < thresholdAngle;
+	
+	bool isValid = input_cloud_normals[a].isSet() && input_cloud_normals[b].isSet();
+	
+	/*static size_t count = 0;
+	if (count > 1000) {
+		count = 0;
+		cout << "\tcompareNormalAngle  :  distance = " << distanceVal << " (" << distance << ")  " <<
+				"angle = " << angleVal << " (" << angle << ")  " <<
+				"isValid = " << isValid << "." << endl;
+	} else {
+		count++;
+	}*/
+	
+	/*if (distance && angle && isValid) {
+		cout << "\tcompareNormalAngle  :  distance = " << distanceVal << " (" << distance << ")  " <<
+				"angle = " << angleVal << " (" << angle << ")  " <<
+				"isValid = " << isValid << "." << endl;
+	}*/
+	
+	
+	return distance && angle && isValid;
 }
 
 
@@ -119,26 +157,152 @@ void ObjectDetection::calculateSurfaceNormals()
 		// by using 2 neighboring points to the right and below. Therefore the
 		// right-most and bottom-most pixels will not have a complete set of
 		// neighbours.
+		size_t count = 0;
 		for (size_t i = 0; i < input_cloud.size(); i++) {
 			uint x = 0, y = 0;
 			frameXYfromIndex(&x, &y, (uint)i);
 			
-			if (x == 0 && i > 0 // is right-hand side (and not i=0)
-				&& y == FREENECT_FRAME_H // and is bottom
+			const int mult = 10;
+			
+			if (   x >= FREENECT_FRAME_W-mult	// is right-hand side
+				&& y >= FREENECT_FRAME_H*mult-1	// and is bottom
 				) {
 				// This point is out-of-bounds! Set the normal to 0.
 				input_cloud_normals.emplace_back(PlaneCoefficients(0, 0, 0, 0));
 			} else {
 				// This point is within bounds. Calculate the normal.
 				input_cloud_normals.emplace_back(getPlaneCoefficients(input_cloud[i],
-																	  input_cloud[i+1],
-																	  input_cloud[i+FREENECT_FRAME_W]));
+																	  input_cloud[i+mult],
+																	  input_cloud[i+FREENECT_FRAME_W*mult]));
 			}
+			//if (count > 10000) {
+				//cout << "\tNormal coefficients of point " << i << " are A = " << input_cloud_normals[i].a << "  B = " << input_cloud_normals[i].b << "  C = " << input_cloud_normals[i].c << "  D = " << input_cloud_normals[i].d << "." << endl;
+			//	count = 0;
+			//} else { count++; }
 		}
 		
 		cout << "calculateSurfaceNormals completed." << endl;
 	}/* END validDepthData */
 }
+
+// Mark all nodes unassigned.
+//
+// ITERATE through all nodes:
+//		IF node unassigned:
+//			ASSIGN node to a new component id C
+//			DO a depth-first-search for all nodes connected to this one:
+//				mark them with same component id C
+
+void ObjectDetection::segmentPlanes()
+{
+	if (validDepthData) {
+		cout << "segmentPlanes started." << endl;
+		
+		// Remove all the current points from the plane_cluster_nodes and reserve the size we need.
+		// Also, set all the node values to -1 to show that they are all unassigned.
+		vector<int> plane_cluster_nodes;
+		plane_cluster_nodes.assign(FREENECT_FRAME_PIX, NODE_UNASSIGNED);
+		
+		int current_segment_id = -1;
+		
+		// Iterate through all nodes.
+		for (size_t i = 0; i < FREENECT_FRAME_PIX; i++) {
+			
+			// Check if the current node is unassigned.
+			if (plane_cluster_nodes[i] == NODE_UNASSIGNED) {
+				
+				//cout << "\tCurrent node is UNASSIGNED. Node = " << i << "   Current Segment = " << current_segment_id << "." << endl;
+				
+				// The node is unassigned then assign it a new segment_id.
+				current_segment_id++;
+				plane_cluster_nodes[i] = current_segment_id;
+				
+				// Find out if the current node has a neighbour.
+				uint currentX, currentY = 0;
+				frameXYfromIndex(&currentX, &currentY, (uint)i);
+				
+				bool rightIsNeighbour = (currentX < FREENECT_FRAME_W-1)&&(i < FREENECT_FRAME_PIX-1)				   ? compareNormalAngle(i, i+1)				   : false;
+				bool belowIsNeighbour = (currentY < FREENECT_FRAME_H-1)&&(i < FREENECT_FRAME_PIX-FREENECT_FRAME_W) ? compareNormalAngle(i, i+FREENECT_FRAME_W) : false;
+				
+				// If it has neighbours then set their segment id to the current points id.
+				if (rightIsNeighbour) {
+					plane_cluster_nodes[i+1] = plane_cluster_nodes[i];
+				}
+				if (belowIsNeighbour) {
+					plane_cluster_nodes[i+FREENECT_FRAME_W] = plane_cluster_nodes[i];
+				}
+				
+			} else {
+				
+				// This node is assigned, so find its neighbours.
+				// Find out if the current node has a neighbour.
+				uint currentX, currentY = 0;
+				frameXYfromIndex(&currentX, &currentY, (uint)i);
+				
+				bool rightIsNeighbour = (currentX < FREENECT_FRAME_W-1)&&(i < FREENECT_FRAME_PIX-1)				   ? compareNormalAngle(i, i+1)				   : false;
+				bool belowIsNeighbour = (currentY < FREENECT_FRAME_H-1)&&(i < FREENECT_FRAME_PIX-FREENECT_FRAME_W) ? compareNormalAngle(i, i+FREENECT_FRAME_W) : false;
+				
+				//cout << "\tCurrent node is assigned. Node = " << i << "   Current Segment = " << current_segment_id << ".  rightIsNeighbour=" << rightIsNeighbour << "   belowIsNeighbour=" << belowIsNeighbour << "." << endl;
+				
+				// If it has neighbours then set their segment id to the current points id.
+				if (rightIsNeighbour) {
+					plane_cluster_nodes[i+1] = plane_cluster_nodes[i];
+				}
+				if (belowIsNeighbour) {
+					plane_cluster_nodes[i+FREENECT_FRAME_W] = plane_cluster_nodes[i];
+				}
+				
+			}
+			
+		}
+		
+		cout << "segmentPlanes completed. Found " << current_segment_id << "." << endl;
+		
+		// FILTERING
+		
+		// Run through all the points in plane_cluster_nodes and count how many
+		// points belong to each one.
+		vector<PointIndices> all_clusters;
+		all_clusters.resize(current_segment_id);
+		
+		for (size_t i = 0; i < plane_cluster_nodes.size(); i++) {
+			size_t segment_id = (size_t)plane_cluster_nodes[i];
+			//cout << "\tassigning " << i << " to segment_id " << segment_id << ". all_clusters.size = " << all_clusters.size() << "." << endl;
+			
+			if (segment_id >= all_clusters.size()) {
+				PointIndices newIndices;
+				newIndices.indices.emplace_back(i);
+				all_clusters.emplace_back(newIndices);
+			} else {
+				all_clusters[segment_id].indices.emplace_back(i);
+			}
+		}
+		
+		// Find all the clusters that have a point count greater than the threshold.
+		plane_clusters.erase(plane_clusters.begin(), plane_clusters.end());
+		size_t bigClusterCount = 0;
+		for (size_t i = 0; i < all_clusters.size(); i++) {
+			if (all_clusters[i].indices.size() > PLANE_CLUSTER_THRESHOLD) {
+				bigClusterCount++;
+				// Add this cluster to the plane_clusters.
+				plane_clusters.emplace_back(all_clusters.at(i));
+			}
+		}
+		cout << "segmentPlanes Filtered clusters down to " << bigClusterCount << " clusters. new plane_clusters.size = " << plane_clusters.size() << "." << endl;
+		
+		// Find the normal coefficients for the plane_clusters.
+		// Do this by using the normal coefficients from the mode point in the cluster.
+		plane_clusters_normals.erase(plane_clusters_normals.begin(), plane_clusters_normals.end());
+		for (size_t i = 0; i < plane_clusters.size(); i++) {
+			size_t index = plane_clusters[i].indices[(uint)plane_clusters[i].indices.size()/2];
+			plane_clusters_normals.emplace_back(input_cloud_normals[index].a, input_cloud_normals[index].b, input_cloud_normals[index].c, input_cloud_normals[index].d);
+			cout << "segmentPlanes set cluster " << i << " normals to A = " << input_cloud_normals[index].a << "  B = " << input_cloud_normals[index].b << "  C = " << input_cloud_normals[index].c << "  D = " << input_cloud_normals[index].d << " for an index of " << index << "." << endl;
+		}
+	}/* END validDepthData */
+}
+
+
+
 
 void ObjectDetection::segmentPlanes_old_old()
 {
@@ -324,116 +488,4 @@ void ObjectDetection::segmentPlanes_old()
 		cout << "segmentPlanes completed. Found " << plane_clusters.size() << " clusters, of which " << goodClusters << "are over the threshold of 1000 points." << endl;
 	}/* END validDepthData */
 }
-
-
-// Mark all nodes unassigned.
-//
-// ITERATE through all nodes:
-//		IF node unassigned:
-//			ASSIGN node to a new component id C
-//			DO a depth-first-search for all nodes connected to this one:
-//				mark them with same component id C
-
-void ObjectDetection::segmentPlanes()
-{
-	if (validDepthData) {
-		cout << "segmentPlanes started." << endl;
-		
-		// Remove all the current points from the plane_cluster_nodes and reserve the size we need.
-		// Also, set all the node values to -1 to show that they are all unassigned.
-		vector<int> plane_cluster_nodes;
-		plane_cluster_nodes.assign(FREENECT_FRAME_PIX, NODE_UNASSIGNED);
-		
-		int current_segment_id = -1;
-		
-		// Iterate through all nodes.
-		for (size_t i = 0; i < FREENECT_FRAME_PIX; i++) {
-			
-			// Check if the current node is unassigned.
-			if (plane_cluster_nodes[i] == NODE_UNASSIGNED) {
-				
-				//cout << "\tCurrent node is UNASSIGNED. Node = " << i << "   Current Segment = " << current_segment_id << "." << endl;
-				
-				// The node is unassigned then assign it a new segment_id.
-				current_segment_id++;
-				plane_cluster_nodes[i] = current_segment_id;
-				
-				// Find out if the current node has a neighbour.
-				uint currentX, currentY = 0;
-				frameXYfromIndex(&currentX, &currentY, (uint)i);
-				
-				bool rightIsNeighbour = (currentX < FREENECT_FRAME_W-1)&&(i < FREENECT_FRAME_PIX-1)				   ? compareNormalAngle(i, i+1)				   : false;
-				bool belowIsNeighbour = (currentY < FREENECT_FRAME_H-1)&&(i < FREENECT_FRAME_PIX-FREENECT_FRAME_W) ? compareNormalAngle(i, i+FREENECT_FRAME_W) : false;
-				
-				// If it has neighbours then set their segment id to the current points id.
-				if (rightIsNeighbour) {
-					plane_cluster_nodes[i+1] = plane_cluster_nodes[i];
-				}
-				if (belowIsNeighbour) {
-					plane_cluster_nodes[i+FREENECT_FRAME_W] = plane_cluster_nodes[i];
-				}
-				
-			} else {
-				
-				// This node is assigned, so find its neighbours.
-				// Find out if the current node has a neighbour.
-				uint currentX, currentY = 0;
-				frameXYfromIndex(&currentX, &currentY, (uint)i);
-				
-				bool rightIsNeighbour = (currentX < FREENECT_FRAME_W-1)&&(i < FREENECT_FRAME_PIX-1)				   ? compareNormalAngle(i, i+1)				   : false;
-				bool belowIsNeighbour = (currentY < FREENECT_FRAME_H-1)&&(i < FREENECT_FRAME_PIX-FREENECT_FRAME_W) ? compareNormalAngle(i, i+FREENECT_FRAME_W) : false;
-				
-				//cout << "\tCurrent node is assigned. Node = " << i << "   Current Segment = " << current_segment_id << ".  rightIsNeighbour=" << rightIsNeighbour << "   belowIsNeighbour=" << belowIsNeighbour << "." << endl;
-				
-				// If it has neighbours then set their segment id to the current points id.
-				if (rightIsNeighbour) {
-					plane_cluster_nodes[i+1] = plane_cluster_nodes[i];
-				}
-				if (belowIsNeighbour) {
-					plane_cluster_nodes[i+FREENECT_FRAME_W] = plane_cluster_nodes[i];
-				}
-				
-			}
-			
-		}
-		
-		cout << "segmentPlanes completed. Found " << current_segment_id << "." << endl;
-		
-		// FILTERING
-		
-		// Run through all the points in plane_cluster_nodes and count how many
-		// points belong to each one.
-		vector<PointIndices> all_clusters;
-		all_clusters.resize(current_segment_id);
-		
-		for (size_t i = 0; i < plane_cluster_nodes.size(); i++) {
-			size_t segment_id = (size_t)plane_cluster_nodes[i];
-			//cout << "\tassigning " << i << " to segment_id " << segment_id << ". all_clusters.size = " << all_clusters.size() << "." << endl;
-			
-			if (segment_id >= all_clusters.size()) {
-				PointIndices newIndices;
-				newIndices.indices.emplace_back(i);
-				all_clusters.emplace_back(newIndices);
-			} else {
-				all_clusters[segment_id].indices.emplace_back(i);
-			}
-		}
-		
-		// Find all the clusters that have a point count greater than the threshold.
-		plane_clusters.erase(plane_clusters.begin(), plane_clusters.end());
-		size_t bigClusterCount = 0;
-		for (size_t i = 0; i < all_clusters.size(); i++) {
-			if (all_clusters[i].indices.size() > PLANE_CLUSTER_THRESHOLD) {
-				bigClusterCount++;
-				// Add this cluster to the plane_clusters.
-				plane_clusters.emplace_back(all_clusters.at(i));
-			}
-		}
-		cout << "segmentPlanes Filtered clusters down to " << bigClusterCount << " clusters. new plane_clusters.size = " << plane_clusters.size() << "." << endl;
-	}/* END validDepthData */
-}
-
-
-
-
 

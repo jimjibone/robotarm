@@ -36,6 +36,7 @@ public:
 	vector<PointXYZ> input_cloud;
 	vector<PlaneCoefficients> input_cloud_normals;
 	vector<PointIndices> plane_clusters;
+	vector<PlaneCoefficients> plane_clusters_normals;
 	
 	void setZPoints(uint16_t* zPoints, size_t size);
 	void calculateSurfaceNormals();

@@ -515,6 +515,50 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 		}
 	}
 }
+- (void)drawSegmentedPlanesPoints
+{
+	if (_segmented_planes_count > 0) {
+		
+		uint coloursSize = 7;
+		float colours[21] = {
+			1, 0, 0,
+			0, 1, 0,
+			0, 0, 1,
+			1, 1, 0,
+			0, 1, 1,
+			1, 0, 1,
+			1, 1, 1};
+		
+		GLfloat prevPointSize = 0;
+		glGetFloatv(GL_POINT_SIZE, &prevPointSize);
+		glPointSize(8);
+		
+		glBegin(GL_POINTS);
+		
+		size_t currentPos = 0;
+		uint currentColour = 0;
+		for (size_t i = 0; i < _segmented_planes_count; i++) {
+				
+			glColor4f(colours[currentColour], colours[currentColour+1], colours[currentColour+2], 0.8);
+			currentColour++;
+			if (currentColour == coloursSize) {
+				currentColour = 0;
+			}
+				
+			for (size_t j = 0; j < _segmented_planes_points_counts[i]; j++) {
+				
+				// Don't draw the last point because it is the same as the last.
+				glVertex3d(_segmented_planes_points[currentPos].x, -_segmented_planes_points[currentPos].y, -_segmented_planes_points[currentPos].z-2);
+				currentPos++;
+			}
+			
+		}
+		
+		glEnd();
+		glPointSize(prevPointSize);
+		
+	}
+}
 - (void)drawGLStringX:(GLfloat)x Y:(GLfloat)y Z:(GLfloat)z String:(NSString*)string {
 	//glColor3f(255, 255, 255);
 	glRasterPos3f(x, y, -z);
@@ -656,6 +700,7 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 		if (_drawConvexHull) [self drawBoundedPlaneHull];//[self drawConvexHull];
 		if (_drawObjectsCloud) [self drawObjectsCloud];
 		if (_drawSegmentedPlanes) [self drawSegmentedPlanes];
+		if (_drawSegmentedPlanes) [self drawSegmentedPlanesPoints];
 		
 		glDisable(GL_POINT_SMOOTH);
 		glDisable(GL_LINE_SMOOTH);
@@ -850,8 +895,31 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 	free(_segmented_planes);
 	_segmented_planes = (PlaneCoefficients*)malloc(_segmented_planes_count * sizeof(PlaneCoefficients));
 	
+	//printf("GLView setting segmented_planes of count = %zd:\n", _segmented_planes_count);
 	for (size_t i = 0; i < _segmented_planes_count; i++) {
 		[objectDetector getA:&_segmented_planes[i].a B:&_segmented_planes[i].b C:&_segmented_planes[i].c D:&_segmented_planes[i].d forPlaneCluster:i];
+		//printf("\tPlane %zd has coeffs   :   A = %.3f  B = %.3f  C = %.3f  D = %.3f\n", i, _segmented_planes[i].a, _segmented_planes[i].b, _segmented_planes[i].c, _segmented_planes[i].d);
+	}
+	
+	free(_segmented_planes_points_counts);
+	_segmented_planes_points_counts = (size_t*)malloc(_segmented_planes_count * sizeof(size_t));
+	size_t total_count = 0;
+	for (size_t i = 0; i < _segmented_planes_count; i++) {
+		_segmented_planes_points_counts[i] = [objectDetector getNumberOfIndicesInPlaneCluster:i];
+		total_count += [objectDetector getNumberOfIndicesInPlaneCluster:i];
+	}
+	
+	free(_segmented_planes_points);
+	_segmented_planes_points = (PointXYZ*)malloc(total_count * sizeof(PointXYZ));
+	size_t currentPos = 0;
+	for (size_t i = 0; i < _segmented_planes_count; i++) {
+		
+		for (size_t j = 0; j < _segmented_planes_points_counts[i]; j++) {
+			
+			[objectDetector getX:&_segmented_planes_points[currentPos].x Y:&_segmented_planes_points[currentPos].y Z:&_segmented_planes_points[currentPos].z forPoint:j forPlaneCluster:i];
+			currentPos++;
+		}
+		
 	}
 	
 	_drawSegmentedPlanes = YES;
