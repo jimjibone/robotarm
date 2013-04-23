@@ -699,7 +699,7 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
         if (_drawFrustrum) [self drawFrustrum];
 		if (_drawConvexHull) [self drawBoundedPlaneHull];//[self drawConvexHull];
 		if (_drawObjectsCloud) [self drawObjectsCloud];
-		if (_drawSegmentedPlanes) [self drawSegmentedPlanes];
+		//if (_drawSegmentedPlanes) [self drawSegmentedPlanes];
 		if (_drawSegmentedPlanes) [self drawSegmentedPlanesPoints];
 		
 		glDisable(GL_POINT_SMOOTH);
