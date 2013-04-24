@@ -21,7 +21,7 @@
 #define OBJECT_MIN_HEIGHT (10)	// mm above table
 #define PI_VALUE (3.141592654)
 #define NODE_UNASSIGNED (-1)
-#define PLANE_CLUSTER_THRESHOLD 1000
+#define PLANE_CLUSTER_THRESHOLD 2000
 
 using namespace std;
 

@@ -27,6 +27,7 @@
 	
 	// Object Detection
 	JRObjectDetectionWrapper *objectDetector;
+	BOOL objectDetectionRun;
 	BOOL objectDetectionReset;
 	BOOL objectDetectionComplete;
 	

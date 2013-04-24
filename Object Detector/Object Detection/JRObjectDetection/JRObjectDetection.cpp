@@ -85,9 +85,10 @@ double theta(PlaneCoefficients a, PlaneCoefficients b)
 
 bool ObjectDetection::compareNormalAngle(size_t a, size_t b)
 {
-	const double thresholdDistance = 10.0; // 10mm.
+	const double thresholdDistance = 20.0; // 10mm.
 	
-	const double thresholdAngle = PI_VALUE/18;	// 10 deg in radians.
+	const double thresholdAngle = PI_VALUE/18;	// 5 deg in radians.
+	//const double thresholdAngle = PI_VALUE/18;	// 10 deg in radians.
 	//const double thresholdAngle = PI_VALUE/9;		// 20 deg in radians.
 	
 	// Compare the difference between the d component of the two points.
@@ -170,7 +171,7 @@ void ObjectDetection::calculateSurfaceNormals()
 			uint x = 0, y = 0;
 			frameXYfromIndex(&x, &y, (uint)i);
 			
-			const int mult = 10;
+			const int mult = 1;
 			
 			if (   x >= FREENECT_FRAME_W-mult	// is right-hand side
 				&& y >= FREENECT_FRAME_H*mult-1	// and is bottom

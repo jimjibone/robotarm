@@ -11,6 +11,7 @@
 #import "JRConstants.h"
 
 #define TIME_INTERVAL 0.1
+#define PROCESSING_FREQUENCY 5
 
 @interface JRObjectDetector ()
 //- (void)start;
@@ -166,6 +167,11 @@
 }
 - (void)performFindObjectPoints
 {
+	static uint processCount = 0;
+	if (objectDetectionRun && (processCount++ % PROCESSING_FREQUENCY == 0)) {
+		objectDetectionReset = YES;
+	}
+	
 	if (objectDetectionReset) {
 		objectDetectionReset = NO;
 		objectDetectionComplete = NO;
@@ -197,6 +203,7 @@
 }
 - (void)resetTableDetection {
 	objectDetectionReset = YES;
+	//objectDetectionRun = !objectDetectionRun;
 }
 - (void)setGLViewOutlet:(GLView*)newGLView {
 	if (glView) {

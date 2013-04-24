@@ -524,36 +524,38 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 	if (_segmented_planes_count > 0) {
 		
 		uint coloursSize = 7;
-		float colours[21] = {
-			1, 0, 0,
-			0, 1, 0,
-			0, 0, 1,
-			1, 1, 0,
-			0, 1, 1,
-			1, 0, 1,
-			1, 1, 1};
+		float colours[7][3] = {
+			{1.0, 0.0, 0.0},
+			{0.0, 1.0, 0.0},
+			{0.0, 0.0, 1.0},
+			{1.0, 1.0, 0.0},
+			{0.0, 1.0, 1.0},
+			{1.0, 0.0, 1.0},
+			{1.0, 1.0, 1.0}
+			};
 		
 		GLfloat prevPointSize = 0;
 		glGetFloatv(GL_POINT_SIZE, &prevPointSize);
-		glPointSize(8);
+		glPointSize(2);
 		
 		glBegin(GL_POINTS);
 		
 		size_t currentPos = 0;
-		uint currentColour = 0;
 		for (size_t i = 0; i < _segmented_planes_count; i++) {
 				
-			glColor4f(colours[currentColour], colours[currentColour+1], colours[currentColour+2], 0.8);
-			currentColour++;
-			if (currentColour == coloursSize) {
-				currentColour = 0;
-			}
+			glColor4f(colours[(i % coloursSize)][0], colours[(i % coloursSize)][1], colours[(i % coloursSize)][2], 0.6);
 				
 			for (size_t j = 0; j < _segmented_planes_points_counts[i]; j++) {
 				
 				// Don't draw the last point because it is the same as the last.
 #ifndef REMOVE_VIEW_DEPTH
-				glVertex3d(_segmented_planes_points[currentPos].x, -_segmented_planes_points[currentPos].y, -_segmented_planes_points[currentPos].z-2);
+				//glVertex3d(_segmented_planes_points[currentPos].x, -_segmented_planes_points[currentPos].y, -_segmented_planes_points[currentPos].z+1);
+				@try {
+					glVertex3d(_segmented_planes_points[currentPos].x, -_segmented_planes_points[currentPos].y, -_segmented_planes_points[currentPos].z+1);
+				}
+				@catch (NSException *exception) {
+					NSLog(@"GLView %@ Caught Exception : %@", NSStringFromSelector(_cmd), [exception description]);
+				}
 #else
 				uint x, y = 0;
 				frameFromWorld(&x, &y, _segmented_planes_points[currentPos].x, _segmented_planes_points[currentPos].y, _segmented_planes_points[currentPos].z);
