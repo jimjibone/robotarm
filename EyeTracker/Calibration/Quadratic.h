@@ -18,8 +18,8 @@ public:
     double Getb();
     double Geac();
 
-    double WorkOut(int):
-    double WorkOut(double):
+    double WorkOut(int);
+    double WorkOut(double);
 protected:
 private:
 

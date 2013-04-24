@@ -32,7 +32,7 @@ void Linear::FindLine(int Xi[], int Yi[], int n)
     c = _Y - (m * _X);
 }
 
-void Linear::FindLine(double[] Xi, double[] Yi, int n)
+void Linear::FindLine(double Xi[], double Yi[], int n)
 {
     double TXY = 0, TX = 0, TY = 0, TX2 = 0;
     for (int cnt = 0; cnt < n; cnt++)
@@ -68,7 +68,7 @@ double Linear::WorkOut(double X)
     return m * X + c;
 }
 
-double Linear::WorkOut(int)
+double Linear::WorkOut(int X)
 {
     return m * (double)X + c;
 }

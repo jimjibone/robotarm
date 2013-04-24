@@ -59,7 +59,7 @@ int Quadratic::Pow(int Num, int Power)
     return Tot;
 }
 
-void Quadratic::FindLine(double[] Xi,double[] Yi, int n)
+void Quadratic::FindLine(double Xi[],double Yi[], int n)
 {
     double TX4 = 0, TX3 = 0, TX2 = 0, TX = 0, TX2Y = 0, TXY = 0, TY = 0;
     for (int cnt = 0; cnt < n; cnt++)

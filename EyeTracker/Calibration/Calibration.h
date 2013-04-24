@@ -10,6 +10,8 @@
 #include "../Common/EyeTimers.h"
 #include "WindowsSizer.h"
 #include "CalibrationScreen.h"
+#include "Linear.h"
+#include "Quadratic.h"
 
 class Calibration
 {
