@@ -44,6 +44,13 @@ void indexFromWorld(unsigned int* index, double wx, double wy, int z) {
 	
 	*index = (unsigned int)(x + y*FREENECT_FRAME_W);
 }
+void frameFromWorld(unsigned int* x, unsigned int *y, double wx, double wy, int z) {
+	double nx = wx/REGISTERED_SCALE_FACTOR/(z + REGISTERED_MIN_DEPTH) + 640/2.0;
+	double ny = wy/REGISTERED_SCALE_FACTOR/(z + REGISTERED_MIN_DEPTH)/(-1.0) + 480/2.0;
+	
+	*x = (unsigned int)( (nx > 0.0) ? floor(nx + 0.5) : ceil(nx - 0.5) );
+	*y = (unsigned int)( (ny > 0.0) ? floor(ny + 0.5) : ceil(ny - 0.5) );
+}
 
 void swapPtr16(uint16_t **firstPtr, uint16_t **secondPtr) {
 	uint16_t *temp = *firstPtr;

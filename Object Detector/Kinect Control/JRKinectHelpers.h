@@ -63,6 +63,7 @@ unsigned int rgbIndex(unsigned int x, unsigned int y);
 void frameXYfromIndex(unsigned int* x, unsigned int* y, unsigned int index);
 void worldFromIndex(double* wx, double* wy, unsigned int index, int z);
 void indexFromWorld(unsigned int* index, double wx, double wy, int z);
+void frameFromWorld(unsigned int* x, unsigned int *y, double wx, double wy, int z);
 
 void swapPtr16(uint16_t **firstPtr, uint16_t **secondPtr);
 void swapPtr8(uint8_t **firstPtr, uint8_t **secondPtr);

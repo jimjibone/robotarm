@@ -21,6 +21,9 @@
 #import "JRPointTypes.h"
 //#import "JRPointRotationXYZ.h"
 
+//#define REMOVE_VIEW_DEPTH
+#define REMOVE_VIEW_DEPTH_VALUE 1000
+
 @class GLProgram;
 @class JRObjectDetector;
 @interface GLView : NSOpenGLView {

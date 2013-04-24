@@ -281,7 +281,11 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
                      ""
                      "   float zs = (z+kMinDistance)*kDepthScale;\n"
                      //"   vec4 world = vec4(pos.x*320.0*zs, pos.y*240.0* zs, 200.0-z, 1.0);\n"
+#ifndef REMOVE_VIEW_DEPTH
 					 "   vec4 world = vec4(pos.x*320.0*zs, pos.y*240.0* zs, -z, 1.0);\n"
+#else
+					 "   vec4 world = vec4(pos.x*320.0, pos.y*240.0, -1000, 1.0);\n"
+#endif
                      ""
                      "   float cs = 1.0/((z+kMinDistance)*kDepthScale);\n"
                      "	gl_TexCoord[1].st = vec2( (world.x*cs)/640.0 + 0.5,   (world.y*cs)/480.0 + 0.5);\n"
@@ -548,7 +552,14 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 			for (size_t j = 0; j < _segmented_planes_points_counts[i]; j++) {
 				
 				// Don't draw the last point because it is the same as the last.
+#ifndef REMOVE_VIEW_DEPTH
 				glVertex3d(_segmented_planes_points[currentPos].x, -_segmented_planes_points[currentPos].y, -_segmented_planes_points[currentPos].z-2);
+#else
+				uint x, y = 0;
+				frameFromWorld(&x, &y, _segmented_planes_points[currentPos].x, _segmented_planes_points[currentPos].y, _segmented_planes_points[currentPos].z);
+				glVertex3d((double)320-x, (double)-y-480, (double)-REMOVE_VIEW_DEPTH_VALUE);
+				//printf("drawSegmentedPlanesPoints x = %d  y = %d  z = %d.", x, y, REMOVE_VIEW_DEPTH_VALUE);
+#endif
 				currentPos++;
 			}
 			

@@ -40,6 +40,7 @@ public:
 	
 	void setZPoints(uint16_t* zPoints, size_t size);
 	void calculateSurfaceNormals();
+	void segmentPlanes_old_old_old();
 	void segmentPlanes_old_old();
 	void segmentPlanes_old();
 	void segmentPlanes();
