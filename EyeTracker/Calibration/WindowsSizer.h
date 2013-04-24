@@ -6,11 +6,11 @@
 
 using namespace std;
 
-class WindowsSizer
+class WindowSizer
 {
     public:
-        WindowsSizer();
-        virtual ~WindowsSizer();
+        WindowSizer();
+        virtual ~WindowSizer();
 
         void SetWindowToFullScreen(char*);
         int GetWidth();

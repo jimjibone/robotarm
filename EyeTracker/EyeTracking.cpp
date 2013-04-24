@@ -50,16 +50,16 @@ void EyeTracking::Run()
             Cam.HideImage();
             break;
         case ' ':
-            Cali.TakeCaliPoint();
+            Cali.TakeCaliPoint(EyeDifferance());
             break;
         case 'c':
-            Cali.ShowCalibrationWindow();
+            Cali.StartCalibration();
             break;
         case 'n':
-            Cali.ShowPointWindow();
+
             break;
         case 'm':
-            Cali.HidePointWindow();
+
             break;
         }
     }
@@ -131,5 +131,4 @@ void EyeTracking::UpdatedImage(IplImage* Image, void* ptr)
 void EyeTracking::UpdatedLocations(void* ptr)
 {
     EyeTracking* This = (EyeTracking*)ptr;
-    This->Cali.NewValue(This->Tracker.GetCircleLocation(), This->Tracker.GetGlintLocation());
 }

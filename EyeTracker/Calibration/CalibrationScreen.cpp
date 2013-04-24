@@ -2,14 +2,27 @@
 
 CalibrationScreen::CalibrationScreen()
 {
-    XStep = (int)((double)Sizer.GetWidth() * 0.9 / 2.0);
-    XStart = (int)((double)Sizer.GetWidth() * 0.05);
-    YStep = (int)((double)Sizer.GetHeight() * 0.9 / 2.0);
-    YStart = (int)((double)Sizer.GetHeight() * 0.05);
+    Wid = 0;
+    Hei = 0;
+    XStep = 0;
+    XStart = 0;
+    YStep = 0;
+    YStart = 0;
 }
 
 CalibrationScreen::~CalibrationScreen()
 {
+
+}
+
+void CalibrationScreen::Setup(int Width, int Height)
+{
+    Hei = Height;
+    Wid = Width;
+    XStep = (int)((double)Width * 0.9 / 2.0);
+    XStart = (int)((double)Width * 0.05);
+    YStep = (int)((double)Height * 0.9 / 2.0);
+    YStart = (int)((double)Height * 0.05);
 }
 
 void CalibrationScreen::StartCalibration(char* Name)
@@ -35,7 +48,7 @@ int CalibrationScreen::CurPoint()
 
 void CalibrationScreen::DrawImage()
 {
-    IplImage* Image = cvCreateImage(cvSize(Sizer.GetWidth(), Sizer.GetHeight()), 8, 3);
+    IplImage* Image = cvCreateImage(cvSize(Wid, Hei), 8, 3);
     cvCircle(Image, cvPoint(XStart + CurX * XStep, YStart + YStep * CurY), 10, CV_RGB(255, 255, 0), 13);
     cvShowImage(WindowName, Image);
     cvReleaseImage(&Image);
@@ -51,9 +64,9 @@ void CalibrationScreen::AddX()
     }
 }
 
-EyePoint[] CalibrationScreen::AllPoints()
+EyePoint* CalibrationScreen::AllPoints()
 {
-    EyePoint Points[9];
+    EyePoint* Points = (EyePoint*)malloc(sizeof(EyePoint) * 9);
     for (int X = 0; X < 3; X++)
     {
         for (int Y = 0; Y < 3; Y++)

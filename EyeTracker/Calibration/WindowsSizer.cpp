@@ -1,6 +1,6 @@
 #include "WindowsSizer.h"
 
-WindowsSizer::WindowsSizer()
+WindowSizer::WindowSizer()
 {
     RECT desktop;
     HWND hDesktop = GetDesktopWindow();
@@ -9,13 +9,13 @@ WindowsSizer::WindowsSizer()
     Height = desktop.bottom - desktop.top;
 }
 
-WindowsSizer::~WindowsSizer()
+WindowSizer::~WindowSizer()
 {
     //dtor
 }
 
 //Code got from http://stackoverflow.com/questions/6512094/how-to-display-an-image-in-full-screen-borderless-window-in-opencv
-void WindowsSizer::SetWindowToFullScreen(char* WindowName)
+void WindowSizer::SetWindowToFullScreen(char* WindowName)
 {
     HWND win_handle = FindWindow(0, WindowName);
     if (!win_handle)
@@ -38,12 +38,12 @@ void WindowsSizer::SetWindowToFullScreen(char* WindowName)
     ShowWindow(win_handle, SW_SHOW);
 }
 
-int WindowsSizer::GetWidth()
+int WindowSizer::GetWidth()
 {
     return Width;
 }
 
-int WindowsSizer::GetHeight()
+int WindowSizer::GetHeight()
 {
     return Height;
 }
