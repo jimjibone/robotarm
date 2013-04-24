@@ -50,3 +50,16 @@ void CalibrationScreen::AddX()
 		CurY++;
     }
 }
+
+EyePoint[] CalibrationScreen::AllPoints()
+{
+    EyePoint Points[9];
+    for (int X = 0; X < 3; X++)
+    {
+        for (int Y = 0; Y < 3; Y++)
+        {
+            Points[X + Y * 3] = EyePoint(XStart + CurX * XStep, YStart + YStep * CurY);
+        }
+    }
+    return Points;
+}

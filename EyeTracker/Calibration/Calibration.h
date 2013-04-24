@@ -13,13 +13,18 @@
 #include "Linear.h"
 #include "Quadratic.h"
 
+enum CaliStyle {LinearStyle, QuadraticStyle};
+
 class Calibration
 {
     public:
         Calibration();
+        Calibration(CaliStyle);
         virtual ~Calibration();
 
         void NewValue(MultiCircleLocations, GlintLocation);
+
+        void UpdateCaliType(CaliStyle);
 
         void ShowCalibrationWindow();
         void HideCalibrationWindow();
@@ -40,8 +45,11 @@ class Calibration
         CalibrationScreen CaliImage;
         EyeDifferance CurDiff;
         EyePointD CurPoint;
+        CaliStyle Type;
 
-        pthread_t bk_Process;
+        Linear Lm, Lc;
+        Quadratic Qa, Qb, Qc;
+
         static void* bk_Process_Thread(void*);
         bool bk_Run;
 
@@ -51,6 +59,9 @@ class Calibration
         bool PointWindow;
 
         EyeDifferance* CaliPoints;
+        pthread_t bk_Process;
+
+        void CaliFinished();
 };
 
 #endif // CALIBRATION_H

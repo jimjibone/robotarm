@@ -4,6 +4,7 @@
 #include "WindowsSizer.h"
 #include <opencv/cv.h>
 #include <opencv/highgui.h>
+#include "../Variables/EyePoint.h"
 
 class CalibrationScreen
 {
@@ -16,6 +17,8 @@ class CalibrationScreen
         bool NextPoint();
 
         int CurPoint();
+
+        EyePoint[] AllPoints();
     protected:
     private:
         WindowsSizer Sizer;
