@@ -75,15 +75,11 @@
 	// Object Detection Notifications
 	[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self
 														   selector:@selector(objectDetectorNotificationWasReceived:)
-															   name:nObjectDetectorDidCompleteTableDetection
+															   name:nObjectDetectorDidCompleteObjectDetection
 															 object:nil];
 	[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self
 														   selector:@selector(objectDetectorNotificationWasReceived:)
-															   name:nObjectDetectorDidFailTableDetection
-															 object:nil];
-	[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self
-														   selector:@selector(objectDetectorNotificationWasReceived:)
-															   name:nObjectDetectorDidUpdateTableDetectProgress
+															   name:nObjectDetectionDidCompletePlaneClusterDetection
 															 object:nil];
 	
 	// Kinect Connection Notification
@@ -103,13 +99,10 @@
 - (void)removeNotifications {
 	// Object Detection Notifications
 	[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self
-																  name:nObjectDetectorDidCompleteTableDetection
+																  name:nObjectDetectorDidCompleteObjectDetection
 																object:nil];
 	[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self
-																  name:nObjectDetectorDidFailTableDetection
-																object:nil];
-	[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self
-																  name:nObjectDetectorDidUpdateTableDetectProgress
+																  name:nObjectDetectionDidCompletePlaneClusterDetection
 																object:nil];
 	
 	// Kinect Controller Notifications
@@ -125,65 +118,18 @@
 }
 - (void)objectDetectorNotificationWasReceived:(NSNotification*)aNotification {
 	static bool fieldsNeedReset = YES;
-	if ([[aNotification name] isEqualToString:nObjectDetectorDidCompleteTableDetection])
+	if ([[aNotification name] isEqualToString:nObjectDetectorDidCompleteObjectDetection])
 	{
 		fieldsNeedReset = YES;
 		[self.resetTableDetectBtn setEnabled:YES];
-		
-		if ([self.tableDetectProgress isIndeterminate]) {
-			[self.tableDetectProgress stopAnimation:self];
-			[self.tableDetectProgress setIndeterminate:NO];
-		}
-		[self.tableDetectProgress setDoubleValue:0.0];
-		
-		/*PlaneCoefficients coefficients = [objectDetector getPlaneCoefficients];
-		[self.tablePlaneEquation setStringValue:[NSString stringWithFormat:
-												 @"%.2fx + %.2fy + %.2fz + %.2f = 0",
-												 coefficients.a,
-												 coefficients.b,
-												 coefficients.c,
-												 coefficients.d]];
-		[self.tablePlaneConfidence setStringValue:[NSString stringWithFormat:@"%.0f", coefficients.confidence]];
-		
-		[self.convexHullPointsController removeObjects:self.convexHullPoints];
-		[self.convexHullPoints removeAllObjects];
-		[self.convexHullPoints addObjectsFromArray:[objectDetector getConvexHullPoints]];
-		[self.convexHullPointsController addObjects:self.convexHullPoints];*/
 	}
-	if ([[aNotification name] isEqualToString:nObjectDetectorDidFailTableDetection])
+	if ([[aNotification name] isEqualToString:nObjectDetectionDidCompletePlaneClusterDetection])
 	{
 		fieldsNeedReset = YES;
-		// Display a notification or something.
-		NSLog(@"%@ %@ Notification", NSStringFromSelector(_cmd), [aNotification name]);
-		[self.tablePlaneEquation setStringValue:@"No equation"];
-		[self.tablePlaneConfidence setStringValue:@":("];
+		[self.planeClustersFound setStringValue:[[[aNotification userInfo] objectForKey:@"clustersFound"] stringValue]];
+		
 		[self.convexHullPointsController removeObjects:self.convexHullPoints];
 		[self.convexHullPoints removeAllObjects];
-	}
-	if ([[aNotification name] isEqualToString:nObjectDetectorDidUpdateTableDetectProgress])
-	{
-		double value = [[[aNotification userInfo] objectForKey:dObjectDetectorDidUpdateTableDetectProgressValue] doubleValue];
-		if (value > 0) {
-			// The Table Detection process has started. Update the user with the value.
-			if ([self.tableDetectProgress isIndeterminate]) {
-				[self.tableDetectProgress stopAnimation:self];
-				[self.tableDetectProgress setIndeterminate:NO];
-			}
-			[self.tableDetectProgress setDoubleValue:value];
-		} else if (value < 0) {
-			// The Table Detection has got to an indeterminate length process.
-			// Change the appearance of the progress bar to suit.
-			[self.tableDetectProgress setIndeterminate:YES];
-			[self.tableDetectProgress startAnimation:self];
-		}
-		
-		if (fieldsNeedReset) {
-			fieldsNeedReset = NO;
-			[self.tablePlaneEquation setStringValue:@""];
-			[self.tablePlaneConfidence setStringValue:@""];
-			[self.convexHullPointsController removeObjects:self.convexHullPoints];
-			[self.convexHullPoints removeAllObjects];
-		}
 	}
 }
 - (void)kinectControllerNotificationWasReceived:(NSNotification*)aNotification {
@@ -226,7 +172,7 @@
 	[objectDetector resetTableDetection];
 }
 - (IBAction)changeKinectTilt:(id)sender {
-	[[objectDetector getKinectController] setKinectTilt:[sender floatValue]];
+	//[[objectDetector getKinectController] setKinectTilt:[sender floatValue]];
 }
 
 

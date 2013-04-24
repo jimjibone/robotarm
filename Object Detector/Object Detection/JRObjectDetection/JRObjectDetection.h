@@ -6,7 +6,7 @@
 //	jamesreuss.co.uk
 //  Copyright (c) 2013 James Reuss. All rights reserved.
 //
-
+	
 #ifndef __Kinect_Object_Detector__JRObjectDetection__
 #define __Kinect_Object_Detector__JRObjectDetection__
 
@@ -21,7 +21,12 @@
 #define OBJECT_MIN_HEIGHT (10)	// mm above table
 #define PI_VALUE (3.141592654)
 #define NODE_UNASSIGNED (-1)
-#define PLANE_CLUSTER_THRESHOLD 2000
+
+#define NORMAL_CALC_POINT_SPREAD		(10)			// 10 points
+#define COMPARE_NORMALS_DISTANCE_THRESH	(20.0)			// 20 mm
+#define COMPARE_NORMALS_ANGLE_THRESH	(PI_VALUE/18)	// 10 deg in radians
+#define PLANE_NEIGHBOUR_SEARCH_DIST		(1)				// The distance the segmentation algorithm should search in each direction for neighbours.
+#define PLANE_CLUSTER_THRESHOLD			(2000)			// The number of points a cluster should have in order to pass as a plane.
 
 using namespace std;
 

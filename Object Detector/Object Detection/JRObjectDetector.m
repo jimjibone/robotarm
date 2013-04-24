@@ -183,7 +183,10 @@
 		[objectDetector segmentPlanes];
 		
 		objectDetectionComplete = YES;
-		[[[NSWorkspace sharedWorkspace] notificationCenter] postNotificationName:nObjectDetectorDidCompleteTableDetection
+		[[[NSWorkspace sharedWorkspace] notificationCenter] postNotificationName:nObjectDetectionDidCompletePlaneClusterDetection
+																		  object:self
+																		userInfo:@{@"clustersFound": @([objectDetector getNumberOfPlaneClusters])}];
+		[[[NSWorkspace sharedWorkspace] notificationCenter] postNotificationName:nObjectDetectorDidCompleteObjectDetection
 																		  object:self];
 		
 		[glView setObjectDetectionData:objectDetector];

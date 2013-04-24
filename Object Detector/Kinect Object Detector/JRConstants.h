@@ -29,12 +29,8 @@ FOUNDATION_EXPORT NSString *const dKinectControllerOrientation;
 FOUNDATION_EXPORT NSString *const dKinectControllerLEDColour;
 
 // Object Detector Notifications
-FOUNDATION_EXPORT NSString *const nObjectDetectorDidCompleteTableDetection;
+FOUNDATION_EXPORT NSString *const nObjectDetectorDidCompleteObjectDetection;
 
-FOUNDATION_EXPORT NSString *const nObjectDetectorDidFailTableDetection;
-FOUNDATION_EXPORT NSString *const dObjectDetectorDidFailTableDetectionString;
-
-FOUNDATION_EXPORT NSString *const nObjectDetectorDidUpdateTableDetectProgress;
-FOUNDATION_EXPORT NSString *const dObjectDetectorDidUpdateTableDetectProgressValue;
+FOUNDATION_EXPORT NSString *const nObjectDetectionDidCompletePlaneClusterDetection;
 
 @end

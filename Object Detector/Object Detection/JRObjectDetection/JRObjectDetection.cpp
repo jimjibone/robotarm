@@ -85,23 +85,18 @@ double theta(PlaneCoefficients a, PlaneCoefficients b)
 
 bool ObjectDetection::compareNormalAngle(size_t a, size_t b)
 {
-	const double thresholdDistance = 20.0; // 10mm.
-	
-	const double thresholdAngle = PI_VALUE/18;	// 5 deg in radians.
-	//const double thresholdAngle = PI_VALUE/18;	// 10 deg in radians.
-	//const double thresholdAngle = PI_VALUE/9;		// 20 deg in radians.
 	
 	// Compare the difference between the d component of the two points.
 	//double distanceVal = fabs(input_cloud_normals[a].d - input_cloud_normals[b].d);	// Distance between the d coefficient of 2 point normals.
 	//double distanceVal = fabs(input_cloud[a].z - input_cloud[b].z);					// Distance between the Z components of 2 3D points.
 	double distanceVal = fabs( mod(input_cloud[a]) - mod(input_cloud[b] ));				// Distance between 2 3D points.
 	//double distanceVal = 0;
-	bool distance = distanceVal < thresholdDistance;
+	bool distance = distanceVal < COMPARE_NORMALS_DISTANCE_THRESH;
 	
 	// Compare the angle between normal vectors by doing the dot product.
 	//double angleVal = dot(input_cloud_normals[a], input_cloud_normals[b]);
 	double angleVal = theta(input_cloud_normals[a], input_cloud_normals[b]);
-	bool angle = angleVal < thresholdAngle;
+	bool angle = angleVal < COMPARE_NORMALS_ANGLE_THRESH;
 	
 	bool isValid = input_cloud_normals[a].isSet() && input_cloud_normals[b].isSet();
 	
@@ -171,18 +166,16 @@ void ObjectDetection::calculateSurfaceNormals()
 			uint x = 0, y = 0;
 			frameXYfromIndex(&x, &y, (uint)i);
 			
-			const int mult = 1;
-			
-			if (   x >= FREENECT_FRAME_W-mult	// is right-hand side
-				&& y >= FREENECT_FRAME_H*mult-1	// and is bottom
+			if (   x >= FREENECT_FRAME_W-NORMAL_CALC_POINT_SPREAD-1	// is right-hand side
+				&& y >= FREENECT_FRAME_H*NORMAL_CALC_POINT_SPREAD-2	// and is bottom
 				) {
 				// This point is out-of-bounds! Set the normal to 0.
 				input_cloud_normals.emplace_back(PlaneCoefficients(0, 0, 0, 0));
 			} else {
 				// This point is within bounds. Calculate the normal.
 				input_cloud_normals.emplace_back(getPlaneCoefficients(input_cloud[i],
-																	  input_cloud[i+mult],
-																	  input_cloud[i+FREENECT_FRAME_W*mult]));
+																	  input_cloud[i+NORMAL_CALC_POINT_SPREAD],
+																	  input_cloud[i+FREENECT_FRAME_W*NORMAL_CALC_POINT_SPREAD]));
 			}
 			//if (count > 10000) {
 				//cout << "\tNormal coefficients of point " << i << " are A = " << input_cloud_normals[i].a << "  B = " << input_cloud_normals[i].b << "  C = " << input_cloud_normals[i].c << "  D = " << input_cloud_normals[i].d << "." << endl;
@@ -234,43 +227,49 @@ void ObjectDetection::segmentPlanes()
 					uint currentX, currentY = 0;
 					frameXYfromIndex(&currentX, &currentY, (uint)point);
 					
-					// Get point indices.
-					size_t above = point-FREENECT_FRAME_W;
-					size_t right = point+1;
-					size_t below = point+FREENECT_FRAME_W;
-					size_t left  = point-1;
-					
-					const size_t minY = 1, maxY = FREENECT_FRAME_H-2;
-					const size_t minX = 1, maxX = FREENECT_FRAME_W-2;
-					
-					// Find out if its neighbouring points qualify.
-					bool aboveIsNeighbour = ((currentY > minY) && (plane_cluster_nodes[above] == NODE_UNASSIGNED)) ? compareNormalAngle(point, above) : false;
-					bool rightIsNeighbour = ((currentX < maxX) && (plane_cluster_nodes[right] == NODE_UNASSIGNED)) ? compareNormalAngle(point, right) : false;
-					bool belowIsNeighbour = ((currentY < maxY) && (plane_cluster_nodes[below] == NODE_UNASSIGNED)) ? compareNormalAngle(point, below) : false;
-					bool leftIsNeighbour  = ((currentX > minX) && (plane_cluster_nodes[left]  == NODE_UNASSIGNED)) ? compareNormalAngle(point, left)  : false;
-					
-					// If there is a neighbour then add it to the list to be processed and set its segment_id.
-					if (aboveIsNeighbour) {
-						unprocessed_points.emplace_back(above);
-						plane_cluster_nodes[above] = current_segment_id;
+					// Now search for neighbours for a distance defined in PLANE_NEIGHBOUR_SEARCH_DIST
+					for (size_t spread = 0; spread < PLANE_NEIGHBOUR_SEARCH_DIST+1; spread++) {
+						
+						// Get point indices.
+						size_t above = point-FREENECT_FRAME_W*spread;
+						size_t right = point+1*spread;
+						size_t below = point+FREENECT_FRAME_W*spread;
+						size_t left  = point-1*spread;
+						
+						const size_t minY = spread, maxY = FREENECT_FRAME_H-1-spread;
+						const size_t minX = spread, maxX = FREENECT_FRAME_W-1-spread;
+						
+						// Find out if its neighbouring points qualify.
+						bool aboveIsNeighbour = ((currentY > minY) && (plane_cluster_nodes[above] == NODE_UNASSIGNED)) ? compareNormalAngle(point, above) : false;
+						bool rightIsNeighbour = ((currentX < maxX) && (plane_cluster_nodes[right] == NODE_UNASSIGNED)) ? compareNormalAngle(point, right) : false;
+						bool belowIsNeighbour = ((currentY < maxY) && (plane_cluster_nodes[below] == NODE_UNASSIGNED)) ? compareNormalAngle(point, below) : false;
+						bool leftIsNeighbour  = ((currentX > minX) && (plane_cluster_nodes[left]  == NODE_UNASSIGNED)) ? compareNormalAngle(point, left)  : false;
+						
+						// If there is a neighbour then add it to the list to be processed and set its segment_id.
+						if (aboveIsNeighbour) {
+							unprocessed_points.emplace_back(above);
+							plane_cluster_nodes[above] = current_segment_id;
+						}
+						if (rightIsNeighbour) {
+							unprocessed_points.emplace_back(right);
+							plane_cluster_nodes[right] = current_segment_id;
+						}
+						if (belowIsNeighbour) {
+							unprocessed_points.emplace_back(below);
+							plane_cluster_nodes[below] = current_segment_id;
+						}
+						if (leftIsNeighbour) {
+							unprocessed_points.emplace_back(left);
+							plane_cluster_nodes[left] = current_segment_id;
+						}
+						
+						/*cout << "\tProcessing point " << point << " with index " << i << " (" << currentX << ", " << currentY <<
+						 ")    Neighbours: above=" << aboveIsNeighbour << "  right=" << rightIsNeighbour <<
+						 "  below=" << belowIsNeighbour << "  left=" << leftIsNeighbour <<
+						 ".    Current segment_id=" << current_segment_id << "  Points unprocessed=" << unprocessed_points.size() << "." << endl;*/
+						
 					}
-					if (rightIsNeighbour) {
-						unprocessed_points.emplace_back(right);
-						plane_cluster_nodes[right] = current_segment_id;
-					}
-					if (belowIsNeighbour) {
-						unprocessed_points.emplace_back(below);
-						plane_cluster_nodes[below] = current_segment_id;
-					}
-					if (leftIsNeighbour) {
-						unprocessed_points.emplace_back(left);
-						plane_cluster_nodes[left] = current_segment_id;
-					}
 					
-					/*cout << "\tProcessing point " << point << " with index " << i << " (" << currentX << ", " << currentY <<
-							")    Neighbours: above=" << aboveIsNeighbour << "  right=" << rightIsNeighbour <<
-							"  below=" << belowIsNeighbour << "  left=" << leftIsNeighbour <<
-							".    Current segment_id=" << current_segment_id << "  Points unprocessed=" << unprocessed_points.size() << "." << endl;*/
 				}
 				
 			}

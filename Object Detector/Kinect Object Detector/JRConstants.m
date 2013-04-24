@@ -22,20 +22,16 @@ NSString *const nKinectControllerDidError		= @"nKinectControllerDidError";
 NSString *const dKinectControllerErrorString	= @"dKinectControllerErrorString";
 
 NSString *const nKinectControllerDidUpdateHardware	= @"nKinectControllerDidUpdateHardware";
-NSString *const dKinectControllerDepthFPS				= @"dKinectControllerDepthFPS";
+NSString *const dKinectControllerDepthFPS			= @"dKinectControllerDepthFPS";
 NSString *const dKinectControllerRGBFPS				= @"dKinectControllerRGBFPS";
-NSString *const dKinectControllerOrientation			= @"dKinectControllerOrientation";
+NSString *const dKinectControllerOrientation		= @"dKinectControllerOrientation";
 NSString *const dKinectControllerLEDColour			= @"dKinectControllerLEDColour";
 
 
 
 // Object Detector Notifications
-NSString *const nObjectDetectorDidCompleteTableDetection			= @"nObjectDetectorDidCompleteTableDetection";
+NSString *const nObjectDetectorDidCompleteObjectDetection		= @"nObjectDetectorDidCompleteObjectDetection";
 
-NSString *const nObjectDetectorDidFailTableDetection				= @"nObjectDetectorDidFailTableDetection";
-NSString *const dObjectDetectorDidFailTableDetectionString		= @"dObjectDetectorDidFailTableDetectionString";
-
-NSString *const nObjectDetectorDidUpdateTableDetectProgress		= @"nObjectDetectorDidUpdateTableDetectProgress";
-NSString *const dObjectDetectorDidUpdateTableDetectProgressValue	= @"dObjectDetectorDidUpdateTableDetectProgressValue";
+NSString *const nObjectDetectionDidCompletePlaneClusterDetection = @"nObjectDetectionDidCompletePlaneClusterDetection";
 
 @end

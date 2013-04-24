@@ -12,5 +12,11 @@ Test Set 1
 Clustering algorithm complete. Starting to tune algorithm to required use.
 
 ###Before Tuning
-![Before Tuning](image1.png)
+![Before Tuning](screen1.png)
 
+Tuning settings:
+- NORMAL_CALC_POINT_SPREAD 10
+- COMPARE_NORMALS_DISTANCE_THRESH 20.0
+- COMPARE_NORMALS_ANGLE_THRESH PI_VALUE/18
+- PLANE_NEIGHBOUR_SEARCH_DIST 1
+- PLANE_CLUSTER_THRESHOLD 2000
