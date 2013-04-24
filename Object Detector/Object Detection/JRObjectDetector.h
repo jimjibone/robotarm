@@ -15,9 +15,11 @@
 #import "JRPointTypes.h"
 
 @class GLView;
+
 @interface JRObjectDetector : NSObject {
 	JRKinectController *kinectController;
 	GLView *glView;
+	GLView *gl2DView;
 	
 	BOOL _runMainMethod;
 	BOOL _mainMethodCompleted;
@@ -42,6 +44,7 @@
 - (void)resetTableDetection;
 
 - (void)setGLViewOutlet:(GLView*)newGLView;
+- (void)setGL2DViewOutlet:(GLView*)newGLView;
 
 //- (NSArray*)getConvexHullPoints;
 

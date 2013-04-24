@@ -145,6 +145,7 @@
 }
 - (void)sendNewFramesToDisplay {
 	[glView swapInNewDepthFrame:&_kinectDepth RGBFrame:&_kinectRGB];
+	[gl2DView swapInNewDepthFrame:&_kinectDepth RGBFrame:&_kinectRGB];
 }
 
 
@@ -211,6 +212,13 @@
 		glView = NULL;
 	}
 	glView = newGLView;
+}
+- (void)setGL2DViewOutlet:(GLView*)newGLView {
+	if (gl2DView) {
+		[gl2DView release];
+		gl2DView = NULL;
+	}
+	gl2DView = newGLView;
 }
 /*- (NSArray*)getConvexHullPoints {
 	NSMutableArray *newArray = [[NSMutableArray alloc] init];

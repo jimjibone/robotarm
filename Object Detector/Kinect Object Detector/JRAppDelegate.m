@@ -28,11 +28,16 @@
 	_convexHullPoints = [[NSMutableArray alloc] init];
 	[self.convexHullPointsController setSelectsInsertedObjects:NO];
 	
+	// Set view modes.
+	[glView setDrawMode:MODE_POINTS];
+	[gl2DView setDrawMode:MODE_2D];
+	
 	// Set up and start the Object Detector.
 	isKinectConnected = NO;
 	[self.connectKinectBtn setEnabled:NO];
     objectDetector = [[JRObjectDetector alloc] init];
 	[objectDetector setGLViewOutlet:glView];
+	[objectDetector setGL2DViewOutlet:gl2DView];
 	[objectDetector start];
 	
 	[_resetTableDetectBtn setEnabled:YES];

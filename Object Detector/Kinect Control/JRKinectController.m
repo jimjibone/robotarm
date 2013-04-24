@@ -124,7 +124,7 @@ static void irCallback(freenect_device * dev, void *video, uint32_t timestamp) {
 			freenect_set_user(_kinectDevice, self);
 			freenect_set_depth_callback(_kinectDevice, depthCallback);
 			freenect_set_video_callback(_kinectDevice, rgbCallback);
-			freenect_set_video_mode(_kinectDevice, freenect_find_video_mode(FREENECT_RESOLUTION_MEDIUM, FREENECT_VIDEO_IR_8BIT));
+			freenect_set_video_mode(_kinectDevice, freenect_find_video_mode(FREENECT_RESOLUTION_MEDIUM, FREENECT_VIDEO_RGB));
 			freenect_set_depth_mode(_kinectDevice, freenect_find_depth_mode(FREENECT_RESOLUTION_MEDIUM, FREENECT_DEPTH_REGISTERED));
 			freenect_set_depth_buffer(_kinectDevice, _depthBack);
 			freenect_set_video_buffer(_kinectDevice, _rgbBack);

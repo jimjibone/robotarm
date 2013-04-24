@@ -13,10 +13,12 @@
 #import "GLView.h"
 
 @class GLView;
+
 @interface JRAppDelegate : NSObject <NSApplicationDelegate> {
     JRObjectDetector *objectDetector;
 	BOOL isKinectConnected;
 	IBOutlet GLView *glView;
+	IBOutlet GLView *gl2DView;
 }
 
 @property (assign) IBOutlet NSWindow *window;

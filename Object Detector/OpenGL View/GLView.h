@@ -68,14 +68,20 @@
 	BOOL _normals;
     BOOL _mirror;
     BOOL _natural;
+#ifndef DRAW_MODE
+#define DRAW_MODE
     enum drawMode {
         MODE_2D = 0,
         MODE_POINTS = 1,
         MODE_MESH = 2,
-    } _drawMode;
+    };
+#endif
+	enum drawMode _drawMode;
 }
 
+- (void)setDrawMode:(enum drawMode)newDrawMode;
 - (void)swapInNewDepthFrame:(uint16_t**)newDepth RGBFrame:(uint8_t**)newRGB;
+
 - (void)setPlaneData:(_ransacConfidentPlane)newPlane;
 - (void)showPlane:(BOOL)mode;
 - (void)resetConvexHullPoints;

@@ -25,7 +25,7 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
     return kCVReturnSuccess;
 }
 - (id)initWithFrame:(NSRect)frame {
-	GLuint attribs[] = 
+	GLuint attribs[] =
     {
         NSOpenGLPFAAccelerated,
         NSOpenGLPFADoubleBuffer,
@@ -34,8 +34,8 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
         NSOpenGLPFADepthSize, 24,
 		NSOpenGLPFAAlphaSize, 32,
         0
-    };	
-	NSOpenGLPixelFormat* fmt = [[NSOpenGLPixelFormat alloc] initWithAttributes: (NSOpenGLPixelFormatAttribute*) attribs]; 
+    };
+	NSOpenGLPixelFormat* fmt = [[NSOpenGLPixelFormat alloc] initWithAttributes: (NSOpenGLPixelFormatAttribute*) attribs];
 	if((self = [super initWithFrame:frame pixelFormat: [fmt autorelease]])) {
     }
     return self;
@@ -48,10 +48,10 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
     [self stopDrawing];
     [super dealloc];
 }
-- (void)prepareOpenGL { 
+- (void)prepareOpenGL {
     // Synchronize buffer swaps with vertical refresh rate
     GLint swapInt = 1;
-    [[self openGLContext] setValues:&swapInt forParameter:NSOpenGLCPSwapInterval]; 
+    [[self openGLContext] setValues:&swapInt forParameter:NSOpenGLCPSwapInterval];
     
     [self initScene];
     
@@ -79,7 +79,7 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
         NSSize size = [self bounds].size;
         [context makeCurrentContext];
         glViewport(0, 0, size.width, size.height);
-    }    
+    }
     CGLUnlockContext([context CGLContextObj]);
 }
 - (void)frameForTime:(const CVTimeStamp*)outputTime {
@@ -116,11 +116,14 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 	
 	//_planeData = (_ransacConfidentPlane){0, 0, 0, 0, 0};
     
-	_intDepth = (uint16_t*)malloc(FREENECT_DEPTH_11BIT_SIZE);
-	_intRGB = (uint8_t*)malloc(FREENECT_VIDEO_RGB_SIZE);
+	_intDepth = (uint16_t*)malloc(FREENECT_FRAME_PIX * sizeof(uint16_t));
+	_intRGB = (uint8_t*)malloc(FREENECT_FRAME_PIX * 3 * sizeof(uint8_t));
 	
-    uint8_t *empty = (uint8_t*)malloc(FREENECT_FRAME_W * FREENECT_FRAME_H * 3);
-    bzero(empty, FREENECT_FRAME_W * FREENECT_FRAME_H * 3);
+    //uint8_t *empty = (uint8_t*)malloc(FREENECT_FRAME_PIX * 3);
+    //bzero(empty, FREENECT_FRAME_PIX * 3);
+	
+	bzero(_intDepth, FREENECT_FRAME_PIX);
+	bzero(_intRGB, FREENECT_FRAME_PIX * 3);
     
 	glGenTextures(1, &_depthTex);
 	glBindTexture(GL_TEXTURE_2D, _depthTex);
@@ -128,7 +131,8 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE16, FREENECT_FRAME_W, FREENECT_FRAME_H, 0, GL_LUMINANCE, GL_UNSIGNED_SHORT, empty);
+    //glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE16, FREENECT_FRAME_W, FREENECT_FRAME_H, 0, GL_LUMINANCE, GL_UNSIGNED_SHORT, empty);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE16, FREENECT_FRAME_W, FREENECT_FRAME_H, 0, GL_LUMINANCE, GL_UNSIGNED_SHORT, _intDepth);
     
 	glGenTextures(1, &_videoTex);
 	glBindTexture(GL_TEXTURE_2D, _videoTex);
@@ -136,9 +140,10 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, FREENECT_FRAME_W, FREENECT_FRAME_H, 0, GL_RGB, GL_UNSIGNED_BYTE, empty);
+    //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, FREENECT_FRAME_W, FREENECT_FRAME_H, 0, GL_RGB, GL_UNSIGNED_BYTE, empty);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, FREENECT_FRAME_W, FREENECT_FRAME_H, 0, GL_RGB, GL_UNSIGNED_BYTE, _intRGB);
     
-    free(empty);
+    //free(empty);
 	
 	uint8_t map[2048*3];
     for(int i = 0; i < 2048; i++) {
@@ -158,7 +163,7 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 				map[i*3+1] = lb;
 				map[i*3+2] = 0;
 				break;
-			case 2: // orange -> green 
+			case 2: // orange -> green
 				map[i*3+0] = 255-lb;
 				map[i*3+1] = 255;
 				map[i*3+2] = 0;
@@ -211,7 +216,7 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
                      "const float kDepthScale  = 0.00174;\n"
                      ""
                      "void main() {\n"
-                     "	float z  = texture2D(depth, gl_TexCoord[0].st).r*10.0;\n" 
+                     "	float z  = texture2D(depth, gl_TexCoord[0].st).r*10.0;\n"
                      "   vec4 rgba;\n"
                      "   if(natural > 0) {\n"
                      ""
@@ -245,7 +250,7 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
     [_depthProgram setUniformInt:0 forName:@"video"];
     [_depthProgram setUniformInt:1 forName:@"depth"];
     [_depthProgram setUniformInt:2 forName:@"colormap"];
-    [_depthProgram unbind];                     
+    [_depthProgram unbind];
     
     // create grid of points
     struct glf2 {
@@ -302,7 +307,7 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
                      ""
                      "void main() {\n"
                      "	float z  = texture2D(depth, gl_TexCoord[0].st).r*10.0;\n" // 0..1
-                     "   vec4 rgba = (natural > 0) ? texture2D(video, gl_TexCoord[1].st) : texture1D(colormap, z);\n" 
+                     "   vec4 rgba = (natural > 0) ? texture2D(video, gl_TexCoord[1].st) : texture1D(colormap, z);\n"
                      ""
                      "   if(normals > 0) {\n"
                      "      float zx =  texture2D(depth, gl_TexCoord[0].st+vec2(2.0/640.0, 0.0)).r*10.0;\n"
@@ -335,8 +340,8 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, _videoTex);
 	
-	glEnable(GL_BLEND); //Enable alpha blending
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); //Set the blend function
+	//glEnable(GL_BLEND); //Enable alpha blending
+    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); //Set the blend function
 	
 	//_rotation = [[JRPointRotationXYZ alloc] initWithRotationX:0 Y:0 Z:0];
 }
@@ -381,115 +386,115 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
     glColor4f(1, 1, 1, 0.5);
     
     glEnableClientState(GL_VERTEX_ARRAY);
-    glVertexPointer(3, GL_FLOAT, sizeof(verts[0]), &verts->x); 
+    glVertexPointer(3, GL_FLOAT, sizeof(verts[0]), &verts->x);
     glDrawElements(GL_LINES, sizeof(inds)/sizeof(inds[0]), GL_UNSIGNED_BYTE, inds);
     glDisableClientState(GL_VERTEX_ARRAY);
 }
 - (void)drawPlane {
 	/*XYZPoint bl = (XYZPoint){-600, 600,
-		zWorldFromPlaneAndWorldXY(_planeData, -600, -600)};
-	XYZPoint tl = (XYZPoint){600, 600,
-		zWorldFromPlaneAndWorldXY(_planeData, 600, -600)};
-	XYZPoint tr = (XYZPoint){600, -600,
-		zWorldFromPlaneAndWorldXY(_planeData, 600, 600)};
-	XYZPoint br = (XYZPoint){-600, -600,
-		zWorldFromPlaneAndWorldXY(_planeData, -600, 600)};
-	
-	glBegin(GL_QUADS);
-	glColor4f(.392156863, 1, .392156863, 0.3);
-	// bl, tl, tr, br
-	glVertex3d(bl.x, bl.y, -bl.z);
-	glVertex3d(tl.x, tl.y, -tl.z);
-	glVertex3d(tr.x, tr.y, -tr.z);
-	glVertex3d(br.x, br.y, -br.z);
-	glEnd();*/
+	 zWorldFromPlaneAndWorldXY(_planeData, -600, -600)};
+	 XYZPoint tl = (XYZPoint){600, 600,
+	 zWorldFromPlaneAndWorldXY(_planeData, 600, -600)};
+	 XYZPoint tr = (XYZPoint){600, -600,
+	 zWorldFromPlaneAndWorldXY(_planeData, 600, 600)};
+	 XYZPoint br = (XYZPoint){-600, -600,
+	 zWorldFromPlaneAndWorldXY(_planeData, -600, 600)};
+	 
+	 glBegin(GL_QUADS);
+	 glColor4f(.392156863, 1, .392156863, 0.3);
+	 // bl, tl, tr, br
+	 glVertex3d(bl.x, bl.y, -bl.z);
+	 glVertex3d(tl.x, tl.y, -tl.z);
+	 glVertex3d(tr.x, tr.y, -tr.z);
+	 glVertex3d(br.x, br.y, -br.z);
+	 glEnd();*/
 }
 - (void)drawConvexHull {
 	/*GLfloat prevPointSize = 0;
-	glGetFloatv(GL_POINT_SIZE, &prevPointSize);
-	glPointSize(8);
-	
-	glBegin(GL_POINTS);
-	glColor4f(1, 0, 0, 0.8);
-	for (int i = 0; i < _convexHullPointCount-1; i++) {
-		// Don't draw the last point because it is the same as the last.
-		glVertex3d(_convexHullPoints[i].x, -_convexHullPoints[i].y, -_convexHullPoints[i].z+2);
-	}
-	glEnd();
-	
-	glPointSize(prevPointSize);
-	
-	GLfloat prevLineWidth = 0;
-	glGetFloatv(GL_LINE_WIDTH, &prevLineWidth);
-	glLineWidth(2);
-	
-	glBegin(GL_LINE_LOOP);
-	glColor4f(1, 1, 0, 0.6);
-	for (int i = 0; i < _convexHullPointCount-1; i++) {
-		// Don't draw the last point because it is the same as the last.
-		glVertex3d(_convexHullPoints[i].x, -_convexHullPoints[i].y, -_convexHullPoints[i].z+2);
-	}
-	glEnd();
-	
-	glLineWidth(prevLineWidth);*/
+	 glGetFloatv(GL_POINT_SIZE, &prevPointSize);
+	 glPointSize(8);
+	 
+	 glBegin(GL_POINTS);
+	 glColor4f(1, 0, 0, 0.8);
+	 for (int i = 0; i < _convexHullPointCount-1; i++) {
+	 // Don't draw the last point because it is the same as the last.
+	 glVertex3d(_convexHullPoints[i].x, -_convexHullPoints[i].y, -_convexHullPoints[i].z+2);
+	 }
+	 glEnd();
+	 
+	 glPointSize(prevPointSize);
+	 
+	 GLfloat prevLineWidth = 0;
+	 glGetFloatv(GL_LINE_WIDTH, &prevLineWidth);
+	 glLineWidth(2);
+	 
+	 glBegin(GL_LINE_LOOP);
+	 glColor4f(1, 1, 0, 0.6);
+	 for (int i = 0; i < _convexHullPointCount-1; i++) {
+	 // Don't draw the last point because it is the same as the last.
+	 glVertex3d(_convexHullPoints[i].x, -_convexHullPoints[i].y, -_convexHullPoints[i].z+2);
+	 }
+	 glEnd();
+	 
+	 glLineWidth(prevLineWidth);*/
 }
 - (void)drawBoundedPlaneHull {
 	// Draw points of the hull
 	/*GLfloat prevPointSize = 0;
-	glGetFloatv(GL_POINT_SIZE, &prevPointSize);
-	glPointSize(8);
-	
-	glBegin(GL_POINTS);
-	glColor4f(1, 0, 0, 0.8);
-	for (int i = 0; i < _convexHullPointCount-1; i++) {
-		// Don't draw the last point because it is the same as the last.
-		glVertex3d(_convexHullPoints[i].x, -_convexHullPoints[i].y, -_convexHullPoints[i].z+2);
-	}
-	glEnd();
-	
-	glPointSize(prevPointSize);
-	
-	// Draw the hull lines and fill
-	GLfloat prevLineWidth = 0;
-	glGetFloatv(GL_LINE_WIDTH, &prevLineWidth);
-	glLineWidth(2);
-	
-	glColor4f(.392156863, 1, .392156863, 0.3);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	glBegin(GL_TRIANGLE_FAN);
-	for (int i = 0; i < _convexHullPointCount-1; i++) {
-		// Don't draw the last point because it is the same as the last.
-		glVertex3d(_convexHullPoints[i].x, -_convexHullPoints[i].y, -_convexHullPoints[i].z+2);
-	}
-	glEnd();
-	
-	glColor4f(1, 1, 0, 0.6);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	glBegin(GL_LINE_LOOP);
-	for (int i = 0; i < _convexHullPointCount-1; i++) {
-		// Don't draw the last point because it is the same as the last.
-		glVertex3d(_convexHullPoints[i].x, -_convexHullPoints[i].y, -_convexHullPoints[i].z+2);
-	}
-	glEnd();
-	
-	glLineWidth(prevLineWidth);*/
+	 glGetFloatv(GL_POINT_SIZE, &prevPointSize);
+	 glPointSize(8);
+	 
+	 glBegin(GL_POINTS);
+	 glColor4f(1, 0, 0, 0.8);
+	 for (int i = 0; i < _convexHullPointCount-1; i++) {
+	 // Don't draw the last point because it is the same as the last.
+	 glVertex3d(_convexHullPoints[i].x, -_convexHullPoints[i].y, -_convexHullPoints[i].z+2);
+	 }
+	 glEnd();
+	 
+	 glPointSize(prevPointSize);
+	 
+	 // Draw the hull lines and fill
+	 GLfloat prevLineWidth = 0;
+	 glGetFloatv(GL_LINE_WIDTH, &prevLineWidth);
+	 glLineWidth(2);
+	 
+	 glColor4f(.392156863, 1, .392156863, 0.3);
+	 glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	 glBegin(GL_TRIANGLE_FAN);
+	 for (int i = 0; i < _convexHullPointCount-1; i++) {
+	 // Don't draw the last point because it is the same as the last.
+	 glVertex3d(_convexHullPoints[i].x, -_convexHullPoints[i].y, -_convexHullPoints[i].z+2);
+	 }
+	 glEnd();
+	 
+	 glColor4f(1, 1, 0, 0.6);
+	 glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	 glBegin(GL_LINE_LOOP);
+	 for (int i = 0; i < _convexHullPointCount-1; i++) {
+	 // Don't draw the last point because it is the same as the last.
+	 glVertex3d(_convexHullPoints[i].x, -_convexHullPoints[i].y, -_convexHullPoints[i].z+2);
+	 }
+	 glEnd();
+	 
+	 glLineWidth(prevLineWidth);*/
 }
 - (void)drawObjectsCloud {
 	/*GLfloat prevPointSize = 0;
-	glGetFloatv(GL_POINT_SIZE, &prevPointSize);
-	glPointSize(8);
-	
-	if (_objectsCloudPointCount > 0) {
-		glBegin(GL_POINTS);
-		glColor4f(0, 0, 1, 0.8);
-		for (int i = 0; i < _objectsCloudPointCount-1; i++) {
-			// Don't draw the last point because it is the same as the last.
-			glVertex3d(_objectsCloudPoints[i].x, -_objectsCloudPoints[i].y, -_objectsCloudPoints[i].z-2);
-		}
-		glEnd();
-	}
-	
-	glPointSize(prevPointSize);*/
+	 glGetFloatv(GL_POINT_SIZE, &prevPointSize);
+	 glPointSize(8);
+	 
+	 if (_objectsCloudPointCount > 0) {
+	 glBegin(GL_POINTS);
+	 glColor4f(0, 0, 1, 0.8);
+	 for (int i = 0; i < _objectsCloudPointCount-1; i++) {
+	 // Don't draw the last point because it is the same as the last.
+	 glVertex3d(_objectsCloudPoints[i].x, -_objectsCloudPoints[i].y, -_objectsCloudPoints[i].z-2);
+	 }
+	 glEnd();
+	 }
+	 
+	 glPointSize(prevPointSize);*/
 }
 - (void)drawSegmentedPlanes
 {
@@ -532,7 +537,7 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 			{0.0, 1.0, 1.0},
 			{1.0, 0.0, 1.0},
 			{1.0, 1.0, 1.0}
-			};
+		};
 		
 		GLfloat prevPointSize = 0;
 		glGetFloatv(GL_POINT_SIZE, &prevPointSize);
@@ -542,9 +547,9 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 		
 		size_t currentPos = 0;
 		for (size_t i = 0; i < _segmented_planes_count; i++) {
-				
+			
 			glColor4f(colours[(i % coloursSize)][0], colours[(i % coloursSize)][1], colours[(i % coloursSize)][2], 0.6);
-				
+			
 			for (size_t j = 0; j < _segmented_planes_points_counts[i]; j++) {
 				
 				// Don't draw the last point because it is the same as the last.
@@ -585,7 +590,7 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
     if(_newDepth) {
         
         if(_drawMode == MODE_MESH) {
-            // naive - most common GPUs will start too choke when pushing 640x480 different 
+            // naive - most common GPUs will start too choke when pushing 640x480 different
 			//  triangles each frame.. (2009)
             const float md = 5; // tolerance in z, increase to join more mesh triangles
             _nTriIndicies = 0;
@@ -621,13 +626,13 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
         glActiveTexture(GL_TEXTURE0);
 		_newDepth = NO;
     }
-
+	
     if(_newRGB) {
         glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, FREENECT_FRAME_W, FREENECT_FRAME_H, GL_RGB, GL_UNSIGNED_BYTE, _intRGB);
 		_newRGB = NO;
     }
     
-    glClearColor(0.0, 0.0, 0.0, 1.0);    
+    glClearColor(0.0, 0.0, 0.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     
     if(_drawMode == MODE_POINTS || _drawMode == MODE_MESH) {
@@ -680,7 +685,7 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glDisableClientState(GL_VERTEX_ARRAY);
         
-        [_pointProgram unbind]; 
+        [_pointProgram unbind];
         
         glActiveTexture(GL_TEXTURE2);
         glDisable(GL_TEXTURE_1D);
@@ -740,16 +745,20 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
         
         glEnable(GL_TEXTURE_2D);
         glBegin(GL_QUADS);
-        glTexCoord2f(_mirror?1:0, 0); glVertex2f(0,               0);
+        /*glTexCoord2f(_mirror?1:0, 0); glVertex2f(0,               0);
         glTexCoord2f(_mirror?0:1, 0); glVertex2f(FREENECT_FRAME_W,0);
         glTexCoord2f(_mirror?0:1, 1); glVertex2f(FREENECT_FRAME_W,FREENECT_FRAME_H);
-        glTexCoord2f(_mirror?1:0, 1); glVertex2f(0,FREENECT_FRAME_H);
+        glTexCoord2f(_mirror?1:0, 1); glVertex2f(0,FREENECT_FRAME_H);*/
+		glTexCoord2f(_mirror?1:0, 0); glVertex2f(0,               0);
+        glTexCoord2f(_mirror?0:1, 0); glVertex2f(FREENECT_FRAME_W/2,0);
+        glTexCoord2f(_mirror?0:1, 1); glVertex2f(FREENECT_FRAME_W/2,FREENECT_FRAME_H/2);
+        glTexCoord2f(_mirror?1:0, 1); glVertex2f(0,FREENECT_FRAME_H/2);
         glEnd();
         glDisable(GL_TEXTURE_2D);
         
         
         
-        glTranslatef(FREENECT_FRAME_W, 0, 0);
+        /*glTranslatef(FREENECT_FRAME_W, 0, 0);
         
         // draw depth
         glEnable(GL_TEXTURE_2D);
@@ -761,6 +770,9 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
         [_depthProgram bind];
         [_depthProgram setUniformInt:(_normals?1:0) forName:@"normals"];
         [_depthProgram setUniformInt:(_natural?1:0) forName:@"natural"];
+		[_depthProgram setUniformFloat:0 forName:@"kColorScale"];
+        [_depthProgram setUniformFloat:0 forName:@"kColorX"];
+        [_depthProgram setUniformFloat:0 forName:@"kColorY"];
         
         glBegin(GL_QUADS);
         glTexCoord2f(_mirror?1:0, 0); glVertex2f(0,               0);
@@ -769,7 +781,7 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
         glTexCoord2f(_mirror?1:0, 1); glVertex2f(0,FREENECT_FRAME_H);
         glEnd();
         
-        [_depthProgram unbind]; 
+        [_depthProgram unbind];*/
         
         glActiveTexture(GL_TEXTURE2);
         glDisable(GL_TEXTURE_1D);
@@ -785,6 +797,12 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 
 
 #pragma mark Instance Methods
+- (void)setDrawMode:(enum drawMode)newDrawMode
+{
+	@synchronized (self) {
+		_drawMode = newDrawMode;
+	}
+}
 - (void)swapInNewDepthFrame:(uint16_t**)newDepth RGBFrame:(uint8_t**)newRGB {
 	if (newDepth) {
 		@synchronized (self) {
@@ -803,7 +821,7 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 	//@synchronized (self) {
 	//	_planeData = newPlane;
 	//}
-//#define GLViewSetPlaneDEBUG
+	//#define GLViewSetPlaneDEBUG
 #ifdef GLViewSetPlaneDEBUG
 	printf("GLView:\n");
 	printf("memloc = %x\n", &_planeData);
@@ -823,39 +841,39 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 }
 - (void)resetConvexHullPoints {
 	/*@synchronized (self) {
-		_drawConvexHull = NO;
-	}
-	if (_convexHullPoints) {
-		// If there is previous convexHullPoints data then remove it all, ready to create the new array.
-		free(_convexHullPoints);
-		_convexHullPoints = NULL;
-		_convexHullPointCount = 0;
-		_drawConvexHull = NO;
-	}*/
+	 _drawConvexHull = NO;
+	 }
+	 if (_convexHullPoints) {
+	 // If there is previous convexHullPoints data then remove it all, ready to create the new array.
+	 free(_convexHullPoints);
+	 _convexHullPoints = NULL;
+	 _convexHullPointCount = 0;
+	 _drawConvexHull = NO;
+	 }*/
 }
 - (void)setConvexHullPoints:(PointXYZ*)newPoints Count:(unsigned int)count {
 	/*@synchronized (self) {
-		_drawConvexHull = NO;
-	}
-	if (_convexHullPoints) {
-		// If there is previous convexHullPoints data then remove it all, ready to create the new array.
-		free(_convexHullPoints);
-		_convexHullPoints = NULL;
-		_convexHullPointCount = 0;
-		_drawConvexHull = NO;
-	}
-	if (!_convexHullPoints && count > 0) {
-		// There is nothing contained in convexHullPoints so let's:
-		// 1. Initialise it with the size we need for all the points.
-		// 2. Add all the points.
-		// 3. Get the view ready to show the points.
-		
-		_convexHullPoints = newPoints;
-		
-		_convexHullPointCount = count;
-		
-		_drawConvexHull = YES;
-	}*/
+	 _drawConvexHull = NO;
+	 }
+	 if (_convexHullPoints) {
+	 // If there is previous convexHullPoints data then remove it all, ready to create the new array.
+	 free(_convexHullPoints);
+	 _convexHullPoints = NULL;
+	 _convexHullPointCount = 0;
+	 _drawConvexHull = NO;
+	 }
+	 if (!_convexHullPoints && count > 0) {
+	 // There is nothing contained in convexHullPoints so let's:
+	 // 1. Initialise it with the size we need for all the points.
+	 // 2. Add all the points.
+	 // 3. Get the view ready to show the points.
+	 
+	 _convexHullPoints = newPoints;
+	 
+	 _convexHullPointCount = count;
+	 
+	 _drawConvexHull = YES;
+	 }*/
 }
 - (void)showConvexHull:(BOOL)mode {
 	@synchronized (self) {
@@ -865,28 +883,28 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 - (void)setObjectsCloudPoints:(PointXYZ*)newPoints Count:(uint)count
 {
 	/*@synchronized (self) {
-		_drawObjectsCloud = NO;
-	}
-	
-	if (_objectsCloudPoints) {
-		// If there is previous convexHullPoints data then remove it all, ready to create the new array.
-		free(_objectsCloudPoints);
-		_objectsCloudPoints = NULL;
-		_objectsCloudPointCount = 0;
-		_drawObjectsCloud = NO;
-	}
-	if (!_objectsCloudPoints && count > 0) {
-		// There is nothing contained in convexHullPoints so let's:
-		// 1. Initialise it with the size we need for all the points.
-		// 2. Add all the points.
-		// 3. Get the view ready to show the points.
-		
-		_objectsCloudPoints = newPoints;
-		
-		_objectsCloudPointCount = count;
-		
-		_drawObjectsCloud = YES;
-	}*/
+	 _drawObjectsCloud = NO;
+	 }
+	 
+	 if (_objectsCloudPoints) {
+	 // If there is previous convexHullPoints data then remove it all, ready to create the new array.
+	 free(_objectsCloudPoints);
+	 _objectsCloudPoints = NULL;
+	 _objectsCloudPointCount = 0;
+	 _drawObjectsCloud = NO;
+	 }
+	 if (!_objectsCloudPoints && count > 0) {
+	 // There is nothing contained in convexHullPoints so let's:
+	 // 1. Initialise it with the size we need for all the points.
+	 // 2. Add all the points.
+	 // 3. Get the view ready to show the points.
+	 
+	 _objectsCloudPoints = newPoints;
+	 
+	 _objectsCloudPointCount = count;
+	 
+	 _drawObjectsCloud = YES;
+	 }*/
 }
 - (void)showObjectsCloud:(BOOL)mode
 {
@@ -896,10 +914,10 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 }
 - (void)setObjectDetectionData:(JRObjectDetectionWrapper*)objectDetector
 {
-//	- (size_t)getNumberOfPlaneClusters;
-//	- (size_t)getNumberOfIndicesInPlaneCluster:(size_t)cluster;
-//	- (void)getX:(double*)x Y:(double*)y Z:(double*)z forPoint:(size_t)point forPlaneCluster:(size_t)cluster;
-//	- (void)getA:(double*)a B:(double*)b C:(double*)c D:(double*)d forPlaneCluster:(size_t)cluster;
+	//	- (size_t)getNumberOfPlaneClusters;
+	//	- (size_t)getNumberOfIndicesInPlaneCluster:(size_t)cluster;
+	//	- (void)getX:(double*)x Y:(double*)y Z:(double*)z forPoint:(size_t)point forPlaneCluster:(size_t)cluster;
+	//	- (void)getA:(double*)a B:(double*)b C:(double*)c D:(double*)d forPlaneCluster:(size_t)cluster;
 	@synchronized (self) {
 		_drawSegmentedPlanes = NO;
 	}
@@ -942,7 +960,7 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 #pragma mark event handling
 - (BOOL)acceptsFirstResponder { return YES; }
 - (void)mouseDown:(NSEvent*)event {
-    _lastPos = [self convertPoint:[event locationInWindow] fromView:nil];	
+    _lastPos = [self convertPoint:[event locationInWindow] fromView:nil];
 }
 - (void)mouseDragged:(NSEvent*)event {
     if(_drawMode == MODE_2D) return;
