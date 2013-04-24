@@ -15,6 +15,13 @@ MultiCircleLocations::~MultiCircleLocations()
     //dtor
 }
 
+void MultiCircleLocations::Clear()
+{
+    CountCentre = 0;
+    CountIris = 0;
+    CountPupil = 0;
+}
+
 void MultiCircleLocations::AddCentre(int X, int Y)
 {
     AddCentre(EyePoint(X, Y));

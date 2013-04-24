@@ -18,6 +18,8 @@ public:
     void AddIrisRadius(int);
     void AverageCircles();
 
+    void Clear();
+
     EyeRectangleD PupilRectangleD();
     EyeRectangleD IrisRectangleD();
 

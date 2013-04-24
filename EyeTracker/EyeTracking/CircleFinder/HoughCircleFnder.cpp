@@ -60,7 +60,7 @@ void HoughCircleFnder::SetOpenCVImage(IplImage* Image)
 void HoughCircleFnder::FindCircle()
 {
     //Function decides if to look in a small area or scan the whole image again.
-    Locs = MultiCircleLocations();
+    Locs.Clear();
 
     if (found)
     {
