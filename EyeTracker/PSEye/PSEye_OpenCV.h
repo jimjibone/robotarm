@@ -2,7 +2,7 @@
 #define PSEYE_OPENCV_H
 
 #include "PSEyeGetter.h"
-#include "../Common/EyeTimers.h"
+#include "../Common/WinEyeTimers.h"
 #include "opencv/cv.h"
 #include <opencv/highgui.h>
 #include <pthread.h>

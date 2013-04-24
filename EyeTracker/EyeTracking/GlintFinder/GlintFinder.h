@@ -12,23 +12,17 @@ class GlintFinder
 {
     public:
         GlintFinder();
-        GlintFinder(int);
         virtual ~GlintFinder();
 
-        void FindGlints(IplImage*, MultiCircleLocations);
-        GlintLocation GetGlintLocation(int);
+        void FindGlints(IplImage*, EyeRectangle);
+        GlintLocation GetGlintLocation();
 
         void DrawGlints(IplImage*);
     protected:
     private:
-    int NumToExptect;
-    GlintLocation* GlintsLocs;
-    EyeRange CurRange;
+    GlintLocation GlintsLoc;
 
-    void FindGlints(IplImage*, EyeRectangle);
-
-    void Around(EyePoint, int, int, IplImage*);
-    EyeRectangle ConstrainRect(EyeRectangle, IplImage*);
+    void Around(EyePoint, int, IplImage*, EyeRange);
 };
 
 #endif // GLINTFINDER_H

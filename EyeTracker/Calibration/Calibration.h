@@ -7,6 +7,8 @@
 #include "WindowsSizer.h"
 #include "CalibrationScreen.h"
 
+typedef
+
 class Calibration
 {
     public:

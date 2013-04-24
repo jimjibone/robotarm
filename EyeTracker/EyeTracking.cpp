@@ -14,7 +14,7 @@ void EyeTracking::Run()
 {
     if (Cam.FindCamera())
     {
-        Tracker.CreateTracking(Cam.GetCameraWidth(), Cam.GetCameraHeight(), &UpdatedLocations, (void*) this);
+        Tracker.Setup(Cam.GetCameraWidth(), Cam.GetCameraHeight(), &UpdatedLocations, (void*) this);
         Cam.StartCapture(&UpdatedImage, (void*)this);
     }
 
@@ -32,33 +32,40 @@ void EyeTracking::Run()
             Carry = false;
             break;
         case '1':
-            Tracker.ShowSlidersWindow();
+
             break;
         case '2':
-            Tracker.HideSlidersWindow();
+
             break;
         case 'a':
+        case 'A':
             Tracker.ShowWindow();
             break;
         case 's':
+        case 'S':
             Tracker.HideWindow();
             break;
-            case 'q':
+        case 'q':
+        case 'Q':
             Cam.ShowImage();
             break;
         case 'w':
+        case 'W':
             Cam.HideImage();
             break;
         case ' ':
             Cali.TakeCaliPoint(EyeDifferance());
             break;
         case 'c':
+        case 'C':
             Cali.StartCalibration();
             break;
         case 'n':
+        case 'N':
 
             break;
         case 'm':
+        case 'M':
 
             break;
         }
@@ -69,13 +76,14 @@ void EyeTracking::Run()
 
 void EyeTracking::RunBehind()
 {
-    Cam.FindCamera();
-    Tracker.CreateTracking(Cam.GetCameraWidth(), Cam.GetCameraHeight(), &UpdatedLocations, (void*) this);
+    if (Cam.FindCamera())
+    {
+        Tracker.Setup(Cam.GetCameraWidth(), Cam.GetCameraHeight(), &UpdatedLocations, (void*) this);
+        Cam.StartCapture(&UpdatedImage, (void*)this);
 
-    Cam.StartCapture(&UpdatedImage, (void*)this);
-
-    Running = true;
-    pthread_create(&bk_Runner, NULL, &bk_Working, (void*) this);
+        Running = true;
+        pthread_create(&bk_Runner, NULL, &bk_Working, (void*) this);
+    }
 }
 
 void EyeTracking::StopBehind()
@@ -100,10 +108,10 @@ void* EyeTracking::bk_Working(void* ptr)
             This->Running = false;
             return NULL;
         case '1':
-            This->Tracker.ShowSlidersWindow();
+
             break;
         case '2':
-            This->Tracker.HideSlidersWindow();
+
             break;
         case 'a':
             This->Tracker.ShowWindow();
@@ -125,10 +133,17 @@ void* EyeTracking::bk_Working(void* ptr)
 
 void EyeTracking::UpdatedImage(IplImage* Image, void* ptr)
 {
-    ((EyeTracking*)ptr)->Tracker.Track(Image);
+    EyeTracking* This = (EyeTracking*)ptr;
+    This->Img_Proc.ProcessImage(Image);
 }
 
-void EyeTracking::UpdatedLocations(void* ptr)
+void EyeTracking::UpdateProcessed(IplImage* Orig, IplImage* Processed, void* ptr)
+{
+    EyeTracking* This = (EyeTracking*)ptr;
+    This->Tracker.Track(Orig, Processed);
+}
+
+void EyeTracking::UpdatedLocations(bool Found, EyeDifferance Diff, void* ptr)
 {
     EyeTracking* This = (EyeTracking*)ptr;
 }

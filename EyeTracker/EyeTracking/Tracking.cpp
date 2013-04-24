@@ -4,81 +4,59 @@ Tracking::Tracking()
 {
     Running = false;
     ShowWind = false;
-    ShowTrackWind = false;
 }
 
 Tracking::~Tracking()
 {
     HideWindow();
-    HideSlidersWindow();
 }
 
-void Tracking::CreateTracking(int Width, int Height, PosUpdate Func, void* Data)
+void Tracking::Setup(int Width, int Height, PosUpdate Func, void* Data)
 {
-    Img_proc = ImagePlaying(100, 255);
     CircleFinder = HoughCircleFnder(Width, Height, false);
-    GlintsFinder = GlintFinder(1);
     UpdateFuncs = Func;
     SentData = Data;
 }
 
-void Tracking::Track(IplImage* Image)
+void Tracking::Track(IplImage* Orig, IplImage* Image)
 {
     if (!Running)
     {
-        Timers.Wait(1);
         Running = true;
         CurImage = Image;
+        OrigImage = Orig;
         pthread_create(&bk_Process, NULL, &bk_Process_Thread, (void*) this);
     }
     else
     {
         cvReleaseImage(&Image);
+        cvReleaseImage(&Orig);
     }
 }
 
-GlintLocation Tracking::GetGlintLocation()
+EyePointD Tracking::GetGlintLocation()
 {
-    if (CircleFinder.Found())
-    {
-        return GlintsFinder.GetGlintLocation(0);
-    }
-    else
-    {
-        return GlintLocation();
-    }
+    return GlintsFinder.GetGlintLocation().GetMid();
 }
 
-MultiCircleLocations Tracking::GetCircleLocation()
+EyePointD Tracking::GetCircleLocation()
 {
-    if (CircleFinder.Found())
-    {
-        return CircleFinder.GetCircleLocation();
-    }
-    else
-    {
-        return MultiCircleLocations();
-    }
+        return CircleFinder.GetCircleLocation().CircleCenter();
 }
 
 void* Tracking::bk_Process_Thread(void* Input)
 {
     Tracking* This = (Tracking*) Input;
-    IplImage* Image = cvCreateImage(cvGetSize(This->CurImage), 8, 1);
     IplImage* DispImg = cvCreateImage(cvGetSize(This->CurImage), 8, 3);
 
-    if (This->ShowWind) cvCvtColor(This->CurImage, DispImg, CV_GRAY2BGR);
+    if (This->ShowWind) cvCvtColor(This->OrigImage, DispImg, CV_GRAY2BGR);
 
-    This->Img_proc.DoAllProcesses(This->CurImage, Image);
-
-    This->CircleFinder.SetOpenCVImage(Image);
+    This->CircleFinder.SetOpenCVImage(This->CurImage);
     This->CircleFinder.FindCircle();
 
     if (This->CircleFinder.Found())
     {
-        This->GlintsFinder.FindGlints(This->CurImage, This->CircleFinder.GetCircleLocation());
-
-        This->UpdateFuncs(This->SentData);
+        This->GlintsFinder.FindGlints(This->CurImage, This->CircleFinder.GetCircleLocation().NextSearchRectangle());
 
         if (This->ShowWind)
         {
@@ -87,11 +65,13 @@ void* Tracking::bk_Process_Thread(void* Input)
         }
     }
 
+    This->UpdateFuncs(This->CircleFinder.Found(),
+                      EyeDifferance(This->CircleFinder.GetCircleLocation().CircleCenter(), This->GlintsFinder.GetGlintLocation().GetMid()),
+                      This->SentData);
+
     if (This->ShowWind) cvShowImage("ImageProcessing", DispImg);
-    if (This->ShowTrackWind) cvShowImage("Settings", Image);
 
     cvReleaseImage(&DispImg);
-    cvReleaseImage(&Image);
     cvReleaseImage(&This->CurImage);
 
     This->Running = false;
@@ -113,49 +93,15 @@ void Tracking::HideWindow()
     {
         ShowWind = false;
         cvDestroyWindow("ImageProcessing");
-        Timers.Wait(100);
     }
 }
 
-void Tracking::ShowSlidersWindow()
-{
-    if (!ShowTrackWind)
-    {
-        ShowTrackWind = true;
-        cvNamedWindow("Settings", CV_WINDOW_AUTOSIZE);
-        int Min = Img_proc.GetNum1();
-        int Max = Img_proc.GetNum2();
-        cvCreateTrackbar2("Min", "Settings", &Min, 255, &MinChange, (void*) this);
-        cvCreateTrackbar2("Max", "Settings", &Max, 255, &MaxChange, (void*) this);
-    }
-}
-
-void Tracking::HideSlidersWindow()
-{
-    if (ShowTrackWind)
-    {
-        ShowTrackWind = false;
-        cvDestroyWindow("Settings");
-		Timers.Wait(100);
-    }
-}
-
-void Tracking::MinChange(int Num, void* ptr)
-{
-    ((Tracking*)ptr)->Img_proc.SetNum1(Num);
-}
-
-void Tracking::MaxChange(int Num, void* ptr)
-{
-    ((Tracking*)ptr)->Img_proc.SetNum2(Num);
-}
 
 int Tracking::GetNumOfWindows()
 {
     int Num = 0;
 
     if (ShowWind) Num++;
-    if (ShowTrackWind) Num++;
 
     return Num;
 }

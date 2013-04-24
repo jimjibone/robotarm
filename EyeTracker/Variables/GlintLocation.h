@@ -15,13 +15,13 @@ class GlintLocation
         virtual ~GlintLocation();
 
         void AddPoint(EyePoint);
+        void Clear();
 
         void FindMid();
         EyePointD GetMid();
 
         void FindMaxRect();
         EyeRectangle GetMaxRect();
-        bool WithinOld(EyePoint);
 
         void DrawPoints(IplImage*);
     protected:
@@ -34,7 +34,7 @@ class GlintLocation
     int Max(int Num1, int Num2);
     int Min(int Num1, int Num2);
 
-    static const int MaxNumOfPoints = 2000;
+    static const int MaxNumOfPoints = 1000;
 };
 
 #endif // GLINTLOCATION_H

@@ -8,11 +8,11 @@
 
 enum LineType {LinearLine, QuadraticLine};
 
-class LineFInder
+class LineFinder
 {
     public:
-        LineFInder();
-        virtual ~LineFInder();
+        LineFinder();
+        virtual ~LineFinder();
 
         void UpdateLineType(LineType);
 
@@ -21,8 +21,6 @@ class LineFInder
         EyePointD FindPoint(EyeDifferance);
     protected:
     private:
-
-    Linear
 };
 
 #endif // LINEFINDER_H

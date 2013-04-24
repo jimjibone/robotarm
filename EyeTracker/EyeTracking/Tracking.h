@@ -3,12 +3,12 @@
 
 #include <pthread.h>
 #include <opencv/cv.h>
-#include "../ImageProcessing/ImagePlaying.h"
+#include <opencv/highgui.h>
 #include "CircleFinder/HoughCircleFnder.h"
 #include "GlintFinder/GlintFinder.h"
-#include "../Common/EyeTimers.h"
+#include "../Variables/EyeDifferance.h"
 
-typedef void (*PosUpdate)(void*);
+typedef void (*PosUpdate)(bool, EyeDifferance, void*);
 
 class Tracking
 {
@@ -16,40 +16,31 @@ class Tracking
         Tracking();
         virtual ~Tracking();
 
-        void CreateTracking(int, int, PosUpdate, void*);
+        void Setup(int, int, PosUpdate, void*);
 
-        void Track(IplImage*);
+        void Track(IplImage*, IplImage*);
 
-        GlintLocation GetGlintLocation();
-        MultiCircleLocations GetCircleLocation();
+        EyePointD GetGlintLocation();
+        EyePointD GetCircleLocation();
 
         void ShowWindow();
         void HideWindow();
 
-        void ShowSlidersWindow();
-        void HideSlidersWindow();
-
         int GetNumOfWindows();
     protected:
     private:
-        pthread_t bk_Process;
         IplImage* CurImage;
+        IplImage* OrigImage;
 
-        EyeTimers Timers;
         void* SentData;
-
-        static void* bk_Process_Thread(void*);
-
         PosUpdate UpdateFuncs;
 
-        bool ShowWind;
-        bool ShowTrackWind;
+        pthread_t bk_Process;
+        static void* bk_Process_Thread(void*);
         bool Running;
 
-        static void MinChange(int, void*);
-        static void MaxChange(int, void*);
+        bool ShowWind;
 
-        ImagePlaying Img_proc;
         HoughCircleFnder CircleFinder;
         GlintFinder GlintsFinder;
 };

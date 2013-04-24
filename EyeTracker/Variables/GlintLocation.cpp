@@ -20,6 +20,11 @@ void GlintLocation::AddPoint(EyePoint Loc)
     }
 }
 
+void GlintLocation::Clear()
+{
+    Count = 0;
+}
+
 void GlintLocation::FindMid()
 {
     double X = 0, Y = 0;
@@ -87,21 +92,6 @@ int GlintLocation::Max(int Num1, int Num2)
     {
         return Num2;
     }
-}
-
-bool GlintLocation::WithinOld(EyePoint Loc)
-{
-    if (Loc.GetX() >= MaxRect.Left() && Loc.GetX() <= MaxRect.Right() && Loc.GetY() >= MaxRect.Top() && Loc.GetY() <= MaxRect.Bottom())
-    {
-        //for (int cnt = 0; cnt < Count; cnt++)
-        //{
-            //if (Loc.GetX() == Points[cnt].GetX() && Loc.GetY() == Points[cnt].GetY())
-            //{
-                return false;
-            //}
-        //}
-    }
-    return true;
 }
 
 void GlintLocation::DrawPoints(IplImage* Image)
