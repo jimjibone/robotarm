@@ -1,74 +1,19 @@
 #include "Linear.h"
 
-Linear::Linear()
+//Taken from JRObjectDetection.cpp
+PlaneCoefficients getPlaneCoefficients(PointXYZ a, PointXYZ b, PointXYZ c)
 {
-    m = 0;
-    c = 0;
-}
+	// First validate the input to check that Z values are not out-of-bounds of Kinect view.
+	if (!a.isValid() || !b.isValid() || !c.isValid()) {
+		return PlaneCoefficients(0, 0, 0, 0);
+	}
 
-Linear::~Linear()
-{
-    //dtor
-}
+	//http://keisan.casio.com/has10/SpecExec.cgi# or
+	//http://www.easycalculation.com/analytical/cartesian-plane-equation.php
+	double Pa = (b.y - a.y)*(c.z - a.z) - (c.y - a.y)*(b.z - a.z);
+	double Pb = (b.z - a.z)*(c.x - a.x) - (c.z - a.z)*(b.x - a.x);
+	double Pc = (b.x - a.x)*(c.y - a.y) - (c.x - a.x)*(b.y - a.y);
+	double Pd = -(Pa*a.x + Pb*a.y + Pc*a.z);
 
-void Linear::FindLine(int Xi[], int Yi[], int n)
-{
-    int TXY = 0, TX = 0, TY = 0, TX2 = 0;
-    for (int cnt = 0; cnt < n; cnt++)
-    {
-        TXY += Xi[cnt] * Yi[cnt];
-        TX += Xi[cnt];
-        TY += Yi[cnt];
-        TX2 += Xi[cnt] * Xi[cnt];
-    }
-
-    int X2 = TX * TX;
-    double _X = (double)TX / n;
-    double _Y = (double)TY / n;
-
-    int Top = (n * TXY) - (TX * TY);
-    int Bot = (n * TX2) - X2;
-    m = (double)Top / (double)Bot;
-    c = _Y - (m * _X);
-}
-
-void Linear::FindLine(double Xi[], double Yi[], int n)
-{
-    double TXY = 0, TX = 0, TY = 0, TX2 = 0;
-    for (int cnt = 0; cnt < n; cnt++)
-    {
-        TXY += Xi[cnt] * Yi[cnt];
-        TX += Xi[cnt];
-        TY += Yi[cnt];
-        TX2 += Xi[cnt] * Xi[cnt];
-    }
-
-    double X2 = TX * TX;
-    double _X = TX / n;
-    double _Y = TY / n;
-
-    double Top = (n * TXY) - (TX * TY);
-    double Bot = (n * TX2) - X2;
-    m = Top / Bot;
-    c = _Y - (m * _X);
-}
-
-double Linear::Getm()
-{
-    return m;
-}
-
-double Linear::Getc()
-{
-    return c;
-}
-
-double Linear::WorkOut(double X)
-{
-    return m * X + c;
-}
-
-double Linear::WorkOut(int X)
-{
-    return m * (double)X + c;
+	return PlaneCoefficients(Pa, Pb, Pc, Pd);
 }

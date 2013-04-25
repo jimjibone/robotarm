@@ -2,9 +2,12 @@
 #define LINEFINDER_H
 
 #include "Linear.h"
-#include "Quadratic.h"
+#include "JRPointTypes.h"
 #include "../Variables/EyeDifferance.h"
 #include "../Variables/EyePoint.h"
+#include "../Common/WindowsSizer.h"
+#include <opencv/cv.h>
+#include <opencv/highgui.h>
 
 enum LineType {LinearLine, QuadraticLine};
 
@@ -22,15 +25,15 @@ public:
 
     void ShowWindow();
     void HideWindow();
+    void UpdateWindow(EyePointD);
     int GetNumWindows();
 protected:
 private:
-    Linear LinXm, LinXc, LinYm, LinYc;
-    Quadratic QuadXa, QuadXb, QuadXc, QuadYa, QuadYb, QuadYc;
-
     LineType CurType;
 
     bool ShowWind;
+
+    WindowSizer Sizer;
 };
 
 #endif // LINEFINDER_H

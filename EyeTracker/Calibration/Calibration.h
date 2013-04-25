@@ -4,7 +4,7 @@
 #include <opencv/cv.h>
 #include <opencv/highgui.h>
 #include "../Variables/EyeDifferance.h"
-#include "WindowsSizer.h"
+#include "../Common/WindowsSizer.h"
 #include "CalibrationScreen.h"
 
 typedef

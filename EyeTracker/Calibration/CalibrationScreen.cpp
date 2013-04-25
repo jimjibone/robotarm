@@ -49,7 +49,7 @@ int CalibrationScreen::CurPoint()
 void CalibrationScreen::DrawImage()
 {
     IplImage* Image = cvCreateImage(cvSize(Wid, Hei), 8, 3);
-    cvCircle(Image, cvPoint(XStart + CurX * XStep, YStart + YStep * CurY), 10, CV_RGB(255, 255, 0), 13);
+    cvCircle(Image, cvPoint(XStart + CurX * XStep, YStart + YStep * CurY), 10, CV_RGB(255, 255, 0), 0);
     cvShowImage(WindowName, Image);
     cvReleaseImage(&Image);
 }
