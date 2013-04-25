@@ -3,6 +3,7 @@
 LineFinder::LineFinder()
 {
     CurType = LinearLine;
+    ShowWind = false;
 }
 
 LineFinder::~LineFinder()
@@ -28,7 +29,7 @@ void LineFinder::UpdateCalibration(EyeDifferance* Differances, EyePoint* Points)
     int PX2[] = { Points[3].GetX(), Points[4].GetX(), Points[5].GetX() };
     int PX3[] = { Points[6].GetX(), Points[7].GetX(), Points[8].GetX() };
     int PY1[] = { Points[0].GetY(), Points[3].GetY(), Points[6].GetY() };
-    int PY2[] = { Points[1].GetY(), Points[4}.GetY(), Points[7].GetY() };
+    int PY2[] = { Points[1].GetY(), Points[4].GetY(), Points[7].GetY() };
     int PY3[] = { Points[2].GetY(), Points[5].GetY(), Points[8].GetY() };
 
 
@@ -44,4 +45,23 @@ EyePointD LineFinder::FindPoint(EyeDifferance Diff)
         break;
     }
     return EyePointD();
+}
+
+void LineFinder::ShowWindow()
+{
+
+}
+
+void LineFinder::HideWindow()
+{
+
+}
+
+int LineFinder::GetNumWindows()
+{
+    if (ShowWind)
+    {
+        return 1;
+    }
+    return 0;
 }

@@ -10,13 +10,28 @@ EyeTracking::~EyeTracking()
     StopBehind();
 }
 
-void EyeTracking::Run()
+bool EyeTracking::Setup()
 {
     if (Cam.FindCamera())
     {
         Tracker.Setup(Cam.GetCameraWidth(), Cam.GetCameraHeight(), &UpdatedLocations, (void*) this);
+        Img_Proc.Setup(&UpdateProcessed, (void*)this);
         Cam.StartCapture(&UpdatedImage, (void*)this);
+
+        DisplayComands();
+        return true;
     }
+    else
+    {
+        printf("Could Not Locate Camera\nProgram Wil Exit\n");
+        return false;
+    }
+}
+
+void EyeTracking::Run()
+{
+    if (!Setup())
+    return;
 
     bool Carry = true;
     while (Carry)
@@ -24,82 +39,87 @@ void EyeTracking::Run()
         if(Cam.GetNumOfWindows() +
                 Tracker.GetNumOfWindows() +
                 Cali.GetNumOfWindows() +
-                Img_Proc.GetNumWindows() == 0)
+                Img_Proc.GetNumWindows() +
+                Calcs.GetNumWindows() == 0)
         {
             Cam.ShowImage();
         }
 
-        switch (cvWaitKey(0))
-        {
-        case 27:
-            Carry = false;
-            break;
-        case '1':
-            Img_Proc.ShowCaliWindow();
-            break;
-        case '2':
-            Img_Proc.HideCaliWindow();
-            break;
-        case 'a':
-        case 'A':
-            Tracker.ShowWindow();
-            break;
-        case 's':
-        case 'S':
-            Tracker.HideWindow();
-            break;
-        case 'q':
-        case 'Q':
-            Cam.ShowImage();
-            break;
-        case 'w':
-        case 'W':
-            Cam.HideImage();
-            break;
-        case ' ':
-            if (DiffFound & Cali.Calibrating())
-            {
-                if (!Cali.TakeCaliPoint(CurDiff))
-                {
-                    Calcs.UpdateCalibration(Cali.GetCalibrationPoints(), Cali.GetCalibrationLocations());
-                }
-            }
-            break;
-        case 'c':
-        case 'C':
-            Cali.StartCalibration();
-            break;
-        case 'n':
-        case 'N':
+        Carry = RunCommnad(cvWaitKey(0));
 
-            break;
-        case 'm':
-        case 'M':
-
-            break;
-        }
     }
 
     Cam.StopCapture();
+}
+
+bool EyeTracking::RunCommnad(char Com)
+{
+    switch (Com)
+    {
+    case 27:
+        return false;
+        break;
+    case '1':
+        Img_Proc.ShowCaliWindow();
+        break;
+    case '2':
+        Img_Proc.HideCaliWindow();
+        break;
+    case 'a':
+    case 'A':
+        Tracker.ShowWindow();
+        break;
+    case 's':
+    case 'S':
+        Tracker.HideWindow();
+        break;
+    case 'q':
+    case 'Q':
+        Cam.ShowImage();
+        break;
+    case 'w':
+    case 'W':
+        Cam.HideImage();
+        break;
+    case ' ':
+        if (DiffFound & Cali.Calibrating())
+        {
+            if (!Cali.TakeCaliPoint(CurDiff))
+            {
+                Calcs.UpdateCalibration(Cali.GetCalibrationPoints(), Cali.GetCalibrationLocations());
+            }
+        }
+        break;
+    case 'c':
+    case 'C':
+        Cali.StartCalibration();
+        break;
+    case 'n':
+    case 'N':
+        Calcs.ShowWindow();
+        break;
+    case 'm':
+    case 'M':
+        Calcs.HideWindow();
+        break;
+    }
+    return true;
 }
 
 void EyeTracking::RunBehind()
 {
-    if (Cam.FindCamera())
-    {
-        Tracker.Setup(Cam.GetCameraWidth(), Cam.GetCameraHeight(), &UpdatedLocations, (void*) this);
-        Cam.StartCapture(&UpdatedImage, (void*)this);
+    if (!Setup())
+    return;
 
         Running = true;
         pthread_create(&bk_Runner, NULL, &bk_Working, (void*) this);
-    }
 }
 
 void EyeTracking::StopBehind()
 {
-    Cam.StopCapture();
     if (Running)
     {
+        Cam.StopCapture();
         Running = false;
         pthread_exit(NULL);
     }
@@ -120,6 +140,21 @@ void* EyeTracking::bk_Working(void* ptr)
     }
 
     return NULL;
+}
+
+void EyeTracking::DisplayComands()
+{
+    printf("Commands:\n");
+    printf("1: Show Settings Window\n");
+    printf("2: Hide Settings Window\n");
+    printf("Q: Show Raw Camera Image\n");
+    printf("W: Hide Camera Image\n");
+    printf("A: Show Tracker Window\n");
+    printf("S: Hide Tracker Window\n");
+    printf("C: Calibrate\n");
+    printf("%c %c: Take Calibration Point\n", 39, 39);
+    printf("N: Show Current Point\n");
+    printf("M: Hide Current Point\n");
 }
 
 void EyeTracking::UpdatedImage(IplImage* Image, void* ptr)

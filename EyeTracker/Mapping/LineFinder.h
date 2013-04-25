@@ -19,12 +19,18 @@ public:
     void UpdateCalibration(EyeDifferance*, EyePoint*);
 
     EyePointD FindPoint(EyeDifferance);
+
+    void ShowWindow();
+    void HideWindow();
+    int GetNumWindows();
 protected:
 private:
     Linear LinXm, LinXc, LinYm, LinYc;
     Quadratic QuadXa, QuadXb, QuadXc, QuadYa, QuadYb, QuadYc;
 
     LineType CurType;
+
+    bool ShowWind;
 };
 
 #endif // LINEFINDER_H

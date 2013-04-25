@@ -19,6 +19,7 @@ public:
 
     void Run();
     void RunBehind();
+    bool RunCommnad(char);
     void StopBehind();
 protected:
 private:
@@ -38,6 +39,9 @@ private:
     static void UpdatedImage(IplImage*, void*);
     static void UpdateProcessed(IplImage*, IplImage*, void*);
     static void UpdatedLocations(bool, EyeDifferance, void*);
+
+    void DisplayComands();
+    bool Setup();
 };
 
 #endif // EYETRACKING_H
