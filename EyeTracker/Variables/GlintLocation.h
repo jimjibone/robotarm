@@ -10,22 +10,22 @@ using namespace std;
 
 class GlintLocation
 {
-    public:
-        GlintLocation();
-        virtual ~GlintLocation();
+public:
+    GlintLocation();
+    virtual ~GlintLocation();
 
-        void AddPoint(EyePoint);
-        void Clear();
+    void AddPoint(EyePoint);
+    void Clear();
 
-        void FindMid();
-        EyePointD GetMid();
+    void FindMid();
+    EyePointD GetMid();
 
-        void FindMaxRect();
-        EyeRectangle GetMaxRect();
+    void FindMaxRect();
+    EyeRectangle GetMaxRect();
 
-        void DrawPoints(IplImage*);
-    protected:
-    private:
+    void DrawPoints(IplImage*);
+protected:
+private:
     int Count;
     EyePoint* Points;
     EyePointD Mid;

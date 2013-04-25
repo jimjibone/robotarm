@@ -5,21 +5,21 @@
 
 class EyeDifferance
 {
-    public:
-        EyeDifferance();
-        EyeDifferance(EyePoint, EyePoint);
-        EyeDifferance(EyePoint, EyePointD);
-        EyeDifferance(EyePointD, EyePoint);
-        EyeDifferance(EyePointD, EyePointD);
+public:
+    EyeDifferance();
+    EyeDifferance(EyePoint, EyePoint);
+    EyeDifferance(EyePoint, EyePointD);
+    EyeDifferance(EyePointD, EyePoint);
+    EyeDifferance(EyePointD, EyePointD);
 
-        double GetXDiff();
-        double GetYDiff();
-        int GetXDiffint();
-        int GetYDiffint();
+    double GetXDiff();
+    double GetYDiff();
+    int GetXDiffint();
+    int GetYDiffint();
 
-        virtual ~EyeDifferance();
-    protected:
-    private:
+    virtual ~EyeDifferance();
+protected:
+private:
     double DiffX, DiffY;
     int intDiffX, intDiffY;
 };

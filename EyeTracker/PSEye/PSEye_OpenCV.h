@@ -11,38 +11,38 @@ typedef void (*NewImage)(IplImage*, void*);
 
 class PSEye_OpenCV
 {
-    public:
-        PSEye_OpenCV();
+public:
+    PSEye_OpenCV();
 
-        virtual ~PSEye_OpenCV();
+    virtual ~PSEye_OpenCV();
 
-        bool FindCamera();
-        bool StartCapture(NewImage, void*);
-        void StopCapture();
+    bool FindCamera();
+    bool StartCapture(NewImage, void*);
+    void StopCapture();
 
-        void ShowImage();
-        void HideImage();
+    void ShowImage();
+    void HideImage();
 
-        int GetCameraWidth();
-        int GetCameraHeight();
+    int GetCameraWidth();
+    int GetCameraHeight();
 
-        IplImage* GetCurrentImage();
+    IplImage* GetCurrentImage();
 
-        int GetNumOfWindows();
-    protected:
-    private:
-        PSEyeGetter Cam;
-        EyeTimers ThisTimer;
+    int GetNumOfWindows();
+protected:
+private:
+    PSEyeGetter Cam;
+    EyeTimers ThisTimer;
 
-        NewImage NewImgFunct;
-        void* SentData;
+    NewImage NewImgFunct;
+    void* SentData;
 
-        static void DoItFunction(void*);
+    static void DoItFunction(void*);
 
-        IplImage* GetImage();
+    IplImage* GetImage();
 
-        bool StillRunning;
-        bool ShowWind;
+    bool StillRunning;
+    bool ShowWind;
 };
 
 #endif // PSEYE_OPENCV_H

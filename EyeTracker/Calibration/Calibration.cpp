@@ -35,7 +35,7 @@ void Calibration::StopCalibration()
     }
 }
 
-void Calibration::TakeCaliPoint(EyeDifferance Location)
+bool Calibration::TakeCaliPoint(EyeDifferance Location)
 {
     if (CaliWindow)
     {
@@ -43,6 +43,8 @@ void Calibration::TakeCaliPoint(EyeDifferance Location)
 
         if (CaliImage.NextPoint()) StopCalibration();
     }
+
+    return CaliWindow;
 }
 
 int Calibration::GetNumOfWindows()
@@ -65,6 +67,11 @@ EyeDifferance* Calibration::GetCalibrationPoints()
 EyePoint* Calibration::GetCalibrationLocations()
 {
     return CaliImage.AllPoints();
+}
+
+bool Calibration::Calibrating()
+{
+    return CaliWindow;
 }
 
 

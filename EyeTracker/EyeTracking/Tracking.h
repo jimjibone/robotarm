@@ -12,37 +12,37 @@ typedef void (*PosUpdate)(bool, EyeDifferance, void*);
 
 class Tracking
 {
-    public:
-        Tracking();
-        virtual ~Tracking();
+public:
+    Tracking();
+    virtual ~Tracking();
 
-        void Setup(int, int, PosUpdate, void*);
+    void Setup(int, int, PosUpdate, void*);
 
-        void Track(IplImage*, IplImage*);
+    void Track(IplImage*, IplImage*);
 
-        EyePointD GetGlintLocation();
-        EyePointD GetCircleLocation();
+    EyePointD GetGlintLocation();
+    EyePointD GetCircleLocation();
 
-        void ShowWindow();
-        void HideWindow();
+    void ShowWindow();
+    void HideWindow();
 
-        int GetNumOfWindows();
-    protected:
-    private:
-        IplImage* CurImage;
-        IplImage* OrigImage;
+    int GetNumOfWindows();
+protected:
+private:
+    IplImage* CurImage;
+    IplImage* OrigImage;
 
-        void* SentData;
-        PosUpdate UpdateFuncs;
+    void* SentData;
+    PosUpdate UpdateFuncs;
 
-        pthread_t bk_Process;
-        static void* bk_Process_Thread(void*);
-        bool Running;
+    pthread_t bk_Process;
+    static void* bk_Process_Thread(void*);
+    bool Running;
 
-        bool ShowWind;
+    bool ShowWind;
 
-        HoughCircleFnder CircleFinder;
-        GlintFinder GlintsFinder;
+    HoughCircleFnder CircleFinder;
+    GlintFinder GlintsFinder;
 };
 
 #endif // TRACKING_H

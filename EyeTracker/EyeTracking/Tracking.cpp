@@ -41,7 +41,7 @@ EyePointD Tracking::GetGlintLocation()
 
 EyePointD Tracking::GetCircleLocation()
 {
-        return CircleFinder.GetCircleLocation().CircleCenter();
+    return CircleFinder.GetCircleLocation().CircleCenter();
 }
 
 void* Tracking::bk_Process_Thread(void* Input)

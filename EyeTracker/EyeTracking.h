@@ -13,28 +13,31 @@
 
 class EyeTracking
 {
-    public:
-        EyeTracking();
-        virtual ~EyeTracking();
+public:
+    EyeTracking();
+    virtual ~EyeTracking();
 
-        void Run();
-        void RunBehind();
-        void StopBehind();
-    protected:
-    private:
-        PSEye_OpenCV Cam;
-        Tracking Tracker;
-        Calibration Cali;
-        DoProcessing Img_Proc;
-        LineFinder Calcs;
+    void Run();
+    void RunBehind();
+    void StopBehind();
+protected:
+private:
+    PSEye_OpenCV Cam;
+    Tracking Tracker;
+    Calibration Cali;
+    DoProcessing Img_Proc;
+    LineFinder Calcs;
 
-        pthread_t bk_Runner;
-        static void* bk_Working(void*);
-        bool Running;
+    EyeDifferance CurDiff;
+    bool DiffFound;
 
-        static void UpdatedImage(IplImage*, void*);
-        static void UpdateProcessed(IplImage*, IplImage*, void*);
-        static void UpdatedLocations(bool, EyeDifferance, void*);
+    pthread_t bk_Runner;
+    static void* bk_Working(void*);
+    bool Running;
+
+    static void UpdatedImage(IplImage*, void*);
+    static void UpdateProcessed(IplImage*, IplImage*, void*);
+    static void UpdatedLocations(bool, EyeDifferance, void*);
 };
 
 #endif // EYETRACKING_H

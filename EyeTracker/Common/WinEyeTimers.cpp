@@ -11,7 +11,7 @@ EyeTimers::EyeTimers(long MillisecDelay)
     Run = false;
     Every = MillisecDelay;
 
-	Next = 0L;
+    Next = 0L;
 }
 
 EyeTimers::EyeTimers(double Freq)
@@ -19,7 +19,7 @@ EyeTimers::EyeTimers(double Freq)
     Run = false;
     Every = (long) (1.0 / Freq * 1000.0);
 
-	Next = 0L;
+    Next = 0L;
 }
 
 EyeTimers::~EyeTimers()
@@ -44,7 +44,7 @@ void EyeTimers::Stop()
     bool WasRun = Run;
     Run = false;
     Sleep(100);
-	//if (WasRun) pthread_exit(NULL);
+    //if (WasRun) pthread_exit(NULL);
 }
 
 void* EyeTimers::Running(void* ptr)

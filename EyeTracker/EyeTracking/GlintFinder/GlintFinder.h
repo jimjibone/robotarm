@@ -10,16 +10,16 @@
 
 class GlintFinder
 {
-    public:
-        GlintFinder();
-        virtual ~GlintFinder();
+public:
+    GlintFinder();
+    virtual ~GlintFinder();
 
-        void FindGlints(IplImage*, EyeRectangle);
-        GlintLocation GetGlintLocation();
+    void FindGlints(IplImage*, EyeRectangle);
+    GlintLocation GetGlintLocation();
 
-        void DrawGlints(IplImage*);
-    protected:
-    private:
+    void DrawGlints(IplImage*);
+protected:
+private:
     GlintLocation GlintsLoc;
 
     void Around(EyePoint, int, IplImage*, EyeRange);

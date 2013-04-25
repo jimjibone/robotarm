@@ -8,16 +8,16 @@ using namespace std;
 
 class WindowSizer
 {
-    public:
-        WindowSizer();
-        virtual ~WindowSizer();
+public:
+    WindowSizer();
+    virtual ~WindowSizer();
 
-        void SetWindowToFullScreen(char*);
-        int GetWidth();
-        int GetHeight();
-    protected:
-    private:
-        int Width, Height;
+    void SetWindowToFullScreen(char*);
+    int GetWidth();
+    int GetHeight();
+protected:
+private:
+    int Width, Height;
 };
 
 #endif // WINDOWSSIZER_H

@@ -60,7 +60,7 @@ void CalibrationScreen::AddX()
     if (CurX >= 3)
     {
         CurX = 0;
-		CurY++;
+        CurY++;
     }
 }
 

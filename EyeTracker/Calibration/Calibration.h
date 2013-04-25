@@ -11,27 +11,29 @@ typedef
 
 class Calibration
 {
-    public:
-        Calibration();
-        virtual ~Calibration();
+public:
+    Calibration();
+    virtual ~Calibration();
 
-        void StartCalibration();
-        void StopCalibration();
+    void StartCalibration();
+    void StopCalibration();
 
-        void TakeCaliPoint(EyeDifferance);
+    bool TakeCaliPoint(EyeDifferance);
 
-        int GetNumOfWindows();
+    int GetNumOfWindows();
 
-        EyeDifferance* GetCalibrationPoints();
-        EyePoint* GetCalibrationLocations();
-    protected:
-    private:
-        WindowSizer Sizer;
-        CalibrationScreen CaliImage;
+    bool Calibrating();
 
-        bool CaliWindow;
+    EyeDifferance* GetCalibrationPoints();
+    EyePoint* GetCalibrationLocations();
+protected:
+private:
+    WindowSizer Sizer;
+    CalibrationScreen CaliImage;
 
-        EyeDifferance* CaliPoints;
+    bool CaliWindow;
+
+    EyeDifferance* CaliPoints;
 };
 
 #endif // CALIBRATION_H

@@ -9,30 +9,30 @@ typedef void (*ptr2Func)(void*);
 
 class EyeTimers
 {
-    public:
-        EyeTimers();
-        EyeTimers(long);
-        EyeTimers(double);
-        virtual ~EyeTimers();
+public:
+    EyeTimers();
+    EyeTimers(long);
+    EyeTimers(double);
+    virtual ~EyeTimers();
 
-        void Start(ptr2Func, void*);
-        void Stop();
+    void Start(ptr2Func, void*);
+    void Stop();
 
-        void WaitTillNext();
+    void WaitTillNext();
 
-        void Wait();
-        void Wait(long);
-    protected:
-    private:
-        ptr2Func Functions;
-        void* SentObj;
+    void Wait();
+    void Wait(long);
+protected:
+private:
+    ptr2Func Functions;
+    void* SentObj;
 
-        pthread_t Bk_thread;
-        static void* Running(void*);
+    pthread_t Bk_thread;
+    static void* Running(void*);
 
-        bool Run;
+    bool Run;
 
-        long Every, Next;
+    long Every, Next;
 };
 
 #endif // EYETIMERS_H

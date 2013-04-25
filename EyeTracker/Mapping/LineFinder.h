@@ -10,17 +10,21 @@ enum LineType {LinearLine, QuadraticLine};
 
 class LineFinder
 {
-    public:
-        LineFinder();
-        virtual ~LineFinder();
+public:
+    LineFinder();
+    virtual ~LineFinder();
 
-        void UpdateLineType(LineType);
+    void UpdateLineType(LineType);
 
-        void UpdateCalibration(EyeDifferance*, EyePoint[]);
+    void UpdateCalibration(EyeDifferance*, EyePoint*);
 
-        EyePointD FindPoint(EyeDifferance);
-    protected:
-    private:
+    EyePointD FindPoint(EyeDifferance);
+protected:
+private:
+    Linear LinXm, LinXc, LinYm, LinYc;
+    Quadratic QuadXa, QuadXb, QuadXc, QuadYa, QuadYb, QuadYc;
+
+    LineType CurType;
 };
 
 #endif // LINEFINDER_H

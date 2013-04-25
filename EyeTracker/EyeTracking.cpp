@@ -21,7 +21,10 @@ void EyeTracking::Run()
     bool Carry = true;
     while (Carry)
     {
-        if(Cam.GetNumOfWindows() + Tracker.GetNumOfWindows() + Cali.GetNumOfWindows() == 0)
+        if(Cam.GetNumOfWindows() +
+                Tracker.GetNumOfWindows() +
+                Cali.GetNumOfWindows() +
+                Img_Proc.GetNumWindows() == 0)
         {
             Cam.ShowImage();
         }
@@ -32,10 +35,10 @@ void EyeTracking::Run()
             Carry = false;
             break;
         case '1':
-
+            Img_Proc.ShowCaliWindow();
             break;
         case '2':
-
+            Img_Proc.HideCaliWindow();
             break;
         case 'a':
         case 'A':
@@ -54,7 +57,13 @@ void EyeTracking::Run()
             Cam.HideImage();
             break;
         case ' ':
-            Cali.TakeCaliPoint(EyeDifferance());
+            if (DiffFound & Cali.Calibrating())
+            {
+                if (!Cali.TakeCaliPoint(CurDiff))
+                {
+                    Calcs.UpdateCalibration(Cali.GetCalibrationPoints(), Cali.GetCalibrationLocations());
+                }
+            }
             break;
         case 'c':
         case 'C':
@@ -107,24 +116,6 @@ void* EyeTracking::bk_Working(void* ptr)
         case 27:
             This->Running = false;
             return NULL;
-        case '1':
-
-            break;
-        case '2':
-
-            break;
-        case 'a':
-            This->Tracker.ShowWindow();
-            break;
-        case 's':
-            This->Tracker.HideWindow();
-            break;
-        case 'q':
-            This->Cam.ShowImage();
-            break;
-        case 'w':
-            This->Cam.HideImage();
-            break;
         }
     }
 
@@ -146,4 +137,11 @@ void EyeTracking::UpdateProcessed(IplImage* Orig, IplImage* Processed, void* ptr
 void EyeTracking::UpdatedLocations(bool Found, EyeDifferance Diff, void* ptr)
 {
     EyeTracking* This = (EyeTracking*)ptr;
+    This->CurDiff = Diff;
+    This->DiffFound = Found;
+
+    if (Found & !This->Cali.Calibrating())
+    {
+        This->Calcs.FindPoint(Diff);
+    }
 }
