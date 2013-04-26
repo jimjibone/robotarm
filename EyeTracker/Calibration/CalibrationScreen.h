@@ -21,19 +21,16 @@ public:
 protected:
 private:
     char* WindowName;
+    EyePoint* Points;
 
     int XStep;
     int XStart;
     int YStep;
     int YStart;
+    int CurPoi;
     int Hei, Wid;
 
-    void AddX();
-
     void DrawImage();
-
-    int CurX;
-    int CurY;
 };
 
 #endif // CALIBRATIONSCREEN_H

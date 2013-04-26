@@ -4,9 +4,9 @@
 PlaneCoefficients getPlaneCoefficients(PointXYZ a, PointXYZ b, PointXYZ c)
 {
 	// First validate the input to check that Z values are not out-of-bounds of Kinect view.
-	if (!a.isValid() || !b.isValid() || !c.isValid()) {
-		return PlaneCoefficients(0, 0, 0, 0);
-	}
+	//if (!a.isValid() || !b.isValid() || !c.isValid()) {
+		//return PlaneCoefficients(0, 0, 0, 0);
+	//}
 
 	//http://keisan.casio.com/has10/SpecExec.cgi# or
 	//http://www.easycalculation.com/analytical/cartesian-plane-equation.php

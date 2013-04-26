@@ -23,56 +23,45 @@ void CalibrationScreen::Setup(int Width, int Height)
     XStart = (int)((double)Width * 0.05);
     YStep = (int)((double)Height * 0.9 / 2.0);
     YStart = (int)((double)Height * 0.05);
+
+    Points = (EyePoint*)malloc(sizeof(EyePoint) * 9);
+    for (int X = 0; X < 3; X++)
+    {
+        for (int Y = 0; Y < 3; Y++)
+        {
+            Points[X + Y * 3] = EyePoint(XStart + X * XStep, YStart + YStep * Y);
+        }
+    }
 }
 
 void CalibrationScreen::StartCalibration(char* Name)
 {
-    CurX = 0;
-    CurY = 0;
+    CurPoi = 0;
     WindowName = Name;
     DrawImage();
-    AddX();
 }
 
 bool CalibrationScreen::NextPoint()
 {
+    CurPoi++;
     DrawImage();
-    AddX();
-    return CurX + CurY * 3 > 9;
+    return CurPoi >= 9;
 }
 
 int CalibrationScreen::CurPoint()
 {
-    return CurX + CurY * 3;
+    return CurPoi;
 }
 
 void CalibrationScreen::DrawImage()
 {
     IplImage* Image = cvCreateImage(cvSize(Wid, Hei), 8, 3);
-    cvCircle(Image, cvPoint(XStart + CurX * XStep, YStart + YStep * CurY), 10, CV_RGB(255, 255, 0), 0);
+    cvCircle(Image, cvPoint(Points[CurPoi].GetX(), Points[CurPoi].GetY()), 10, CV_RGB(255, 255, 0), -1);
     cvShowImage(WindowName, Image);
     cvReleaseImage(&Image);
 }
 
-void CalibrationScreen::AddX()
-{
-    CurX++;
-    if (CurX >= 3)
-    {
-        CurX = 0;
-        CurY++;
-    }
-}
-
 EyePoint* CalibrationScreen::AllPoints()
 {
-    EyePoint* Points = (EyePoint*)malloc(sizeof(EyePoint) * 9);
-    for (int X = 0; X < 3; X++)
-    {
-        for (int Y = 0; Y < 3; Y++)
-        {
-            Points[X + Y * 3] = EyePoint(XStart + CurX * XStep, YStart + YStep * CurY);
-        }
-    }
     return Points;
 }

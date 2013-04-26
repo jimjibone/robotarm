@@ -36,7 +36,7 @@ EyeRange::~EyeRange()
 
 bool EyeRange::CheckWithin(unsigned char Value)
 {
-    if (Value >= Upper | Value <= Lower) return false;
+    if (Value > Upper | Value < Lower) return false;
     return true;
 }
 
