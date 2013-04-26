@@ -61,6 +61,18 @@ void ImagePlaying::DoAllProcesses(IplImage* ScrImage, IplImage* DestImage)
     cvReleaseImage(&Img2);
 }
 
+void ImagePlaying::DoAllProcesses(IplImage* ScrImage, IplImage* DestImage, int Extend)
+{
+    IplImage* Img1 = cvCreateImage(cvGetSize(ScrImage), 8, 1);
+    ConvertToBinary(ScrImage, Img1);
+    IplImage* Img2 = cvCreateImage(cvGetSize(ScrImage), 8, 1);
+    ContourFinder(Img1, Img2);
+    cvReleaseImage(&Img1);
+    ExtendLines(Img2, DestImage, Extend);
+    cvReleaseImage(&Img2);
+}
+
+
 
 void ImagePlaying::ConvertToBinary(IplImage* ScrImage, IplImage* DestImage)
 {

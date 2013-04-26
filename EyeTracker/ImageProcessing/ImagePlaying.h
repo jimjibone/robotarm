@@ -18,6 +18,7 @@ public:
     int GetNum2();
 
     void DoAllProcesses(IplImage*, IplImage*);
+    void DoAllProcesses(IplImage*, IplImage*, int);
 
     void ConvertToBinary(IplImage*, IplImage*);
 
