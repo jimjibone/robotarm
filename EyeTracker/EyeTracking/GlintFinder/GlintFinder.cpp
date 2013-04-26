@@ -108,7 +108,7 @@ void GlintFinder::Around(EyePoint Loc, int Nums, IplImage* Image, EyeRange Range
             }
         }
 
-        if (Num != 0) break;
+        if (Num == 0) break;
     }
 }
 
@@ -116,5 +116,5 @@ void GlintFinder::DrawGlints(IplImage* Image)
 {
     EyePointD P = Glints[0].GetMid();
     Glints[0].DrawPoints(Image);
-    cvCircle(Image, cvPoint(P.GetXint(), P.GetYint()), 1, CV_RGB(0, 0, 255), 2);
+    cvCircle(Image, cvPoint(P.GetXint(), P.GetYint()), 2, CV_RGB(0, 0, 255), -1);
 }

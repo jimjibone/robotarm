@@ -43,7 +43,7 @@ private:
     static const int IrisStep = 2;
     static const int IrisAccept = 8;
 
-    static const int CircleStep = 30;
+    static const int CircleStep = 15;
 
     static const int AllStep = 3;
 
