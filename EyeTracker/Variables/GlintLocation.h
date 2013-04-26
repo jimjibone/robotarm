@@ -23,6 +23,8 @@ public:
     void FindMaxRect();
     EyeRectangle GetMaxRect();
 
+    bool CheckWithin(EyePoint);
+
     void DrawPoints(IplImage*);
 protected:
 private:

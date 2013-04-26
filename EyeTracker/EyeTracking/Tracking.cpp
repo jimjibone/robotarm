@@ -56,7 +56,7 @@ void* Tracking::bk_Process_Thread(void* Input)
 
     if (This->CircleFinder.Found())
     {
-        This->GlintsFinder.FindGlints(This->CurImage, This->CircleFinder.GetCircleLocation().NextSearchRectangle());
+        This->GlintsFinder.FindGlints(This->CurImage, This->CircleFinder.GetCircleLocation().GlintSearchRectangle());
 
         if (This->ShowWind)
         {

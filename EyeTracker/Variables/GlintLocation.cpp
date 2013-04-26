@@ -105,3 +105,24 @@ void GlintLocation::DrawPoints(IplImage* Image)
         Image->imageData[L + 2] = (char)0;
     }
 }
+
+bool GlintLocation::CheckWithin(EyePoint Point)
+{
+    if (MaxRect.Left() < Point.GetX() && MaxRect.Right() > Point.GetX() &&
+            MaxRect.Top() < Point.GetY() && MaxRect.Bottom() > Point.GetY())
+    {
+        return false;
+    }
+    else
+    {
+        for (int cnt = 0; cnt < Count; cnt++)
+        {
+            if (Points[cnt].GetX() == Point.GetX()
+                && Points[cnt].GetY() == Point.GetY())
+                {
+                    return true;
+                }
+        }
+        return false;
+    }
+}

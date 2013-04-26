@@ -2,7 +2,11 @@
 
 GlintFinder::GlintFinder()
 {
-    //ctor
+    Glints = (GlintLocation*)malloc(sizeof(GlintLocation) * GlintToExpect);
+    for (int cnt = 0; cnt < GlintToExpect; cnt++)
+    {
+        Glints[cnt] = GlintLocation();
+    }
 }
 
 GlintFinder::~GlintFinder()
@@ -12,88 +16,105 @@ GlintFinder::~GlintFinder()
 
 void GlintFinder::FindGlints(IplImage* Image, EyeRectangle Rect)
 {
-    GlintsLoc.Clear();
-
-    unsigned char Max = 0;
-    EyePoint MaxLoc;
-    for (int X = Rect.Left(); X < Rect.Right(); X++)
+    for (int cnt = 0; cnt < GlintToExpect; cnt++)
     {
-        for (int Y = Rect.Top(); Y < Rect.Bottom(); Y++)
-        {
-            int P = X + Y * Image->width;
-            if (Max < (unsigned char)Image->imageData[P])
-            {
-                Max = (unsigned char)Image->imageData[P];
-                MaxLoc = EyePoint(X, Y);
-            }
-        }
+        Glints[cnt].Clear();
     }
 
-    GlintsLoc.AddPoint(MaxLoc);
+    for (int cnt = 0; cnt < GlintToExpect; cnt++)
+    {
+        unsigned char Max = 0;
+        EyePoint MaxLoc;
+        for (int X = Rect.Left(); X < Rect.Right(); X++)
+        {
+            for (int Y = Rect.Top(); Y < Rect.Bottom(); Y++)
+            {
+                int P = X + Y * Image->width;
+                bool Carry = true;
+                for (int ctr = 0; ctr < cnt; ctr++)
+                {
+                    if (Glints[ctr].CheckWithin(EyePoint(X, Y)))
+                    {
+                        Carry = false;
+                        break;
+                    }
+                }
+                if (Carry)
+                {
+                    if (Max < (unsigned char)Image->imageData[P])
+                    {
+                        Max = (unsigned char)Image->imageData[P];
+                        MaxLoc = EyePoint(X, Y);
+                    }
+                }
+            }
+        }
+        Glints[cnt].AddPoint(MaxLoc);
 
-    Around(MaxLoc, 1, Image, EyeRange(Max));
+        Around(MaxLoc, cnt, Image, EyeRange(Max));
 
-    GlintsLoc.FindMaxRect();
-    GlintsLoc.FindMid();
+        Glints[cnt].FindMaxRect();
+        Glints[cnt].FindMid();
+    }
 }
 
 GlintLocation GlintFinder::GetGlintLocation()
 {
-    return GlintsLoc;
+    return Glints[0];
 }
 
-void GlintFinder::Around(EyePoint Loc, int From, IplImage* Image, EyeRange Range)
+void GlintFinder::Around(EyePoint Loc, int Nums, IplImage* Image, EyeRange Range)
 {
-    int Num = 0;
-    EyeRectangle Rect = EyeRectangle(Loc.GetX() - From, Loc.GetY() - From, From * 2, From * 2);
-    if (!(Rect.Left() > 0 && Rect.Right() < Image->width && Rect.Top() > 0 && Rect.Bottom() < Image->height))
+    for (int From = 1; From < Image->width; From++)
     {
-        return;
-    }
-
-    for (int X = Rect.Left(); X <= Rect.Right(); X++)
-    {
-        int P = X + Rect.Top() * Image->width;
-        if (Range.CheckWithin(Image->imageData[P]))
+        int Num = 0;
+        EyeRectangle Rect = EyeRectangle(Loc.GetX() - From, Loc.GetY() - From, From * 2, From * 2);
+        if (!(Rect.Left() > 0 && Rect.Right() < Image->width && Rect.Top() > 0 && Rect.Bottom() < Image->height))
         {
-            GlintsLoc.AddPoint(EyePoint(X, Rect.Top()));
-            Num++;
+            break;
         }
 
-        P = X + Rect.Bottom() * Image->width;
-        if (Range.CheckWithin(Image->imageData[P]))
+        for (int X = Rect.Left(); X <= Rect.Right(); X++)
         {
-            GlintsLoc.AddPoint(EyePoint(X, Rect.Bottom()));
-            Num++;
-        }
-    }
+            int P = X + Rect.Top() * Image->width;
+            if (Range.CheckWithin(Image->imageData[P]))
+            {
+                Glints[Nums].AddPoint(EyePoint(X, Rect.Top()));
+                Num++;
+            }
 
-    for (int Y = Rect.Top(); Y <= Rect.Bottom(); Y++)
-    {
-        int P = Rect.Left() + Y * Image->width;
-        if (Range.CheckWithin(Image->imageData[P]))
+            P = X + Rect.Bottom() * Image->width;
+            if (Range.CheckWithin(Image->imageData[P]))
+            {
+                Glints[Nums].AddPoint(EyePoint(X, Rect.Bottom()));
+                Num++;
+            }
+        }
+
+        for (int Y = Rect.Top(); Y <= Rect.Bottom(); Y++)
         {
-            GlintsLoc.AddPoint(EyePoint(Rect.Left(), Y));
-            Num++;
+            int P = Rect.Left() + Y * Image->width;
+            if (Range.CheckWithin(Image->imageData[P]))
+            {
+                Glints[Nums].AddPoint(EyePoint(Rect.Left(), Y));
+                Num++;
+            }
+
+            P = Rect.Right() + Y * Image->width;
+            if (Range.CheckWithin(Image->imageData[P]))
+            {
+                Glints[Nums].AddPoint(EyePoint(Rect.Right(), Y));
+                Num++;
+            }
         }
 
-        P = Rect.Right() + Y * Image->width;
-        if (Range.CheckWithin(Image->imageData[P]))
-        {
-            GlintsLoc.AddPoint(EyePoint(Rect.Right(), Y));
-            Num++;
-        }
-    }
-
-    if (Num != 0)
-    {
-        Around(Loc, From + 1, Image, Range);
+        if (Num != 0) break;
     }
 }
 
 void GlintFinder::DrawGlints(IplImage* Image)
 {
-    EyePointD P = GlintsLoc.GetMid();
-    GlintsLoc.DrawPoints(Image);
+    EyePointD P = Glints[0].GetMid();
+    Glints[0].DrawPoints(Image);
     cvCircle(Image, cvPoint(P.GetXint(), P.GetYint()), 1, CV_RGB(0, 0, 255), 2);
 }

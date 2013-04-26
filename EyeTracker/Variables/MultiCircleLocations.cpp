@@ -87,7 +87,7 @@ void MultiCircleLocations::AverageCircles()
     PupilRect = EyeRectangleD(XAv - PupilRadius, YAv - PupilRadius, PupilRadius * 2.0, PupilRadius * 2.0);
     IrisRect = EyeRectangleD(XAv - IrisRadius, YAv - IrisRadius, IrisRadius * 2.0, IrisRadius * 2.0);
     NextRect = EyeRectangle(PupilRect.intLeft() - NewArea, PupilRect.intTop() - NewArea, NewArea * 2 + (int)PupilRadius * 2, NewArea * 2 + (int)PupilRadius * 2);
-    BrightRect = EyeRectangle((int)XAv - (int)PupilRadius * 2, (int)YAv - (int)PupilRadius * 2, (int)PupilRadius * 4, (int)PupilRadius * 4);
+    BrightRect = EyeRectangle(PupilRect.intX(), PupilRect.intY(), PupilRect.intWidth(), PupilRect.intHeight());
 }
 
 EyeRectangleD MultiCircleLocations::PupilRectangleD()

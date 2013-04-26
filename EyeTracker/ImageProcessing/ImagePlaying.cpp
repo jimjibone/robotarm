@@ -21,11 +21,22 @@ ImagePlaying::~ImagePlaying()
 void ImagePlaying::SetNum1(int Num)
 {
     PNum1 = Num;
+    if (PNum2 < Num)
+    {
+        PNum2 = PNum1 + 1;
+    }
 }
 
 void ImagePlaying::SetNum2(int Num)
 {
-    PNum2 = Num;
+    if (Num < PNum1)
+    {
+        PNum2 = PNum1 + 1;
+    }
+    else
+    {
+        PNum2 = Num;
+    }
 }
 
 int ImagePlaying::GetNum1()

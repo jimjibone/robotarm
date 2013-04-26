@@ -3,6 +3,8 @@
 DoProcessing::DoProcessing()
 {
     ShowWind = false;
+    Running = false;
+    Img_proc = ImagePlaying(100, 105);
 }
 
 DoProcessing::~DoProcessing()

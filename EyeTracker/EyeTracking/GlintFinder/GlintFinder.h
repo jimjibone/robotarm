@@ -20,7 +20,9 @@ public:
     void DrawGlints(IplImage*);
 protected:
 private:
-    GlintLocation GlintsLoc;
+    GlintLocation* Glints;
+
+    static const int GlintToExpect = 1;
 
     void Around(EyePoint, int, IplImage*, EyeRange);
 };

@@ -9,15 +9,11 @@
 #include <opencv/cv.h>
 #include <opencv/highgui.h>
 
-enum LineType {LinearLine, QuadraticLine};
-
 class LineFinder
 {
 public:
     LineFinder();
     virtual ~LineFinder();
-
-    void UpdateLineType(LineType);
 
     void UpdateCalibration(EyeDifferance*, EyePoint*);
 
@@ -29,8 +25,6 @@ public:
     int GetNumWindows();
 protected:
 private:
-    LineType CurType;
-
     bool ShowWind;
 
     WindowSizer Sizer;
