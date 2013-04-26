@@ -42,13 +42,19 @@ Now that the initial tuning is finished we can start tuning the algorithm to use
 ![Mug](test2b.png)
 
 ###Begin Tuning!
+Value							| Amount
+--------------------------------|-------------
 COMPARE_NORMALS_ANGLE_THRESH	| PI_VALUE/36
 ![Tune 1](test2c.png)
 
+Value							| Amount
+--------------------------------|-------------
 COMPARE_NORMALS_ANGLE_THRESH	| PI_VALUE/36
 PLANE_NEIGHBOUR_SEARCH_DIST		| 2
 ![Tune 2](test2d.png)
 
+Value							| Amount
+--------------------------------|-------------
 COMPARE_NORMALS_ANGLE_THRESH	| PI_VALUE/36
 PLANE_NEIGHBOUR_SEARCH_DIST		| 3
 ![Tune 3](test2e.png)
@@ -81,11 +87,15 @@ Tuning seems to be sufficient here. Minimal tweaking will be done and the result
 ###Begin Tuning!
 After observation, the distance threshold seemed very high. At 20mm the distance two points can be to make a plane is very high. Setting this to 10mm proved that there was no reduction in the detection of the table plane.
 
+Value							| Amount
+--------------------------------|-------------
 COMPARE_NORMALS_DISTANCE_THRESH	| 10.0
 ![Tune 1](test3c.png)
 
 After some more tuning it was found that gradually decreasing the normal angle threshold gave the desired plane point clustering without the inclusion of the orange and mug points.
 
+Value							| Amount
+--------------------------------|-------------
 COMPARE_NORMALS_DISTANCE_THRESH	| 10.0
 COMPARE_NORMALS_ANGLE_THRESH	| PI_VALUE/26
 ![Tune 2](test3d.png)

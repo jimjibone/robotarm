@@ -21,6 +21,7 @@
 #define OBJECT_MIN_HEIGHT (10)	// mm above table
 #define PI_VALUE (3.141592654)
 #define NODE_UNASSIGNED (-1)
+#define DOMINANT_PLANE_UNASSIGNED (SIZE_T_MAX)
 
 #define NORMAL_CALC_POINT_SPREAD		(10)			// 10 points
 #define COMPARE_NORMALS_DISTANCE_THRESH	(10.0)			// 20 mm
@@ -42,13 +43,12 @@ public:
 	vector<PlaneCoefficients> input_cloud_normals;
 	vector<PointIndices> plane_clusters;
 	vector<PlaneCoefficients> plane_clusters_normals;
+	size_t dominant_plane_index;
 	
 	void setZPoints(uint16_t* zPoints, size_t size);
 	void calculateSurfaceNormals();
-	void segmentPlanes_old_old_old();
-	void segmentPlanes_old_old();
-	void segmentPlanes_old();
 	void segmentPlanes();
+	void findDominantPlane();
 	
 };
 
