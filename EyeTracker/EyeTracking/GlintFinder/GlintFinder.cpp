@@ -29,7 +29,7 @@ void GlintFinder::FindGlints(IplImage* Image, EyeRectangle Rect)
         {
             for (int Y = Rect.Top(); Y < Rect.Bottom(); Y++)
             {
-                int P = X + Y * Image->width;
+                unsigned char Cur = (unsigned char)Image->imageData[X + Y * Image->width];
                 bool Carry = true;
                 for (int ctr = 0; ctr < cnt; ctr++)
                 {
@@ -41,9 +41,9 @@ void GlintFinder::FindGlints(IplImage* Image, EyeRectangle Rect)
                 }
                 if (Carry)
                 {
-                    if (Max < (unsigned char)Image->imageData[P])
+                    if (Max < Cur)
                     {
-                        Max = (unsigned char)Image->imageData[P];
+                        Max = Cur;
                         MaxLoc = EyePoint(X, Y);
                     }
                 }

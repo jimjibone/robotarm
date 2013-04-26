@@ -18,7 +18,7 @@ public:
 protected:
 private:
     unsigned char Upper, Lower;
-    static const int RangeArea = 40;
+    static const int RangeArea = 30;
 };
 
 #endif // EYERANGE_H
