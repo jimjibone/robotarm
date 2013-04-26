@@ -1031,5 +1031,10 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 	_angle = -90;
 	_tilt = 0;
 }
+- (IBAction)clearDetection:(id)sender {
+	@synchronized (self) {
+		_drawSegmentedPlanes = NO;
+	}
+}
 
 @end

@@ -95,5 +95,6 @@
 
 - (IBAction)resetView:(id)sender;
 - (IBAction)rightView:(id)sender;
+- (IBAction)clearDetection:(id)sender;
 
 @end

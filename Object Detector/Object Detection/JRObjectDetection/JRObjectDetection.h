@@ -23,8 +23,8 @@
 #define NODE_UNASSIGNED (-1)
 
 #define NORMAL_CALC_POINT_SPREAD		(10)			// 10 points
-#define COMPARE_NORMALS_DISTANCE_THRESH	(10.0)			// 10 mm
-#define COMPARE_NORMALS_ANGLE_THRESH	(PI_VALUE/18)	// 10 deg in radians
+#define COMPARE_NORMALS_DISTANCE_THRESH	(10.0)			// 20 mm
+#define COMPARE_NORMALS_ANGLE_THRESH	(PI_VALUE/26)	// 5 deg in radians
 #define PLANE_NEIGHBOUR_SEARCH_DIST		(3)				// The distance the segmentation algorithm should search in each direction for neighbours.
 #define PLANE_CLUSTER_THRESHOLD			(2000)			// The number of points a cluster should have in order to pass as a plane.
 
