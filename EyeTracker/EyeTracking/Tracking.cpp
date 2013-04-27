@@ -50,7 +50,7 @@ void* Tracking::bk_Process_Thread(void* Input)
     IplImage* DispImg;
     if (This->ShowWind) DispImg = cvCreateImage(cvGetSize(This->CurImage), 8, 3);
 
-    if (DispImg) cvCvtColor(This->OrigImage, DispImg, CV_GRAY2BGR);
+    if (DispImg && This->ShowWind) cvCvtColor(This->OrigImage, DispImg, CV_GRAY2BGR);
 
     This->CircleFinder.SetOpenCVImage(This->CurImage);
     This->CircleFinder.FindCircle();
@@ -59,7 +59,7 @@ void* Tracking::bk_Process_Thread(void* Input)
     {
         This->GlintsFinder.FindGlints(This->OrigImage, This->CircleFinder.GetCircleLocation().GlintSearchRectangle());
 
-        if (DispImg)
+        if (DispImg && This->ShowWind)
         {
             This->GlintsFinder.DrawGlints(DispImg);
             This->CircleFinder.DrawEye(DispImg);
@@ -70,9 +70,9 @@ void* Tracking::bk_Process_Thread(void* Input)
                       EyeDifferance(This->CircleFinder.GetCircleLocation().CircleCenter(), This->GlintsFinder.GetGlintLocation().GetMid()),
                       This->SentData);
 
-    if (DispImg)  cvShowImage("ImageProcessing", DispImg);
+    if (DispImg && This->ShowWind)  cvShowImage("ImageProcessing", DispImg);
 
-    cvReleaseImage(&DispImg);
+    if (DispImg) cvReleaseImage(&DispImg);
     cvReleaseImage(&This->CurImage);
 
     This->Running = false;

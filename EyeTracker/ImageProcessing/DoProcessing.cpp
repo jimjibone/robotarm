@@ -4,7 +4,7 @@ DoProcessing::DoProcessing()
 {
     ShowWind = false;
     Running = false;
-    Img_proc = ImagePlaying(100, 105);
+    Img_proc = ImagePlaying(100, 110);
 }
 
 DoProcessing::~DoProcessing()
@@ -37,7 +37,7 @@ void* DoProcessing::bk_Process_Thread(void* Data)
     DoProcessing* This = (DoProcessing*)Data;
     IplImage* Image = cvCreateImage(cvGetSize(This->CurImage), 8, 1);
 
-    This->Img_proc.DoAllProcesses(This->CurImage, Image, 0);
+    This->Img_proc.DoAllProcesses(This->CurImage, Image, 1);
 
     if (This->ShowWind) cvShowImage("Settings", Image);
 

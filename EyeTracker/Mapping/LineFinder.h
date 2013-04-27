@@ -26,8 +26,11 @@ public:
 protected:
 private:
     bool ShowWind;
+    bool CaliDone;
 
     WindowSizer Sizer;
+
+    PlaneCoefficients CoeY, CoeX;
 };
 
 #endif // LINEFINDER_H

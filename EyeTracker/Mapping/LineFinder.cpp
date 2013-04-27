@@ -3,6 +3,7 @@
 LineFinder::LineFinder()
 {
     ShowWind = false;
+    CaliDone = false;
 }
 
 LineFinder::~LineFinder()
@@ -37,29 +38,45 @@ void LineFinder::UpdateCalibration(EyeDifferance* Differances, EyePoint* Points)
     PlaneCoefficients CoefX3 = getPlaneCoefficients(P9X, P3X, P7X);
     PlaneCoefficients CoefX4 = getPlaneCoefficients(P7X, P9X, P1X);
 
-    PlaneCoefficients CoeX = PlaneCoefficients((CoefX1.a + CoefX2.a + CoefX3.a + CoefX4.a)/4,
-                                               (CoefX1.b + CoefX2.b + CoefX3.b + CoefX4.b)/4,
-                                               (CoefX1.c + CoefX2.c + CoefX3.c + CoefX4.c)/4,
-                                               (CoefX1.d + CoefX2.d + CoefX3.d + CoefX4.d)/4);
+    CoeX = PlaneCoefficients((CoefX1.a + CoefX2.a + CoefX3.a + CoefX4.a)/4,
+                             (CoefX1.b + CoefX2.b + CoefX3.b + CoefX4.b)/4,
+                             (CoefX1.c + CoefX2.c + CoefX3.c + CoefX4.c)/4,
+                             (CoefX1.d + CoefX2.d + CoefX3.d + CoefX4.d)/4);
 
     PlaneCoefficients CoefY1 = getPlaneCoefficients(P1Y, P3Y, P7Y);
     PlaneCoefficients CoefY2 = getPlaneCoefficients(P3Y, P1Y, P9Y);
     PlaneCoefficients CoefY3 = getPlaneCoefficients(P9Y, P3Y, P7Y);
     PlaneCoefficients CoefY4 = getPlaneCoefficients(P7Y, P9Y, P1Y);
 
-    PlaneCoefficients CoeY = PlaneCoefficients((CoefY1.a + CoefY2.a + CoefY3.a + CoefY4.a)/4,
-                                               (CoefY1.b + CoefY2.b + CoefY3.b + CoefY4.b)/4,
-                                               (CoefY1.c + CoefY2.c + CoefY3.c + CoefY4.c)/4,
-                                               (CoefY1.d + CoefY2.d + CoefY3.d + CoefY4.d)/4);
+    CoeY = PlaneCoefficients((CoefY1.a + CoefY2.a + CoefY3.a + CoefY4.a)/4,
+                             (CoefY1.b + CoefY2.b + CoefY3.b + CoefY4.b)/4,
+                             (CoefY1.c + CoefY2.c + CoefY3.c + CoefY4.c)/4,
+                             (CoefY1.d + CoefY2.d + CoefY3.d + CoefY4.d)/4);
 
-    printf("%0.3fx + %0.3fy + %0.3fz + %0.3f = 0\n", CoeX.a, CoeX.b, CoeX.c, CoeX.d);
-    printf("%0.3fx + %0.3fy + %0.3fz + %0.3f = 0\n", CoeY.a, CoeY.b, CoeY.c, CoeY.d);
+    CaliDone = true;
 }
 
 EyePointD LineFinder::FindPoint(EyeDifferance Diff)
 {
+    if (CaliDone)
+    {
+        double Top1 = (CoeX.d + CoeX.c * Diff.GetXDiff()) / CoeX.b;
+        double Top2 = CoeY.c * Diff.GetYDiff() + CoeY.d;
+        double Bot = CoeY.a - (CoeX.a / CoeX.b);
+        double X = (Top1 + Top2) / Bot;
+        double Y = -((CoeX.d + CoeX.c * Diff.GetXDiff() + CoeX.a * X) / CoeX.b);
 
-    return EyePointD();
+        printf("%d, %d\n", (int)X, (int)Y);
+
+        EyePointD P = EyePointD(X, Y);
+        if (ShowWind) UpdateWindow(P);
+        return P;
+
+    }
+    else
+    {
+        return EyePointD();
+    }
 }
 
 void LineFinder::ShowWindow()
