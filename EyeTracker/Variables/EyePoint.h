@@ -1,6 +1,7 @@
 #ifndef POINT_H
 #define POINT_H
 
+#include <iostream>
 
 class EyePoint
 {
@@ -31,6 +32,28 @@ public:
 protected:
 private:
     double X, Y;
+};
+
+class AvEyePointD
+{
+public:
+    AvEyePointD();
+    AvEyePointD(int);
+    virtual ~AvEyePointD();
+
+    void AddPoint(EyePointD);
+    EyePointD GetCurAverage();
+
+    void Reset();
+
+protected:
+private:
+
+    int NumAt;
+    int MaxNum;
+    bool First;
+
+    EyePointD* Points;
 };
 
 

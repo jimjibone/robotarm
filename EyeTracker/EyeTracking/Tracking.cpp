@@ -59,6 +59,9 @@ void* Tracking::bk_Process_Thread(void* Input)
     {
         This->GlintsFinder.FindGlints(This->OrigImage, This->CircleFinder.GetCircleLocation().GlintSearchRectangle());
 
+        This->CircleAv.AddPoint(This->CircleFinder.GetCircleLocation().CircleCenter());
+        This->GlintAv.AddPoint(This->GlintsFinder.GetGlintLocation().GetMid());
+
         if (DispImg && This->ShowWind)
         {
             This->GlintsFinder.DrawGlints(DispImg);
@@ -67,7 +70,7 @@ void* Tracking::bk_Process_Thread(void* Input)
     }
 
     This->UpdateFuncs(This->CircleFinder.Found(),
-                      EyeDifferance(This->CircleFinder.GetCircleLocation().CircleCenter(), This->GlintsFinder.GetGlintLocation().GetMid()),
+                      EyeDifferance(This->CircleAv.GetCurAverage(), This->GlintAv.GetCurAverage()),
                       This->SentData);
 
     if (DispImg && This->ShowWind)  cvShowImage("ImageProcessing", DispImg);

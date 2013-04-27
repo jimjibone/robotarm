@@ -34,8 +34,8 @@ private:
     RectangleSearcher Search;
 
     //Constants
-    static const int PupilMinR = 10;
-    static const int PupilMaxR = 25;
+    static const int PupilMinR = 15;
+    static const int PupilMaxR = 40;
     static const int PupilAccept = 2;
 
     static const int IrisMinR = 27;
