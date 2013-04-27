@@ -8,6 +8,7 @@
 //
 
 #include "JRObjectDetection.h"
+#include "JRRANSAC.h"
 
 #pragma mark - 
 #pragma mark Helping Functions
@@ -320,12 +321,12 @@ void ObjectDetection::segmentPlanes()
 		
 		// Find the normal coefficients for the plane_clusters.
 		// Do this by using the normal coefficients from the mode point in the cluster.
-		plane_clusters_normals.erase(plane_clusters_normals.begin(), plane_clusters_normals.end());
+		/*plane_clusters_normals.erase(plane_clusters_normals.begin(), plane_clusters_normals.end());
 		for (size_t i = 0; i < plane_clusters.size(); i++) {
 			size_t index = plane_clusters[i].indices[(uint)plane_clusters[i].indices.size()/2];
 			plane_clusters_normals.emplace_back(input_cloud_normals[index].a, input_cloud_normals[index].b, input_cloud_normals[index].c, input_cloud_normals[index].d);
 			cout << "segmentPlanes set cluster " << i << " normals to A = " << input_cloud_normals[index].a << "  B = " << input_cloud_normals[index].b << "  C = " << input_cloud_normals[index].c << "  D = " << input_cloud_normals[index].d << " for an index of " << index << "." << endl;
-		}
+		}*/
 	}/* END validDepthData */
 }
 
@@ -405,6 +406,11 @@ void ObjectDetection::findDominantPlane()
 		// its bounds.
 		
 		if (dominant_plane_index != DOMINANT_PLANE_UNASSIGNED) {
+			
+			RANSAC<PointXYZ> sac (10.0);	// ransac with 10.0mm distance tolerance.
+			sac.setData(&input_cloud, &plane_clusters[dominant_plane_index]);
+			sac.run();
+			dominant_plane_coefficients = sac.coefficients;
 			
 			
 			

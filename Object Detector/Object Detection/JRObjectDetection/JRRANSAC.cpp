@@ -40,32 +40,32 @@ double absoluteDistance(PointXYZ point, PlaneCoefficients plane) {
 }
 
 template <class PointType>
-void ransac<PointType>::setCloud(vector<PointType> *newCloud)
+void RANSAC<PointType>::setCloud(vector<PointType> *newCloud)
 {
 	cloud = newCloud;
 }
 
 template <class PointType>
-void ransac<PointType>::setIndices(PointIndices *newIndices)
+void RANSAC<PointType>::setIndices(PointIndices *newIndices)
 {
 	indices = newIndices;
 }
 
 template <class PointType>
-void ransac<PointType>::setData(vector<PointType> *newCloud, PointIndices *newIndices)
+void RANSAC<PointType>::setData(vector<PointType> *newCloud, PointIndices *newIndices)
 {
 	cloud = newCloud;
 	indices = newIndices;
 }
 
 template <class PointType>
-void ransac<PointType>::setDistanceTolerance(double newTolerance)
+void RANSAC<PointType>::setDistanceTolerance(double newTolerance)
 {
 	distance_tolerance = newTolerance;
 }
 
 template <class PointType>
-void ransac<PointType>::generatePoints()
+void RANSAC<PointType>::generatePoints()
 {
 	// http://en.wikipedia.org/wiki/RANSAC#The_algorithm
 	// Also see Computer Vision book, pp. 305 (algorithm 10.4).
@@ -114,7 +114,7 @@ void ransac<PointType>::generatePoints()
 }
 
 template <class PointType>
-void ransac<PointType>::run()
+void RANSAC<PointType>::run()
 {
 	generatePoints();
 	
@@ -134,6 +134,7 @@ void ransac<PointType>::run()
 	
 	// Iterate through all the valid planes and process with all the
 	// non random points. Determine the plane confidences.
+	plane_confidences.resize(planes.size(), 0);
 	int highest_confidence = INT_MIN;
 	size_t highest_confidence_index = 0;
 	for (size_t i = 0; i < planes.size(); i++) {
@@ -147,16 +148,23 @@ void ransac<PointType>::run()
 			// confidence.
 			double distance = absoluteDistance(cloud[indices[non_random_points[j]]], planes[i]);
 			
-			if (distance) {
-				<#statements#>
+			if (distance <= distance_tolerance) {
+				plane_confidences[i]++;
+			} else {
+				plane_confidences[i]--;
 			}
 			
 		}
+		
+		// Is this the best plane so far?
+		if (plane_confidences[i] > highest_confidence) {
+			highest_confidence = plane_confidences[i];
+			highest_confidence_index = i;
+		}
 	}
 	
+	// Now that the confident plane has been found, set the
+	// confident plane.
+	coefficients = planes[highest_confidence_index];
 	
 }
-
-
-
-

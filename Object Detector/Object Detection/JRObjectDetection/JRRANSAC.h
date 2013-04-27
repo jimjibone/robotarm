@@ -22,7 +22,7 @@
 using namespace std;
 
 template <class PointType>
-class ransac {
+class RANSAC {
 	
 	vector<PointType> *cloud;
 	PointIndices *indices;
@@ -34,6 +34,11 @@ class ransac {
 	void generatePoints();
 	
 public:
+	
+	PlaneCoefficients coefficients;
+	
+	RANSAC(double _tolerance) : distance_tolerance(_tolerance) {};
+	~RANSAC();
 	
 	void setCloud(vector<PointType> *newCloud);
 	void setIndices(PointIndices *newIndices);
