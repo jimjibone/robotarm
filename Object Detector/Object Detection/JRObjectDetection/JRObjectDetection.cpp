@@ -429,6 +429,13 @@ void ObjectDetection::segmentObjects()
 {
 	if (validDepthData) {
 		
+		// What needs to be done:
+		// - Get the indices of all the points above the table.
+		// - Do a K-Means clustering of the points to find the object clusters.
+		// - Do some basic shape fitting of objects to find the diameter, height and location.
+		
+		// Get the indices of all the points above the table.
+		
 		
 		
 	}/* END validDepthData */
