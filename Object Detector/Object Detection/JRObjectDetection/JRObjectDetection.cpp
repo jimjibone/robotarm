@@ -9,6 +9,7 @@
 
 #include "JRObjectDetection.h"
 #include "JRRANSAC.h"
+#include "JRConvexHull.h"
 
 #pragma mark - 
 #pragma mark Helping Functions
@@ -342,14 +343,14 @@ void ObjectDetection::findDominantPlane()
 			// There are no planes! This is not very good.
 			// So let's not do any dominant plane finding.
 			// Just set the dominant plane as unassigned.
-			dominant_plane_index = DOMINANT_PLANE_UNASSIGNED;
+			dominant_plane.index = DOMINANT_PLANE_UNASSIGNED;
 			
 		} else if (plane_clusters.size() == 1) {
 			
 			// There is only one plane! This helps a lot.
 			// So there is no need to find the dominant plane. Just
 			// set the dominant plane as this one.
-			dominant_plane_index = 0;
+			dominant_plane.index = 0;
 			
 		} else {
 			
@@ -397,7 +398,7 @@ void ObjectDetection::findDominantPlane()
 			// Now the plane_cluster that has the best fit will be set
 			// as the dominant plane.
 			
-			dominant_plane_index = highest_approval_cluster;
+			dominant_plane.index = highest_approval_cluster;
 			
 		}
 		
@@ -405,14 +406,17 @@ void ObjectDetection::findDominantPlane()
 		// equation and perform the convex hull of the points, to find
 		// its bounds.
 		
-		if (dominant_plane_index != DOMINANT_PLANE_UNASSIGNED) {
+		if (dominant_plane.index != DOMINANT_PLANE_UNASSIGNED) {
 			
-			RANSAC<PointXYZ> sac (10.0);	// ransac with 10.0mm distance tolerance.
-			sac.setData(&input_cloud, &plane_clusters[dominant_plane_index]);
+			RANSAC sac (10.0);	// ransac with 10.0mm distance tolerance.
+			sac.setData(&input_cloud, &plane_clusters[dominant_plane.index]);
 			sac.run();
-			dominant_plane_coefficients = sac.coefficients;
+			dominant_plane.coefficients = sac.coefficients;
 			
-			
+			ConvexHull hull;
+			hull.setData(&input_cloud, &plane_clusters[dominant_plane.index], &dominant_plane.coefficients);
+			hull.run();
+			dominant_plane.hull = hull.hull_indices;
 			
 		}
 		
@@ -420,8 +424,8 @@ void ObjectDetection::findDominantPlane()
 	
 }
 
-// ABOVE: Also get the plane equation and convex hull of the table (dominant) plane.
-// THEN: Get the indices of all the points on the table.
+// DONE: ABOVE: Also get the plane equation and convex hull of the table (dominant) plane.
+// THEN: Get the indices of all the points above the table.
 // THEN: Do K-Means clustering to find the object clouds indices.
 // THEN: Maybe to some shape-fitting and store the diameter/position of objects on table.
 

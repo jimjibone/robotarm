@@ -39,33 +39,28 @@ double absoluteDistance(PointXYZ point, PlaneCoefficients plane) {
 	return distance;
 }
 
-template <class PointType>
-void RANSAC<PointType>::setCloud(vector<PointType> *newCloud)
+void RANSAC::setCloud(vector<PointXYZ> *newCloud)
 {
 	cloud = newCloud;
 }
 
-template <class PointType>
-void RANSAC<PointType>::setIndices(PointIndices *newIndices)
+void RANSAC::setIndices(PointIndices *newIndices)
 {
 	indices = newIndices;
 }
 
-template <class PointType>
-void RANSAC<PointType>::setData(vector<PointType> *newCloud, PointIndices *newIndices)
+void RANSAC::setData(vector<PointXYZ> *newCloud, PointIndices *newIndices)
 {
 	cloud = newCloud;
 	indices = newIndices;
 }
 
-template <class PointType>
-void RANSAC<PointType>::setDistanceTolerance(double newTolerance)
+void RANSAC::setDistanceTolerance(double newTolerance)
 {
 	distance_tolerance = newTolerance;
 }
 
-template <class PointType>
-void RANSAC<PointType>::generatePoints()
+void RANSAC::generatePoints()
 {
 	// http://en.wikipedia.org/wiki/RANSAC#The_algorithm
 	// Also see Computer Vision book, pp. 305 (algorithm 10.4).
@@ -113,8 +108,7 @@ void RANSAC<PointType>::generatePoints()
 	
 }
 
-template <class PointType>
-void RANSAC<PointType>::run()
+void RANSAC::run()
 {
 	generatePoints();
 	
@@ -146,7 +140,7 @@ void RANSAC<PointType>::run()
 			
 			// Find the distance from point to plane to determine the
 			// confidence.
-			double distance = absoluteDistance(cloud[indices[non_random_points[j]]], planes[i]);
+			double distance = absoluteDistance(cloud->at(indices->indices.at(non_random_points[j])), planes[i]);
 			
 			if (distance <= distance_tolerance) {
 				plane_confidences[i]++;

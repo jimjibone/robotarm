@@ -46,11 +46,23 @@ struct PointXYZ {
 struct PointXYZIJ {
 	double x, y, z;	// 3D points from the original->projectd-to-plane data.
 	double i, j;	// 2D points once 3D->2D conversion has been completed.
-	bool isValid() { return (z > 0) && (z < 10000); }
+	bool isValid() { return (z > FREENECT_DEPTH_MM_NO_VALUE) && (z < FREENECT_DEPTH_MM_MAX_VALUE); }
 	bool operator <(const PointXYZIJ &point) const {
 		return i < point.i || (i == point.i && j < point.j);
 	}
 	PointXYZIJ(double _x = 0, double _y = 0, double _z = 0, double _i = 0, double _j = 0) : x(_x), y(_y), z(_z), i(_i), j(_j) {};
+	PointXYZIJ() { z = FREENECT_DEPTH_MM_NO_VALUE; };
+};
+
+struct PointNXYZIJ {
+	uint index;
+	double x, y, z;	// 3D points from the original->projectd-to-plane data.
+	double i, j;	// 2D points once 3D->2D conversion has been completed.
+	bool isValid() { return (z > FREENECT_DEPTH_MM_NO_VALUE) && (z < FREENECT_DEPTH_MM_MAX_VALUE); }
+	bool operator <(const PointNXYZIJ &point) const {
+		return i < point.i || (i == point.i && j < point.j);
+	}
+	PointNXYZIJ(uint _index = 0, double _x = 0, double _y = 0, double _z = FREENECT_DEPTH_MM_NO_VALUE, double _i = 0, double _j = 0) : index(_index), x(_x), y(_y), z(_z), i(_i), j(_j) {};
 };
 
 struct PlaneCoefficients {

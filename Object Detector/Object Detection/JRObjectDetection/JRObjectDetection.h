@@ -42,8 +42,12 @@ public:
 	vector<PointXYZ> input_cloud;
 	vector<PlaneCoefficients> input_cloud_normals;
 	vector<PointIndices> plane_clusters;
-	size_t dominant_plane_index;
-	PlaneCoefficients dominant_plane_coefficients;
+	
+	struct {
+		size_t index;
+		PlaneCoefficients coefficients;
+		PointIndices hull;
+	} dominant_plane;
 	
 	void setZPoints(uint16_t* zPoints, size_t size);
 	void calculateSurfaceNormals();

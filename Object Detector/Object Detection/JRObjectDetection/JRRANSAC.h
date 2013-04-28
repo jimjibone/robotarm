@@ -21,10 +21,9 @@
 
 using namespace std;
 
-template <class PointType>
 class RANSAC {
 	
-	vector<PointType> *cloud;
+	vector<PointXYZ> *cloud;
 	PointIndices *indices;
 	double distance_tolerance;
 	
@@ -38,11 +37,11 @@ public:
 	PlaneCoefficients coefficients;
 	
 	RANSAC(double _tolerance) : distance_tolerance(_tolerance) {};
-	~RANSAC();
+	//~RANSAC();
 	
-	void setCloud(vector<PointType> *newCloud);
+	void setCloud(vector<PointXYZ> *newCloud);
 	void setIndices(PointIndices *newIndices);
-	void setData(vector<PointType> *newCloud, PointIndices *newIndices);
+	void setData(vector<PointXYZ> *newCloud, PointIndices *newIndices);
 	void setDistanceTolerance(double newTolerance);
 	void run();
 	

@@ -24,6 +24,7 @@
 		1ADF88F9165AE3E8004A442B /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ADF88F8165AE3E8004A442B /* GLUT.framework */; };
 		1ADF88FB165AE401004A442B /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ADF88FA165AE401004A442B /* CoreVideo.framework */; };
 		D15D2B09171C097600A10D3A /* JRPointRotationXYZ.m in Sources */ = {isa = PBXBuildFile; fileRef = D15D2B08171C097600A10D3A /* JRPointRotationXYZ.m */; };
+		D1843660172C9D79004D730C /* JRConvexHull.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D184365E172C9D79004D730C /* JRConvexHull.cpp */; };
 		D192E13817171D2600B94D3D /* JRObjectDetection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D192E13617171D2600B94D3D /* JRObjectDetection.cpp */; };
 		D19413F6171B4B67005EDC0D /* JRObjectDetectionWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = D19413F5171B4B67005EDC0D /* JRObjectDetectionWrapper.mm */; };
 		D1AD8A3717145EAE003CECDD /* libfreenect.0.1.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D1AD8A3617145EAE003CECDD /* libfreenect.0.1.2.dylib */; };
@@ -75,6 +76,8 @@
 		1ADF88FA165AE401004A442B /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		D15D2B07171C097600A10D3A /* JRPointRotationXYZ.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JRPointRotationXYZ.h; sourceTree = "<group>"; };
 		D15D2B08171C097600A10D3A /* JRPointRotationXYZ.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JRPointRotationXYZ.m; sourceTree = "<group>"; };
+		D184365E172C9D79004D730C /* JRConvexHull.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = JRConvexHull.cpp; sourceTree = "<group>"; };
+		D184365F172C9D79004D730C /* JRConvexHull.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JRConvexHull.h; sourceTree = "<group>"; };
 		D192E13617171D2600B94D3D /* JRObjectDetection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = JRObjectDetection.cpp; sourceTree = "<group>"; };
 		D192E13717171D2600B94D3D /* JRObjectDetection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JRObjectDetection.h; sourceTree = "<group>"; };
 		D19413F4171B4B67005EDC0D /* JRObjectDetectionWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JRObjectDetectionWrapper.h; sourceTree = "<group>"; };
@@ -215,6 +218,8 @@
 				D19413F5171B4B67005EDC0D /* JRObjectDetectionWrapper.mm */,
 				D1CB8DA2172C253C007E0A43 /* JRRANSAC.cpp */,
 				D1CB8DA3172C253C007E0A43 /* JRRANSAC.h */,
+				D184365E172C9D79004D730C /* JRConvexHull.cpp */,
+				D184365F172C9D79004D730C /* JRConvexHull.h */,
 			);
 			path = JRObjectDetection;
 			sourceTree = "<group>";
@@ -298,6 +303,7 @@
 				D19413F6171B4B67005EDC0D /* JRObjectDetectionWrapper.mm in Sources */,
 				D15D2B09171C097600A10D3A /* JRPointRotationXYZ.m in Sources */,
 				D1CB8DA4172C253C007E0A43 /* JRRANSAC.cpp in Sources */,
+				D1843660172C9D79004D730C /* JRConvexHull.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
