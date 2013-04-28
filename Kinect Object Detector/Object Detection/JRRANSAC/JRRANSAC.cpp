@@ -157,6 +157,14 @@ void RANSAC::performRANSAC() {
 		for (int j = 0; j < otherPoints.size(); j+=100/*Point const& point : otherPoints*/) {
 			// Determine the distance from point to plane and find the confidence.
 			double distance = findAbsoluteDistance(otherPoints[j], planes[i]);
+			
+			static int count = 0;
+			count++;
+			if (count % 1000 == 0) {
+				count = 0;
+				cout << "\tPlane " << i << ", point " << j << " had a distance of " << distance << "." << endl;
+			}
+			
 			if (distance <= distanceTolerance) {
 				planes[i].confidence++;
 			} else {

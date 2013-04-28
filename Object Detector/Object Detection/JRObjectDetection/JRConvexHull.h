@@ -35,7 +35,7 @@ public:
 	
 	PointIndices hull_indices;
 	
-	//ConvexHull();
+	ConvexHull(double _tolerance) : distance_tolerance(_tolerance) {};
 	//~ConvexHull();
 	
 	void setData(vector<PointXYZ> *newCloud, PointIndices *newIndices, PlaneCoefficients *newPlane);

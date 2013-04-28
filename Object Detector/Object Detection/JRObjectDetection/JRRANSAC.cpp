@@ -35,7 +35,7 @@ double absoluteDistance(PointXYZ point, PlaneCoefficients plane) {
 	distance += plane.c * point.z;
 	distance += plane.d;
 	distance /= sqrt(pow(plane.a, 2) + pow(plane.b, 2) + pow(plane.c, 2));
-	distance  = distance >= 0 ? distance : -distance;
+	distance  = distance < 0 ? -distance : distance;
 	return distance;
 }
 
@@ -71,11 +71,11 @@ void RANSAC::generatePoints()
 	
 	// Get a better amount of random points.
 	size_t max_points = indices->indices.size() / RANDOM_POINT_DIVISOR;
-	max_points += max_points % 3;	// Make up the size to be a multiple of 3.
+	max_points += 3 - (max_points % 3);	// Make up the size to be a multiple of 3.
 	
 	for (size_t i = 0; i < max_points; i++) {
 		
-		size_t random_index = rand() % indices->indices.size()-1;
+		size_t random_index = rand() % (indices->indices.size()-1);
 		
 		// Check that the random number has not alreayd been used.
 		// If it has then continue, have another go.
@@ -113,52 +113,57 @@ void RANSAC::run()
 	generatePoints();
 	
 	vector<PlaneCoefficients> planes;
-	vector<uint> plane_confidences;
+	
+	cout << "RANSAC::run(). Starting." << endl;
 	
 	// Grab 3 random points at a time and then determine the plane equation.
 	for (size_t i = 0; i < random_points.size(); i+=3) {
 		
-		PlaneCoefficients thisPlane = calculatePlane(cloud->at(i), cloud->at(i+1), cloud->at(i+2));
+		PlaneCoefficients thisPlane = calculatePlane((*cloud)[(*indices).indices[random_points[i]]], (*cloud)[(*indices).indices[random_points[i+1]]], (*cloud)[(*indices).indices[random_points[i+2]]]);
 		if (thisPlane.isSet()) {
 			planes.emplace_back(thisPlane);
-			plane_confidences.emplace_back(0);
 		}
 		
 	}
 	
+	cout << "RANSAC::run(). Ended plane generation and found " << planes.size() << " planes." << endl;
+	
 	// Iterate through all the valid planes and process with all the
 	// non random points. Determine the plane confidences.
-	plane_confidences.resize(planes.size(), 0);
 	int highest_confidence = INT_MIN;
 	size_t highest_confidence_index = 0;
 	for (size_t i = 0; i < planes.size(); i++) {
 		
 		// Now compare this plane with all the non random
 		// points.
+		int this_plane_confidence = 0;
 		
-		for (size_t j = 0; j < non_random_points.size(); j++) {
+		for (size_t j = 0; j < non_random_points.size(); j+=POINT_ITERATION_STEP) {
 			
 			// Find the distance from point to plane to determine the
 			// confidence.
-			double distance = absoluteDistance(cloud->at(indices->indices.at(non_random_points[j])), planes[i]);
+			double distance = absoluteDistance((*cloud)[(*indices).indices[non_random_points[j]]], planes[i]);
 			
 			if (distance <= distance_tolerance) {
-				plane_confidences[i]++;
+				this_plane_confidence++;
 			} else {
-				plane_confidences[i]--;
+				this_plane_confidence--;
 			}
 			
 		}
 		
 		// Is this the best plane so far?
-		if (plane_confidences[i] > highest_confidence) {
-			highest_confidence = plane_confidences[i];
+		if (this_plane_confidence > highest_confidence) {
+			highest_confidence = this_plane_confidence;
 			highest_confidence_index = i;
 		}
 	}
 	
+	cout << "RANSAC::run(). Found the confident plane with a confidence of " << highest_confidence << "." << endl;
+	
 	// Now that the confident plane has been found, set the
 	// confident plane.
 	coefficients = planes[highest_confidence_index];
+	confidence = highest_confidence;
 	
 }

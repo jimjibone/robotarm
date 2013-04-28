@@ -33,5 +33,6 @@ NSString *const dKinectControllerLEDColour			= @"dKinectControllerLEDColour";
 NSString *const nObjectDetectorDidCompleteObjectDetection		= @"nObjectDetectorDidCompleteObjectDetection";
 
 NSString *const nObjectDetectionDidCompletePlaneClusterDetection = @"nObjectDetectionDidCompletePlaneClusterDetection";
+NSString *const nObjectDetectionDidCompleteDominantPlaneDetection = @"nObjectDetectionDidCompleteDominantPlaneDetection";
 
 @end

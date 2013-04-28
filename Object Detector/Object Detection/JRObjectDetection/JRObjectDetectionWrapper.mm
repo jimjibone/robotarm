@@ -65,6 +65,10 @@ public:
 {
 	self.cpp->wrapper.segmentPlanes();
 }
+- (void)findDominantPlane
+{
+	self.cpp->wrapper.findDominantPlane();
+}
 
 
 
@@ -99,6 +103,39 @@ public:
 	*b = self.cpp->wrapper.input_cloud_normals[index].b;
 	*c = self.cpp->wrapper.input_cloud_normals[index].c;
 	*d = self.cpp->wrapper.input_cloud_normals[index].d;
+}
+
+
+
+
+#pragma mark -
+#pragma mark Get Dominant Plane Methods
+
+- (size_t)getDominantPlaneIndex
+{
+	return self.cpp->wrapper.dominant_plane.index;
+}
+- (int)getDominantPlaneConfidence
+{
+	return self.cpp->wrapper.dominant_plane.confidence;
+}
+- (void)getDominantPlaneA:(double*)a B:(double*)b C:(double*)c D:(double*)d
+{
+	*a = self.cpp->wrapper.dominant_plane.coefficients.a;
+	*b = self.cpp->wrapper.dominant_plane.coefficients.b;
+	*c = self.cpp->wrapper.dominant_plane.coefficients.c;
+	*d = self.cpp->wrapper.dominant_plane.coefficients.d;
+}
+- (size_t)getDominantPlaneHullPointCount
+{
+	return self.cpp->wrapper.dominant_plane.hull.indices.size();
+}
+- (void)getDominantPlaneHullPointX:(double*)x Y:(double*)y Z:(double*)z forPoint:(size_t)point
+{
+	size_t index = self.cpp->wrapper.dominant_plane.hull.indices[point];
+	*x = self.cpp->wrapper.input_cloud[index].x;
+	*y = self.cpp->wrapper.input_cloud[index].y;
+	*z = self.cpp->wrapper.input_cloud[index].z;
 }
 
 

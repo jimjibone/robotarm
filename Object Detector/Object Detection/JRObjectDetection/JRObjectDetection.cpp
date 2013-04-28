@@ -365,7 +365,7 @@ void ObjectDetection::findDominantPlane()
 			vector<size_t> cluster_approval_ratings;
 			cluster_approval_ratings.resize(plane_clusters.size(), 0);
 			
-			size_t highest_approval = 0;
+			int highest_approval = 0;
 			size_t highest_approval_cluster = DOMINANT_PLANE_UNASSIGNED;
 			
 			for (size_t i = 0; i < plane_clusters.size(); i++) {
@@ -384,9 +384,9 @@ void ObjectDetection::findDominantPlane()
 				
 				// Now find out how good the plane cluster is as a dominant plane.
 				
-				size_t current_approval = pointCount/PLANE_CLUSTER_THRESHOLD;
-				current_approval += 1000 * fabs(avgX);
-				current_approval += 1000 * fabs(avgY);
+				int current_approval = (int)pointCount/PLANE_CLUSTER_THRESHOLD;
+				current_approval -= fabs(avgX)/10;
+				current_approval -= fabs(avgY)/10;
 				
 				if (current_approval > highest_approval) {
 					highest_approval = current_approval;
@@ -409,11 +409,12 @@ void ObjectDetection::findDominantPlane()
 		if (dominant_plane.index != DOMINANT_PLANE_UNASSIGNED) {
 			
 			RANSAC sac (10.0);	// ransac with 10.0mm distance tolerance.
-			sac.setData(&input_cloud, &plane_clusters[dominant_plane.index]);
+			sac.setData(&input_cloud, &(plane_clusters[dominant_plane.index]));
 			sac.run();
+			dominant_plane.confidence = sac.confidence;
 			dominant_plane.coefficients = sac.coefficients;
 			
-			ConvexHull hull;
+			ConvexHull hull (20.0);	// convex hull with 20.0mm distance tolerance.
 			hull.setData(&input_cloud, &plane_clusters[dominant_plane.index], &dominant_plane.coefficients);
 			hull.run();
 			dominant_plane.hull = hull.hull_indices;
@@ -422,6 +423,15 @@ void ObjectDetection::findDominantPlane()
 		
 	}/* END validDepthData */
 	
+}
+
+void ObjectDetection::segmentObjects()
+{
+	if (validDepthData) {
+		
+		
+		
+	}/* END validDepthData */
 }
 
 // DONE: ABOVE: Also get the plane equation and convex hull of the table (dominant) plane.

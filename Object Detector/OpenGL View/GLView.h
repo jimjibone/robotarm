@@ -45,13 +45,14 @@
     GLProgram *_depthProgram;
 	
 	// Object Detection
-	//_ransacConfidentPlane _planeData;
-	//PointXYZ *_convexHullPoints;	unsigned int _convexHullPointCount;
-	//PointXYZ *_objectsCloudPoints;	uint _objectsCloudPointCount;
 	PlaneCoefficients *_segmented_planes;
 	size_t _segmented_planes_count;
 	PointXYZ *_segmented_planes_points;
 	size_t *_segmented_planes_points_counts;
+	
+	PlaneCoefficients _dominant_plane_hull_coefficients;
+	PointXYZ *_dominant_plane_hull_points;
+	size_t _dominant_plane_hull_point_count;
     
     // 3D navigation
     NSPoint _lastPos, _lastPosRight;
@@ -61,10 +62,8 @@
 	
 	// Draw Modes
 	BOOL _drawFrustrum;
-	BOOL _drawPlane;
-	BOOL _drawConvexHull;
-	BOOL _drawObjectsCloud;
 	BOOL _drawSegmentedPlanes;
+	BOOL _drawDominantPlane;
 	BOOL _normals;
     BOOL _mirror;
     BOOL _natural;
@@ -82,13 +81,6 @@
 - (void)setDrawMode:(enum drawMode)newDrawMode;
 - (void)swapInNewDepthFrame:(uint16_t**)newDepth RGBFrame:(uint8_t**)newRGB;
 
-- (void)setPlaneData:(_ransacConfidentPlane)newPlane;
-- (void)showPlane:(BOOL)mode;
-- (void)resetConvexHullPoints;
-- (void)setConvexHullPoints:(PointXYZ*)newPoints Count:(unsigned int)count;
-- (void)showConvexHull:(BOOL)mode;
-- (void)setObjectsCloudPoints:(PointXYZ*)newPoints Count:(uint)count;
-- (void)showObjectsCloud:(BOOL)mode;
 - (void)setObjectDetectionData:(JRObjectDetectionWrapper*)objectDetector;
 
 - (void)stopDrawing;

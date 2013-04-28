@@ -181,11 +181,15 @@
 		
 		[objectDetector calculateSurfaceNormals];
 		[objectDetector segmentPlanes];
+		[objectDetector findDominantPlane];
 		
 		objectDetectionComplete = YES;
 		[[[NSWorkspace sharedWorkspace] notificationCenter] postNotificationName:nObjectDetectionDidCompletePlaneClusterDetection
 																		  object:self
 																		userInfo:@{@"clustersFound": @([objectDetector getNumberOfPlaneClusters])}];
+		[[[NSWorkspace sharedWorkspace] notificationCenter] postNotificationName:nObjectDetectionDidCompleteDominantPlaneDetection
+																		  object:self
+																		userInfo:@{@"confidence": @([objectDetector getDominantPlaneConfidence]), @"hullPointsCount": @([objectDetector getDominantPlaneHullPointCount])}];
 		[[[NSWorkspace sharedWorkspace] notificationCenter] postNotificationName:nObjectDetectorDidCompleteObjectDetection
 																		  object:self];
 		

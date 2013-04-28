@@ -32,5 +32,6 @@ FOUNDATION_EXPORT NSString *const dKinectControllerLEDColour;
 FOUNDATION_EXPORT NSString *const nObjectDetectorDidCompleteObjectDetection;
 
 FOUNDATION_EXPORT NSString *const nObjectDetectionDidCompletePlaneClusterDetection;
+FOUNDATION_EXPORT NSString *const nObjectDetectionDidCompleteDominantPlaneDetection;
 
 @end

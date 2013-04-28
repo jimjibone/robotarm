@@ -107,8 +107,8 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 - (void)initScene {
 	// Set up draw modes
 	_drawFrustrum = YES;
-	_drawPlane = NO;
-	_drawConvexHull = NO;
+	_drawSegmentedPlanes = NO;
+	_drawDominantPlane = NO;
 	_normals = YES;
     _mirror = NO;
     _natural = NO;
@@ -577,6 +577,58 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 		
 	}
 }
+- (void)drawDominantPlane
+{
+	// PLANE
+	
+	/*XYZPoint bl = (XYZPoint){-600, 600,
+		zWorldFromPlaneAndWorldXY(_dominant_plane_hull_coefficients, -600, -600)};
+	XYZPoint tl = (XYZPoint){600, 600,
+		zWorldFromPlaneAndWorldXY(_dominant_plane_hull_coefficients, 600, -600)};
+	XYZPoint tr = (XYZPoint){600, -600,
+		zWorldFromPlaneAndWorldXY(_dominant_plane_hull_coefficients, 600, 600)};
+	XYZPoint br = (XYZPoint){-600, -600,
+		zWorldFromPlaneAndWorldXY(_dominant_plane_hull_coefficients, -600, 600)};
+	
+	glBegin(GL_QUADS);
+	glColor4f(.392156863, 1, .392156863, 0.3);
+	// bl, tl, tr, br
+	glVertex3d(bl.x, bl.y, -bl.z);
+	glVertex3d(tl.x, tl.y, -tl.z);
+	glVertex3d(tr.x, tr.y, -tr.z);
+	glVertex3d(br.x, br.y, -br.z);
+	glEnd();*/
+	
+	// LOOP
+	
+	GLfloat prevPointSize = 0;
+	glGetFloatv(GL_POINT_SIZE, &prevPointSize);
+	glPointSize(8);
+	
+	glBegin(GL_POINTS);
+	glColor4f(1, 0, 0, 0.8);
+	for (int i = 0; i < _dominant_plane_hull_point_count-1; i++) {
+		// Don't draw the last point because it is the same as the last.
+		glVertex3d(_dominant_plane_hull_points[i].x, -_dominant_plane_hull_points[i].y, -_dominant_plane_hull_points[i].z+2);
+	}
+	glEnd();
+	
+	glPointSize(prevPointSize);
+	
+	GLfloat prevLineWidth = 0;
+	glGetFloatv(GL_LINE_WIDTH, &prevLineWidth);
+	glLineWidth(2);
+	
+	glBegin(GL_LINE_LOOP);
+	glColor4f(1, 1, 0, 0.6);
+	for (int i = 0; i < _dominant_plane_hull_point_count-1; i++) {
+		// Don't draw the last point because it is the same as the last.
+		glVertex3d(_dominant_plane_hull_points[i].x, -_dominant_plane_hull_points[i].y, -_dominant_plane_hull_points[i].z+2);
+	}
+	glEnd();
+	
+	glLineWidth(prevLineWidth);
+}
 - (void)drawGLStringX:(GLfloat)x Y:(GLfloat)y Z:(GLfloat)z String:(NSString*)string {
 	//glColor3f(255, 255, 255);
 	glRasterPos3f(x, y, -z);
@@ -714,11 +766,10 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 		glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
 		glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
         
-        if (_drawFrustrum) [self drawFrustrum];
-		if (_drawConvexHull) [self drawBoundedPlaneHull];//[self drawConvexHull];
-		if (_drawObjectsCloud) [self drawObjectsCloud];
-		//if (_drawSegmentedPlanes) [self drawSegmentedPlanes];
-		if (_drawSegmentedPlanes) [self drawSegmentedPlanesPoints];
+        if (_drawFrustrum)			[self drawFrustrum];
+		//if (_drawSegmentedPlanes)	[self drawSegmentedPlanes];
+		if (_drawSegmentedPlanes)	[self drawSegmentedPlanesPoints];
+		if (_drawDominantPlane)		[self drawDominantPlane];
 		
 		glDisable(GL_POINT_SMOOTH);
 		glDisable(GL_LINE_SMOOTH);
@@ -834,92 +885,11 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 	printf("plane - point 3: wx=%f wy=%f wz=%f\n\n", _planeData.point3.x, _planeData.point3.y, _planeData.point3.z);
 #endif
 }
-- (void)showPlane:(BOOL)mode {
-	@synchronized (self) {
-		_drawPlane = mode;
-	}
-}
-- (void)resetConvexHullPoints {
-	/*@synchronized (self) {
-	 _drawConvexHull = NO;
-	 }
-	 if (_convexHullPoints) {
-	 // If there is previous convexHullPoints data then remove it all, ready to create the new array.
-	 free(_convexHullPoints);
-	 _convexHullPoints = NULL;
-	 _convexHullPointCount = 0;
-	 _drawConvexHull = NO;
-	 }*/
-}
-- (void)setConvexHullPoints:(PointXYZ*)newPoints Count:(unsigned int)count {
-	/*@synchronized (self) {
-	 _drawConvexHull = NO;
-	 }
-	 if (_convexHullPoints) {
-	 // If there is previous convexHullPoints data then remove it all, ready to create the new array.
-	 free(_convexHullPoints);
-	 _convexHullPoints = NULL;
-	 _convexHullPointCount = 0;
-	 _drawConvexHull = NO;
-	 }
-	 if (!_convexHullPoints && count > 0) {
-	 // There is nothing contained in convexHullPoints so let's:
-	 // 1. Initialise it with the size we need for all the points.
-	 // 2. Add all the points.
-	 // 3. Get the view ready to show the points.
-	 
-	 _convexHullPoints = newPoints;
-	 
-	 _convexHullPointCount = count;
-	 
-	 _drawConvexHull = YES;
-	 }*/
-}
-- (void)showConvexHull:(BOOL)mode {
-	@synchronized (self) {
-		_drawConvexHull = mode;
-	}
-}
-- (void)setObjectsCloudPoints:(PointXYZ*)newPoints Count:(uint)count
-{
-	/*@synchronized (self) {
-	 _drawObjectsCloud = NO;
-	 }
-	 
-	 if (_objectsCloudPoints) {
-	 // If there is previous convexHullPoints data then remove it all, ready to create the new array.
-	 free(_objectsCloudPoints);
-	 _objectsCloudPoints = NULL;
-	 _objectsCloudPointCount = 0;
-	 _drawObjectsCloud = NO;
-	 }
-	 if (!_objectsCloudPoints && count > 0) {
-	 // There is nothing contained in convexHullPoints so let's:
-	 // 1. Initialise it with the size we need for all the points.
-	 // 2. Add all the points.
-	 // 3. Get the view ready to show the points.
-	 
-	 _objectsCloudPoints = newPoints;
-	 
-	 _objectsCloudPointCount = count;
-	 
-	 _drawObjectsCloud = YES;
-	 }*/
-}
-- (void)showObjectsCloud:(BOOL)mode
-{
-	@synchronized (self) {
-		_drawObjectsCloud = mode;
-	}
-}
 - (void)setObjectDetectionData:(JRObjectDetectionWrapper*)objectDetector
 {
-	//	- (size_t)getNumberOfPlaneClusters;
-	//	- (size_t)getNumberOfIndicesInPlaneCluster:(size_t)cluster;
-	//	- (void)getX:(double*)x Y:(double*)y Z:(double*)z forPoint:(size_t)point forPlaneCluster:(size_t)cluster;
-	//	- (void)getA:(double*)a B:(double*)b C:(double*)c D:(double*)d forPlaneCluster:(size_t)cluster;
 	@synchronized (self) {
 		_drawSegmentedPlanes = NO;
+		_drawDominantPlane = NO;
 	}
 	
 	_segmented_planes_count = [objectDetector getNumberOfPlaneClusters];
@@ -953,7 +923,17 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 		
 	}
 	
+	
+	[objectDetector getDominantPlaneA:&_dominant_plane_hull_coefficients.a B:&_dominant_plane_hull_coefficients.b C:&_dominant_plane_hull_coefficients.c D:&_dominant_plane_hull_coefficients.d];
+	_dominant_plane_hull_point_count = [objectDetector getDominantPlaneHullPointCount];
+	free(_dominant_plane_hull_points);
+	_dominant_plane_hull_points = (PointXYZ*)malloc(_dominant_plane_hull_point_count * sizeof(PointXYZ));
+	for (size_t i = 0; i < _dominant_plane_hull_point_count; i++) {
+		[objectDetector getDominantPlaneHullPointX:&_dominant_plane_hull_points[i].x Y:&_dominant_plane_hull_points[i].y Z:&_dominant_plane_hull_points[i].z forPoint:i];
+	}
+	
 	_drawSegmentedPlanes = YES;
+	_drawDominantPlane = YES;
 }
 
 
@@ -1034,6 +1014,7 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 - (IBAction)clearDetection:(id)sender {
 	@synchronized (self) {
 		_drawSegmentedPlanes = NO;
+		_drawDominantPlane = NO;
 	}
 }
 

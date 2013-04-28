@@ -80,6 +80,8 @@ void ConvexHull::setData(vector<PointXYZ> *newCloud, PointIndices *newIndices, P
 
 void ConvexHull::run()
 {
+	cout << "ConvexHull::run(). Starting." << endl;
+	
 	// Clear all the previously stored convex
 	// hull points, if there are any.
 	hull_indices.indices.erase(hull_indices.indices.begin(), hull_indices.indices.end());
@@ -112,7 +114,7 @@ void ConvexHull::run()
 	}
 	
 	hull_points.resize(k);
-	sort(hull_points.begin(), hull_points.end());
+	//sort(hull_points.begin(), hull_points.end());
 	
 	// Now we have all the hull points! So let's
 	// fill the indices with the relevant positions.
@@ -120,4 +122,5 @@ void ConvexHull::run()
 		hull_indices.indices.emplace_back(hull_points[i].index);
 	}
 	
+	cout << "ConvexHull::run(). Ended with " << hull_indices.indices.size() << " hull points." << endl;
 }

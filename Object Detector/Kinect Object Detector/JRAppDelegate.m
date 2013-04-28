@@ -81,6 +81,10 @@
 														   selector:@selector(objectDetectorNotificationWasReceived:)
 															   name:nObjectDetectionDidCompletePlaneClusterDetection
 															 object:nil];
+	[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self
+														   selector:@selector(objectDetectorNotificationWasReceived:)
+															   name:nObjectDetectionDidCompleteDominantPlaneDetection
+															 object:nil];
 	
 	// Kinect Connection Notification
 	[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self
@@ -103,6 +107,9 @@
 																object:nil];
 	[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self
 																  name:nObjectDetectionDidCompletePlaneClusterDetection
+																object:nil];
+	[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self
+																  name:nObjectDetectionDidCompleteDominantPlaneDetection
 																object:nil];
 	
 	// Kinect Controller Notifications
@@ -130,6 +137,12 @@
 		
 		[self.convexHullPointsController removeObjects:self.convexHullPoints];
 		[self.convexHullPoints removeAllObjects];
+	}
+	if ([[aNotification name] isEqualToString:nObjectDetectionDidCompleteDominantPlaneDetection])
+	{
+		fieldsNeedReset = YES;
+		[self.dominantPlaneConfidence setStringValue:[[[aNotification userInfo] objectForKey:@"confidence"] stringValue]];
+		[self.dominantPlaneHullPoints setStringValue:[[[aNotification userInfo] objectForKey:@"hullPointsCount"] stringValue]];
 	}
 }
 - (void)kinectControllerNotificationWasReceived:(NSNotification*)aNotification {

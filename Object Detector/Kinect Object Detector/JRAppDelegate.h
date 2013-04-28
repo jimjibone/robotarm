@@ -29,6 +29,8 @@
 
 // Object detection pane
 @property (assign) IBOutlet NSTextField *planeClustersFound;
+@property (assign) IBOutlet NSTextField *dominantPlaneConfidence;
+@property (assign) IBOutlet NSTextField *dominantPlaneHullPoints;
 @property (assign) IBOutlet NSArrayController *convexHullPointsController;
 
 - (IBAction)connectKinect:(id)sender;
