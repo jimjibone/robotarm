@@ -22,6 +22,7 @@ struct JRObjectDetectionWrapperOpaque;
 - (void)calculateSurfaceNormals;
 - (void)segmentPlanes;
 - (void)findDominantPlane;
+- (void)segmentObjects;
 
 - (size_t)getNumberOfPlaneClusters;
 - (size_t)getNumberOfIndicesInPlaneCluster:(size_t)cluster;
@@ -33,5 +34,8 @@ struct JRObjectDetectionWrapperOpaque;
 - (void)getDominantPlaneA:(double*)a B:(double*)b C:(double*)c D:(double*)d;
 - (size_t)getDominantPlaneHullPointCount;
 - (void)getDominantPlaneHullPointX:(double*)x Y:(double*)y Z:(double*)z forPoint:(size_t)point;
+
+- (size_t)getObjectsPointsCount;
+- (void)getObjectsX:(double *)x Y:(double *)y Z:(double *)z forPoint:(size_t)point;
 
 @end

@@ -109,6 +109,7 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 	_drawFrustrum = YES;
 	_drawSegmentedPlanes = NO;
 	_drawDominantPlane = NO;
+	_drawObjectsPoints = NO;
 	_normals = YES;
     _mirror = NO;
     _natural = NO;
@@ -629,6 +630,42 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 	
 	glLineWidth(prevLineWidth);
 }
+- (void)drawObjectsPoints
+{
+	if (_objects_points_count > 0) {
+		
+		uint coloursSize = 8;
+		float colours[8][3] = {
+			{1.0, 0.0, 0.0},
+			{0.0, 1.0, 0.0},
+			{0.0, 0.0, 1.0},
+			{1.0, 1.0, 0.0},
+			{0.0, 1.0, 1.0},
+			{1.0, 0.0, 1.0},
+			{1.0, 1.0, 1.0},
+			{0.9, 0.9, 0.9}
+		};
+		uint col = 7;//arc4random_uniform(coloursSize);
+		
+		GLfloat prevPointSize = 0;
+		glGetFloatv(GL_POINT_SIZE, &prevPointSize);
+		glPointSize(4);
+		
+		glBegin(GL_POINTS);
+		
+		for (size_t i = 0; i < _objects_points_count; i++) {
+			
+			glColor4f(colours[col][0], colours[col][1], colours[col][2], 0.6);
+			
+			glVertex3d(_objects_points[i].x, -_objects_points[i].y, -_objects_points[i].z);
+			
+		}
+		
+		glEnd();
+		glPointSize(prevPointSize);
+		
+	}
+}
 - (void)drawGLStringX:(GLfloat)x Y:(GLfloat)y Z:(GLfloat)z String:(NSString*)string {
 	//glColor3f(255, 255, 255);
 	glRasterPos3f(x, y, -z);
@@ -770,6 +807,7 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 		//if (_drawSegmentedPlanes)	[self drawSegmentedPlanes];
 		if (_drawSegmentedPlanes)	[self drawSegmentedPlanesPoints];
 		if (_drawDominantPlane)		[self drawDominantPlane];
+		if (_drawObjectsPoints)		[self drawObjectsPoints];
 		
 		glDisable(GL_POINT_SMOOTH);
 		glDisable(GL_LINE_SMOOTH);
@@ -890,6 +928,7 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 	@synchronized (self) {
 		_drawSegmentedPlanes = NO;
 		_drawDominantPlane = NO;
+		_drawObjectsPoints = NO;
 	}
 	
 	_segmented_planes_count = [objectDetector getNumberOfPlaneClusters];
@@ -932,8 +971,18 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 		[objectDetector getDominantPlaneHullPointX:&_dominant_plane_hull_points[i].x Y:&_dominant_plane_hull_points[i].y Z:&_dominant_plane_hull_points[i].z forPoint:i];
 	}
 	
+	
+	_objects_points_count = [objectDetector getObjectsPointsCount];
+	free(_objects_points);
+	_objects_points = (PointXYZ*)malloc(_objects_points_count * sizeof(PointXYZ));
+	for (size_t i = 0; i < _objects_points_count; i++) {
+		[objectDetector getObjectsX:&_objects_points[i].x Y:&_objects_points[i].y Z:&_objects_points[i].z forPoint:i];
+	}
+	
+	
 	_drawSegmentedPlanes = YES;
 	_drawDominantPlane = YES;
+	_drawObjectsPoints = YES;
 }
 
 
@@ -1015,6 +1064,7 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 	@synchronized (self) {
 		_drawSegmentedPlanes = NO;
 		_drawDominantPlane = NO;
+		_drawObjectsPoints = NO;
 	}
 }
 

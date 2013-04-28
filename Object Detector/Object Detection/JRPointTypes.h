@@ -26,6 +26,11 @@ struct PointIndices {
 	PointIndices() { /*indices.erase(indices.begin(), indices.end());*/ };
 };
 
+struct PointXY {
+	double x, y;
+	PointXY(double _x = 0, double _y = 0) : x(_x), y(_y) {};
+};
+
 struct PointIXYZ {
 	uint index;
 	double x, y, z;

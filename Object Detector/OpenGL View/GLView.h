@@ -53,6 +53,9 @@
 	PlaneCoefficients _dominant_plane_hull_coefficients;
 	PointXYZ *_dominant_plane_hull_points;
 	size_t _dominant_plane_hull_point_count;
+	
+	PointXYZ *_objects_points;
+	size_t _objects_points_count;
     
     // 3D navigation
     NSPoint _lastPos, _lastPosRight;
@@ -64,6 +67,7 @@
 	BOOL _drawFrustrum;
 	BOOL _drawSegmentedPlanes;
 	BOOL _drawDominantPlane;
+	BOOL _drawObjectsPoints;
 	BOOL _normals;
     BOOL _mirror;
     BOOL _natural;

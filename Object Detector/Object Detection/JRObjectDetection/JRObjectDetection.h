@@ -50,6 +50,8 @@ public:
 		PointIndices hull;
 	} dominant_plane;
 	
+	PointIndices object_points;
+	
 	void setZPoints(uint16_t* zPoints, size_t size);
 	void calculateSurfaceNormals();
 	void segmentPlanes();

@@ -69,6 +69,10 @@ public:
 {
 	self.cpp->wrapper.findDominantPlane();
 }
+- (void)segmentObjects
+{
+	self.cpp->wrapper.segmentObjects();
+}
 
 
 
@@ -138,6 +142,23 @@ public:
 	*z = self.cpp->wrapper.input_cloud[index].z;
 }
 
+
+
+
+#pragma mark -
+#pragma mark Get Object Point Methods
+
+- (size_t)getObjectsPointsCount
+{
+	return self.cpp->wrapper.object_points.indices.size();
+}
+- (void)getObjectsX:(double *)x Y:(double *)y Z:(double *)z forPoint:(size_t)point
+{
+	size_t index = self.cpp->wrapper.object_points.indices[point];
+	*x = self.cpp->wrapper.input_cloud[index].x;
+	*y = self.cpp->wrapper.input_cloud[index].y;
+	*z = self.cpp->wrapper.input_cloud[index].z;
+}
 
 
 

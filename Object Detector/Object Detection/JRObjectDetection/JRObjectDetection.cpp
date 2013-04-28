@@ -10,6 +10,7 @@
 #include "JRObjectDetection.h"
 #include "JRRANSAC.h"
 #include "JRConvexHull.h"
+#include "JRPointInclusion.h"
 
 #pragma mark - 
 #pragma mark Helping Functions
@@ -435,7 +436,16 @@ void ObjectDetection::segmentObjects()
 		// - Do some basic shape fitting of objects to find the diameter, height and location.
 		
 		// Get the indices of all the points above the table.
+		PointInclusion inclusion (500.0);	// Set the tolerance to include points that are up to 500mm above the table.
+		inclusion.setCloud(&input_cloud);
+		inclusion.setPlane(&dominant_plane.coefficients);
+		inclusion.setHull(&dominant_plane.hull);
+		// We can assume that dominant plane points are not part of the objects.
+		inclusion.excludeIndices(&plane_clusters[dominant_plane.index]);
+		inclusion.run();
+		object_points = inclusion.included_indices;
 		
+		// Do a K-Means clustering of the points to find the object clusters.
 		
 		
 	}/* END validDepthData */

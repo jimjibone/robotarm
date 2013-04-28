@@ -182,6 +182,7 @@
 		[objectDetector calculateSurfaceNormals];
 		[objectDetector segmentPlanes];
 		[objectDetector findDominantPlane];
+		[objectDetector segmentObjects];
 		
 		objectDetectionComplete = YES;
 		[[[NSWorkspace sharedWorkspace] notificationCenter] postNotificationName:nObjectDetectionDidCompletePlaneClusterDetection
