@@ -63,3 +63,69 @@ int EyePointD::GetXint()
 {
     return (int)X;
 }
+
+AvEyePointD::AvEyePointD()
+{
+    NumAt = 0;
+    MaxNum = 5;
+    First = true;
+    Points = (EyePointD*)malloc(sizeof(EyePointD) * MaxNum);
+}
+
+AvEyePointD::AvEyePointD(int ToExpect)
+{
+    NumAt = 0;
+    MaxNum = ToExpect;
+    First = true;
+    Points = (EyePointD*)malloc(sizeof(EyePointD) * MaxNum);
+}
+
+AvEyePointD::~AvEyePointD()
+{
+
+}
+
+void AvEyePointD::Reset()
+{
+    NumAt = 0;
+    First = true;
+}
+
+void AvEyePointD::AddPoint(EyePointD NewPoint)
+{
+    Points[NumAt] = NewPoint;
+    NumAt++;
+    if (NumAt < MaxNum)
+    {
+        NumAt = 0;
+        First = false;
+    }
+}
+
+EyePointD AvEyePointD::GetCurAverage()
+{
+    if (First)
+    {
+        double Xs = 0, Ys = 0;
+        for (int cnt = 0; cnt <= NumAt; cnt++)
+        {
+            Xs += Points[cnt].GetX();
+            Ys += Points[cnt].GetY();
+        }
+        Xs /= (NumAt + 1);
+        Ys /= (NumAt + 1);
+        return EyePointD(Xs, Ys);
+    }
+    else
+    {
+        double Xs = 0, Ys = 0;
+        for (int cnt = 0; cnt <= MaxNum; cnt++)
+        {
+            Xs += Points[cnt].GetX();
+            Ys += Points[cnt].GetY();
+        }
+        Xs /= (NumAt + 1);
+        Ys /= (NumAt + 1);
+        return EyePointD(Xs, Ys);
+    }
+}

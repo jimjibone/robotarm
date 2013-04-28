@@ -43,6 +43,8 @@ private:
 
     HoughCircleFnder CircleFinder;
     GlintFinder GlintsFinder;
+
+    AvEyePointD CircleAv, GlintAv;
 };
 
 #endif // TRACKING_H
