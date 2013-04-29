@@ -37,7 +37,7 @@ void* DoProcessing::bk_Process_Thread(void* Data)
     DoProcessing* This = (DoProcessing*)Data;
     IplImage* Image = cvCreateImage(cvGetSize(This->CurImage), 8, 1);
 
-    This->Img_proc.DoAllProcesses(This->CurImage, Image, 1);
+    This->Img_proc.DoAllProcesses(This->CurImage, Image);
 
     if (This->ShowWind) cvShowImage("Settings", Image);
 

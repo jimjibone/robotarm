@@ -66,8 +66,6 @@ EyePointD LineFinder::FindPoint(EyeDifferance Diff)
         double X = (Top1 + Top2) / Bot;
         double Y = -((CoeX.d + CoeX.c * Diff.GetXDiff() + CoeX.a * X) / CoeX.b);
 
-        printf("%d, %d\n", (int)X, (int)Y);
-
         EyePointD P = EyePointD(X, Y);
         if (ShowWind) UpdateWindow(P);
         return P;
