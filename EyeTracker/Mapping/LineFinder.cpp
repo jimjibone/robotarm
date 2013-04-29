@@ -60,16 +60,15 @@ EyePointD LineFinder::FindPoint(EyeDifferance Diff)
 {
     if (CaliDone)
     {
-        double Top1 = (CoeX.d + CoeX.c * Diff.GetXDiff()) / CoeX.b;
+        double Top1 = CoeY.b * ((CoeX.d + CoeX.c * Diff.GetXDiff()) / CoeX.b);
         double Top2 = CoeY.c * Diff.GetYDiff() + CoeY.d;
-        double Bot = CoeY.a - (CoeX.a / CoeX.b);
+        double Bot = CoeY.a - (CoeY.b * CoeX.a / CoeX.b);
         double X = (Top1 + Top2) / Bot;
         double Y = -((CoeX.d + CoeX.c * Diff.GetXDiff() + CoeX.a * X) / CoeX.b);
 
         EyePointD P = EyePointD(X, Y);
         if (ShowWind) UpdateWindow(P);
         return P;
-
     }
     else
     {
