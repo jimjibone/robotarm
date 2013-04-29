@@ -31,7 +31,10 @@
 @property (assign) IBOutlet NSTextField *planeClustersFound;
 @property (assign) IBOutlet NSTextField *dominantPlaneConfidence;
 @property (assign) IBOutlet NSTextField *dominantPlaneHullPoints;
+@property (assign) IBOutlet NSTextField *kmeansClusters;
+@property (assign) IBOutlet NSScrollView *kmeansText;
 @property (assign) IBOutlet NSArrayController *convexHullPointsController;
+
 
 - (IBAction)connectKinect:(id)sender;
 - (IBAction)resetTableDetect:(id)sender;

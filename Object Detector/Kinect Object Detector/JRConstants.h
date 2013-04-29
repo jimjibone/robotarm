@@ -33,5 +33,6 @@ FOUNDATION_EXPORT NSString *const nObjectDetectorDidCompleteObjectDetection;
 
 FOUNDATION_EXPORT NSString *const nObjectDetectionDidCompletePlaneClusterDetection;
 FOUNDATION_EXPORT NSString *const nObjectDetectionDidCompleteDominantPlaneDetection;
+FOUNDATION_EXPORT NSString *const nObjectDetectionDidCompleteObjectClustering;
 
 @end

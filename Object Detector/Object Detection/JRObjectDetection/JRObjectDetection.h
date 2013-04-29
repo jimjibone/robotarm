@@ -28,6 +28,8 @@
 #define COMPARE_NORMALS_ANGLE_THRESH	(PI_VALUE/26)	// 5 deg in radians
 #define PLANE_NEIGHBOUR_SEARCH_DIST		(3)				// The distance the segmentation algorithm should search in each direction for neighbours.
 #define PLANE_CLUSTER_THRESHOLD			(2000)			// The number of points a cluster should have in order to pass as a plane.
+#define KMEANS_CLUSTER_COUNT			(2)				// The number of clusters the k-means algorithm should look for.
+#define KMEANS_FILTER_DISTANCE			(100.0)			// The max distance a point can be away from its centroid for it to be included.
 
 using namespace std;
 
@@ -50,7 +52,8 @@ public:
 		PointIndices hull;
 	} dominant_plane;
 	
-	PointIndices object_points;
+	PointIndices objects_points;
+	vector<Object> objects;
 	
 	void setZPoints(uint16_t* zPoints, size_t size);
 	void calculateSurfaceNormals();

@@ -35,7 +35,10 @@ struct JRObjectDetectionWrapperOpaque;
 - (size_t)getDominantPlaneHullPointCount;
 - (void)getDominantPlaneHullPointX:(double*)x Y:(double*)y Z:(double*)z forPoint:(size_t)point;
 
-- (size_t)getObjectsPointsCount;
-- (void)getObjectsX:(double *)x Y:(double *)y Z:(double *)z forPoint:(size_t)point;
+- (size_t)getObjectClustersCount;
+- (size_t)getObjectPointCountForCluster:(size_t)cluster;
+- (void)getObjectX:(double *)x Y:(double *)y Z:(double *)z forPoint:(size_t)point inCluster:(size_t)cluster;
+- (void)getObjectCentroidX:(double *)x Y:(double *)y Z:(double *)z forCluster:(size_t)cluster;
+- (double)getObjectRadiusForCluster:(size_t)cluster;
 
 @end

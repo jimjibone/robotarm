@@ -7,6 +7,7 @@
 //
 
 #include "JRConvexHull.h"
+#include <boost/thread/thread_time.hpp>
 
 // 2D cross product of OA and OB vectors, i.e. z-component of their 3D cross product.
 // Returns a positive value, if OAB makes a counter-clockwise turn,
@@ -81,6 +82,7 @@ void ConvexHull::setData(vector<PointXYZ> *newCloud, PointIndices *newIndices, P
 void ConvexHull::run()
 {
 	cout << "ConvexHull::run(). Starting." << endl;
+	boost::posix_time::ptime start = boost::posix_time::microsec_clock::local_time();
 	
 	// Clear all the previously stored convex
 	// hull points, if there are any.
@@ -122,5 +124,7 @@ void ConvexHull::run()
 		hull_indices.indices.emplace_back(hull_points[i].index);
 	}
 	
-	cout << "ConvexHull::run(). Ended with " << hull_indices.indices.size() << " hull points." << endl;
+	boost::posix_time::ptime stop = boost::posix_time::microsec_clock::local_time();
+	boost::posix_time::time_duration diff = stop - start;
+	cout << "ConvexHull::run(). Ended with " << hull_indices.indices.size() << " hull points." << " Taken " << diff.total_microseconds() << " us." << endl;
 }

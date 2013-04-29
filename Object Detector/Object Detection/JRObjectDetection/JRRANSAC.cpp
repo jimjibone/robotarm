@@ -8,6 +8,7 @@
 //
 
 #include "JRRANSAC.h"
+#include <boost/thread/thread_time.hpp>
 
 // Function to get the plane equation from 3 points in 3D space.
 PlaneCoefficients calculatePlane(PointXYZ a, PointXYZ b, PointXYZ c) {
@@ -115,6 +116,7 @@ void RANSAC::run()
 	vector<PlaneCoefficients> planes;
 	
 	cout << "RANSAC::run(). Starting." << endl;
+	boost::posix_time::ptime start = boost::posix_time::microsec_clock::local_time();
 	
 	// Grab 3 random points at a time and then determine the plane equation.
 	for (size_t i = 0; i < random_points.size(); i+=3) {
@@ -126,7 +128,9 @@ void RANSAC::run()
 		
 	}
 	
-	cout << "RANSAC::run(). Ended plane generation and found " << planes.size() << " planes." << endl;
+	boost::posix_time::ptime mid = boost::posix_time::microsec_clock::local_time();
+	boost::posix_time::time_duration middiff = mid - start;
+	cout << "RANSAC::run(). Ended plane generation and found " << planes.size() << " planes." << " Taken " << middiff.total_microseconds() << " us." << endl;
 	
 	// Iterate through all the valid planes and process with all the
 	// non random points. Determine the plane confidences.
@@ -159,7 +163,9 @@ void RANSAC::run()
 		}
 	}
 	
-	cout << "RANSAC::run(). Found the confident plane with a confidence of " << highest_confidence << "." << endl;
+	boost::posix_time::ptime stop = boost::posix_time::microsec_clock::local_time();
+	boost::posix_time::time_duration diff = stop - mid;
+	cout << "RANSAC::run(). Found the confident plane with a confidence of " << highest_confidence << "." << " Taken " << diff.total_microseconds() << " us." << endl;
 	
 	// Now that the confident plane has been found, set the
 	// confident plane.

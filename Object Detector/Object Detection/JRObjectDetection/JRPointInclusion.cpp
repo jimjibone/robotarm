@@ -7,6 +7,7 @@
 //
 
 #include "JRPointInclusion.h"
+#include <boost/thread/thread_time.hpp>
 
 PointXY projectToPlane(PointXYZ point, PlaneCoefficients plane)
 {
@@ -84,6 +85,11 @@ bool PointInclusion::pointWithinHull(PointXY point)
 	return result;
 }
 
+void PointInclusion::setMinDistance(double newMin)
+{
+	min_distance = newMin;
+}
+
 void PointInclusion::setCloud(vector<PointXYZ> *newCloud)
 {
 	cloud = newCloud;
@@ -131,8 +137,10 @@ void PointInclusion::excludeIndices(PointIndices *exclude)
 void PointInclusion::run()
 {
 	cout << "PointInclusion::run(). Starting." << endl;
+	boost::posix_time::ptime start = boost::posix_time::microsec_clock::local_time();
 	
 	included_indices.indices.erase(included_indices.indices.begin(), included_indices.indices.end());
+	flattened_points.erase(flattened_points.begin(), flattened_points.end());
 	
 	// Iterate through every point in the cloud.
 	// Check whether the current index is in the excluded indices.
@@ -162,7 +170,7 @@ void PointInclusion::run()
 			double dist = pointPlaneDistance((*cloud)[i], *plane);
 			dist = (invert_plane == true) ? -dist : dist;
 			
-			if (dist >= 0 && dist < distance_tolerance) {
+			if (dist >= min_distance && dist < distance_tolerance) {
 				
 				// This point is within the tolerance and above the table!
 				// Now find out if the projected point is within the hull.
@@ -173,6 +181,9 @@ void PointInclusion::run()
 					// included_indices.
 					included_indices.indices.emplace_back(i);
 					
+					// Add the flattened (x,y only) point for later use.
+					flattened_points.emplace_back(thisPoint);
+					
 				}
 				
 			}
@@ -181,6 +192,8 @@ void PointInclusion::run()
 		
 	}
 	
-	cout << "PointInclusion::run(). Ended with " << included_indices.indices.size() << " points inside the area." << endl;
+	boost::posix_time::ptime stop = boost::posix_time::microsec_clock::local_time();
+	boost::posix_time::time_duration diff = stop - start;
+	cout << "PointInclusion::run(). Ended with " << included_indices.indices.size() << " points inside the area." << " Taken " << diff.total_microseconds() << " us." << endl;
 }
 

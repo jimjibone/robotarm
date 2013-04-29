@@ -108,6 +108,12 @@ struct PointCloud {
 	}
 };
 
+struct Object {
+	PointIndices indices;
+	PointXYZ centroid;
+	double radius;
+};
+
 
 #else
 

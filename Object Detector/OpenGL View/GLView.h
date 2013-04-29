@@ -54,8 +54,11 @@
 	PointXYZ *_dominant_plane_hull_points;
 	size_t _dominant_plane_hull_point_count;
 	
+	size_t _objects_count;
 	PointXYZ *_objects_points;
-	size_t _objects_points_count;
+	size_t *_objects_points_counts;
+	PointXYZ *_objects_centroids;
+	double *_objects_radii;
     
     // 3D navigation
     NSPoint _lastPos, _lastPosRight;

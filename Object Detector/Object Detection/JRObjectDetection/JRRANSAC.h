@@ -11,7 +11,7 @@
 #define __Object_Detector__JRRANSAC__
 
 #define RANDOM_POINT_DIVISOR 20	// 5% of the points will be used for random points.
-#define POINT_ITERATION_STEP 10 // When comparing planes, use this step amount between points.
+#define POINT_ITERATION_STEP 20 // When comparing planes, use this step amount between points.
 
 #include <iostream>
 #include <vector>

@@ -85,6 +85,10 @@
 														   selector:@selector(objectDetectorNotificationWasReceived:)
 															   name:nObjectDetectionDidCompleteDominantPlaneDetection
 															 object:nil];
+	[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self
+														   selector:@selector(objectDetectorNotificationWasReceived:)
+															   name:nObjectDetectionDidCompleteObjectClustering
+															 object:nil];
 	
 	// Kinect Connection Notification
 	[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self
@@ -110,6 +114,9 @@
 																object:nil];
 	[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self
 																  name:nObjectDetectionDidCompleteDominantPlaneDetection
+																object:nil];
+	[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self
+																  name:nObjectDetectionDidCompleteObjectClustering
 																object:nil];
 	
 	// Kinect Controller Notifications
@@ -143,6 +150,22 @@
 		fieldsNeedReset = YES;
 		[self.dominantPlaneConfidence setStringValue:[[[aNotification userInfo] objectForKey:@"confidence"] stringValue]];
 		[self.dominantPlaneHullPoints setStringValue:[[[aNotification userInfo] objectForKey:@"hullPointsCount"] stringValue]];
+	}
+	if ([[aNotification name] isEqualToString:nObjectDetectionDidCompleteObjectClustering])
+	{
+		NSArray *clusters = [[aNotification userInfo] objectForKey:@"clusters"];
+		[self.kmeansClusters setStringValue:[@([clusters count]) stringValue]];
+		NSTextView *textView = [self.kmeansText documentView];
+		
+		NSString *text = @"";
+		for (NSDictionary *dict in clusters) {
+			text = [text stringByAppendingFormat:@"Cluster %ld contains %ld points and radius is %.1f mm.\n",
+					[[dict objectForKey:@"index"] integerValue],
+					[[dict objectForKey:@"count"] integerValue],
+					[[dict objectForKey:@"radius"] doubleValue]];
+		}
+		
+		[textView setString:text];
 	}
 }
 - (void)kinectControllerNotificationWasReceived:(NSNotification*)aNotification {

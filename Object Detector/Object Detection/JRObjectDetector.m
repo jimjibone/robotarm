@@ -184,6 +184,11 @@
 		[objectDetector findDominantPlane];
 		[objectDetector segmentObjects];
 		
+		NSMutableArray *clusters = [[NSMutableArray alloc] init];
+		for (NSUInteger i = 0; i < [objectDetector getObjectClustersCount]; i++) {
+			[clusters addObject:@{@"index": @(i), @"count": @([objectDetector getObjectPointCountForCluster:i]), @"radius": @([objectDetector getObjectRadiusForCluster:i])}];
+		}
+		
 		objectDetectionComplete = YES;
 		[[[NSWorkspace sharedWorkspace] notificationCenter] postNotificationName:nObjectDetectionDidCompletePlaneClusterDetection
 																		  object:self
@@ -191,6 +196,10 @@
 		[[[NSWorkspace sharedWorkspace] notificationCenter] postNotificationName:nObjectDetectionDidCompleteDominantPlaneDetection
 																		  object:self
 																		userInfo:@{@"confidence": @([objectDetector getDominantPlaneConfidence]), @"hullPointsCount": @([objectDetector getDominantPlaneHullPointCount])}];
+		[[[NSWorkspace sharedWorkspace] notificationCenter] postNotificationName:nObjectDetectionDidCompleteObjectClustering
+																		  object:self
+																		userInfo:@{@"clusters": clusters}];
+		
 		[[[NSWorkspace sharedWorkspace] notificationCenter] postNotificationName:nObjectDetectorDidCompleteObjectDetection
 																		  object:self];
 		

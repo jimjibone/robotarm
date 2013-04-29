@@ -30,9 +30,10 @@ NSString *const dKinectControllerLEDColour			= @"dKinectControllerLEDColour";
 
 
 // Object Detector Notifications
-NSString *const nObjectDetectorDidCompleteObjectDetection		= @"nObjectDetectorDidCompleteObjectDetection";
+NSString *const nObjectDetectorDidCompleteObjectDetection			= @"nObjectDetectorDidCompleteObjectDetection";
 
-NSString *const nObjectDetectionDidCompletePlaneClusterDetection = @"nObjectDetectionDidCompletePlaneClusterDetection";
-NSString *const nObjectDetectionDidCompleteDominantPlaneDetection = @"nObjectDetectionDidCompleteDominantPlaneDetection";
+NSString *const nObjectDetectionDidCompletePlaneClusterDetection	= @"nObjectDetectionDidCompletePlaneClusterDetection";
+NSString *const nObjectDetectionDidCompleteDominantPlaneDetection	= @"nObjectDetectionDidCompleteDominantPlaneDetection";
+NSString *const nObjectDetectionDidCompleteObjectClustering			= @"nObjectDetectionDidCompleteObjectClustering";
 
 @end

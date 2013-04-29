@@ -632,37 +632,68 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 }
 - (void)drawObjectsPoints
 {
-	if (_objects_points_count > 0) {
+	if (_objects_count > 0) {
 		
-		uint coloursSize = 8;
-		float colours[8][3] = {
-			{1.0, 0.0, 0.0},
-			{0.0, 1.0, 0.0},
-			{0.0, 0.0, 1.0},
-			{1.0, 1.0, 0.0},
-			{0.0, 1.0, 1.0},
-			{1.0, 0.0, 1.0},
-			{1.0, 1.0, 1.0},
-			{0.9, 0.9, 0.9}
+		uint coloursSize = 7;
+		float colours[7][3] = {
+			{0.6, 0.0, 0.0},
+			{0.0, 0.6, 0.0},
+			{0.0, 0.0, 0.6},
+			{0.6, 0.6, 0.0},
+			{0.0, 0.6, 0.6},
+			{0.6, 0.0, 0.6},
+			{0.6, 0.6, 0.6}
 		};
-		uint col = 7;//arc4random_uniform(coloursSize);
 		
 		GLfloat prevPointSize = 0;
 		glGetFloatv(GL_POINT_SIZE, &prevPointSize);
-		glPointSize(4);
+		glPointSize(2);
 		
 		glBegin(GL_POINTS);
 		
-		for (size_t i = 0; i < _objects_points_count; i++) {
+		size_t currentPos = 0;
+		for (size_t o = 0; o < _objects_count; o++) {
 			
-			glColor4f(colours[col][0], colours[col][1], colours[col][2], 0.6);
+			glColor4f(colours[(o % coloursSize)][0], colours[(o % coloursSize)][1], colours[(o % coloursSize)][2], 0.6);
 			
-			glVertex3d(_objects_points[i].x, -_objects_points[i].y, -_objects_points[i].z);
+			for (size_t p = 0; p < _objects_points_counts[o]; p++) {
+				
+				glVertex3d(_objects_points[currentPos].x, -_objects_points[currentPos].y, -_objects_points[currentPos].z+1);
+				currentPos++;
+			}
 			
 		}
 		
 		glEnd();
 		glPointSize(prevPointSize);
+		
+	}
+}
+- (void)drawObjectsRadii
+{
+	if (_objects_count > 0) {
+		
+		// Draw circle showing object radius.
+		GLfloat prevLineWidth = 0;
+		glGetFloatv(GL_LINE_WIDTH, &prevLineWidth);
+		glLineWidth(2);
+		
+		
+		glColor4f(1, 1, 0, 0.6);
+		for (int i = 0; i < _objects_count; i++) {
+			
+			glBegin(GL_LINE_LOOP);
+			for (int angle = 0; angle < 360; angle += 5) {
+				glVertex3d(_objects_centroids[i].x + sin(angle*3.14159/180) * _objects_radii[i],
+						   -_objects_centroids[i].y - cos(angle*3.14159/180) * _objects_radii[i],
+						   -_objects_centroids[i].z);
+			}
+			glEnd();
+			
+		}
+		
+		
+		glLineWidth(prevLineWidth);
 		
 	}
 }
@@ -808,6 +839,7 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 		if (_drawSegmentedPlanes)	[self drawSegmentedPlanesPoints];
 		if (_drawDominantPlane)		[self drawDominantPlane];
 		if (_drawObjectsPoints)		[self drawObjectsPoints];
+		if (_drawObjectsPoints)		[self drawObjectsRadii];
 		
 		glDisable(GL_POINT_SMOOTH);
 		glDisable(GL_LINE_SMOOTH);
@@ -943,21 +975,21 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 	
 	free(_segmented_planes_points_counts);
 	_segmented_planes_points_counts = (size_t*)malloc(_segmented_planes_count * sizeof(size_t));
-	size_t total_count = 0;
+	size_t total_planes_points_count = 0;
 	for (size_t i = 0; i < _segmented_planes_count; i++) {
 		_segmented_planes_points_counts[i] = [objectDetector getNumberOfIndicesInPlaneCluster:i];
-		total_count += [objectDetector getNumberOfIndicesInPlaneCluster:i];
+		total_planes_points_count += [objectDetector getNumberOfIndicesInPlaneCluster:i];
 	}
 	
 	free(_segmented_planes_points);
-	_segmented_planes_points = (PointXYZ*)malloc(total_count * sizeof(PointXYZ));
-	size_t currentPos = 0;
+	_segmented_planes_points = (PointXYZ*)malloc(total_planes_points_count * sizeof(PointXYZ));
+	size_t currentPlanePointPos = 0;
 	for (size_t i = 0; i < _segmented_planes_count; i++) {
 		
 		for (size_t j = 0; j < _segmented_planes_points_counts[i]; j++) {
 			
-			[objectDetector getX:&_segmented_planes_points[currentPos].x Y:&_segmented_planes_points[currentPos].y Z:&_segmented_planes_points[currentPos].z forPoint:j forPlaneCluster:i];
-			currentPos++;
+			[objectDetector getX:&_segmented_planes_points[currentPlanePointPos].x Y:&_segmented_planes_points[currentPlanePointPos].y Z:&_segmented_planes_points[currentPlanePointPos].z forPoint:j forPlaneCluster:i];
+			currentPlanePointPos++;
 		}
 		
 	}
@@ -970,13 +1002,31 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 	for (size_t i = 0; i < _dominant_plane_hull_point_count; i++) {
 		[objectDetector getDominantPlaneHullPointX:&_dominant_plane_hull_points[i].x Y:&_dominant_plane_hull_points[i].y Z:&_dominant_plane_hull_points[i].z forPoint:i];
 	}
+
 	
-	
-	_objects_points_count = [objectDetector getObjectsPointsCount];
+	_objects_count = [objectDetector getObjectClustersCount];
 	free(_objects_points);
-	_objects_points = (PointXYZ*)malloc(_objects_points_count * sizeof(PointXYZ));
-	for (size_t i = 0; i < _objects_points_count; i++) {
-		[objectDetector getObjectsX:&_objects_points[i].x Y:&_objects_points[i].y Z:&_objects_points[i].z forPoint:i];
+	free(_objects_points_counts);
+	free(_objects_centroids);
+	free(_objects_radii);
+	_objects_points_counts = (size_t*)malloc(_objects_count * sizeof(size_t));
+	_objects_centroids = (PointXYZ*)malloc(_objects_count * sizeof(PointXYZ));
+	_objects_radii = (double*)malloc(_objects_count * sizeof(double));
+	size_t total_objects_points_count = 0;
+	for (size_t i = 0; i < _objects_count; i++) {
+		_objects_points_counts[i] = [objectDetector getObjectPointCountForCluster:i];
+		total_objects_points_count += [objectDetector getObjectPointCountForCluster:i];
+		[objectDetector getObjectCentroidX:&_objects_centroids[i].x Y:&_objects_centroids[i].y Z:&_objects_centroids[i].z forCluster:i];
+		_objects_radii[i] = [objectDetector getObjectRadiusForCluster:i];
+	}
+	
+	_objects_points = (PointXYZ*)malloc(total_objects_points_count * sizeof(PointXYZ));
+	size_t current_objects_points_pos = 0;
+	for (size_t o = 0; o < _objects_count; o++) {
+		for (size_t p = 0; p < _objects_points_counts[o]; p++) {
+			[objectDetector getObjectX:&_objects_points[current_objects_points_pos].x Y:&_objects_points[current_objects_points_pos].y Z:&_objects_points[current_objects_points_pos].z forPoint:p inCluster:o];
+			current_objects_points_pos++;
+		}
 	}
 	
 	

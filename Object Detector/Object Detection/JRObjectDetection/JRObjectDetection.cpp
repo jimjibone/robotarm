@@ -11,6 +11,8 @@
 #include "JRRANSAC.h"
 #include "JRConvexHull.h"
 #include "JRPointInclusion.h"
+#include "JRKMeansClustering.h"
+#include <boost/thread/thread_time.hpp>
 
 #pragma mark - 
 #pragma mark Helping Functions
@@ -154,6 +156,7 @@ void ObjectDetection::calculateSurfaceNormals()
 {
 	if (validDepthData) {
 		cout << "calculateSurfaceNormals started." << endl;
+		boost::posix_time::ptime start = boost::posix_time::microsec_clock::local_time();
 		
 		// Iterate through all the points in the input_cloud and calcualte
 		// the surface normals of each point.
@@ -186,7 +189,9 @@ void ObjectDetection::calculateSurfaceNormals()
 			//} else { count++; }
 		}
 		
-		cout << "calculateSurfaceNormals completed." << endl;
+		boost::posix_time::ptime stop = boost::posix_time::microsec_clock::local_time();
+		boost::posix_time::time_duration diff = stop - start;
+		cout << "calculateSurfaceNormals completed." << " Taken " << diff.total_microseconds() << " us." << endl;
 	}/* END validDepthData */
 }
 
@@ -202,6 +207,7 @@ void ObjectDetection::segmentPlanes()
 	
 	if (validDepthData) {
 		cout << "segmentPlanes started." << endl;
+		boost::posix_time::ptime start = boost::posix_time::microsec_clock::local_time();
 		
 		// Remove all the current points from the plane_cluster_nodes and reserve the size we need.
 		// Also, set all the node values to -1 to show that they are all unassigned.
@@ -287,7 +293,9 @@ void ObjectDetection::segmentPlanes()
 			
 		}
 		
-		cout << "segmentPlanes completed. Found " << current_segment_id << "." << endl;
+		boost::posix_time::ptime mid = boost::posix_time::microsec_clock::local_time();
+		boost::posix_time::time_duration middiff = mid - start;
+		cout << "segmentPlanes completed. Found " << current_segment_id << "." << " Taken " << middiff.total_microseconds() << " us." << endl;
 		
 		// FILTERING
 		
@@ -319,7 +327,10 @@ void ObjectDetection::segmentPlanes()
 				plane_clusters.emplace_back(all_clusters.at(i));
 			}
 		}
-		cout << "segmentPlanes Filtered clusters down to " << bigClusterCount << " clusters. new plane_clusters.size = " << plane_clusters.size() << "." << endl;
+		
+		boost::posix_time::ptime stop = boost::posix_time::microsec_clock::local_time();
+		boost::posix_time::time_duration diff = stop - mid;
+		cout << "segmentPlanes Filtered clusters down to " << bigClusterCount << " clusters. new plane_clusters.size = " << plane_clusters.size() << "." << " Taken " << diff.total_microseconds() << " us." << endl;
 		
 		// Find the normal coefficients for the plane_clusters.
 		// Do this by using the normal coefficients from the mode point in the cluster.
@@ -335,6 +346,9 @@ void ObjectDetection::segmentPlanes()
 void ObjectDetection::findDominantPlane()
 {
 	if (validDepthData) {
+		
+		cout << "findDominantPlane started." << endl;
+		boost::posix_time::ptime start = boost::posix_time::microsec_clock::local_time();
 		
 		// Now find the plane cluster that has the most
 		// points and is most centre within the frame.
@@ -403,6 +417,10 @@ void ObjectDetection::findDominantPlane()
 			
 		}
 		
+		boost::posix_time::ptime mid = boost::posix_time::microsec_clock::local_time();
+		boost::posix_time::time_duration middiff = mid - start;
+		cout << "findDominantPlane found dominant plane." << " Taken " << middiff.total_microseconds() << " us." << endl;
+		
 		// Now that we've found the dominant plane, find out its plane
 		// equation and perform the convex hull of the points, to find
 		// its bounds.
@@ -422,6 +440,10 @@ void ObjectDetection::findDominantPlane()
 			
 		}
 		
+		boost::posix_time::ptime stop = boost::posix_time::microsec_clock::local_time();
+		boost::posix_time::time_duration diff = stop - mid;
+		cout << "findDominantPlane completed." << " Taken " << diff.total_microseconds() << " us." << endl;
+		
 	}/* END validDepthData */
 	
 }
@@ -430,6 +452,8 @@ void ObjectDetection::segmentObjects()
 {
 	if (validDepthData) {
 		
+		objects.erase(objects.begin(), objects.end());
+		
 		// What needs to be done:
 		// - Get the indices of all the points above the table.
 		// - Do a K-Means clustering of the points to find the object clusters.
@@ -437,23 +461,37 @@ void ObjectDetection::segmentObjects()
 		
 		// Get the indices of all the points above the table.
 		PointInclusion inclusion (500.0);	// Set the tolerance to include points that are up to 500mm above the table.
+		inclusion.setMinDistance(10.0);		// Set the minimum distance off the plane to 10mm. All objects less than will be ignored.
 		inclusion.setCloud(&input_cloud);
 		inclusion.setPlane(&dominant_plane.coefficients);
 		inclusion.setHull(&dominant_plane.hull);
 		// We can assume that dominant plane points are not part of the objects.
 		inclusion.excludeIndices(&plane_clusters[dominant_plane.index]);
 		inclusion.run();
-		object_points = inclusion.included_indices;
+		objects_points = inclusion.included_indices;
 		
 		// Do a K-Means clustering of the points to find the object clusters.
+		KMeansClustering kmeans;
+		kmeans.setCloud(&input_cloud);
+		kmeans.useIndices(objects_points);
+		kmeans.setClusterCount(KMEANS_CLUSTER_COUNT);
+		kmeans.run();
+		kmeans.filterClusters(KMEANS_FILTER_DISTANCE);
 		
+		// Get all the objects info.
+		objects.resize(kmeans.clusters.size());
+		for (size_t o = 0; o < kmeans.clusters.size(); o++) {
+			objects[o].indices.indices = kmeans.clusters[o].indices;
+			objects[o].centroid = kmeans.clusters_centroids[o];
+			objects[o].radius = kmeans.clusters_radii[o];
+		}
 		
 	}/* END validDepthData */
 }
 
 // DONE: ABOVE: Also get the plane equation and convex hull of the table (dominant) plane.
-// THEN: Get the indices of all the points above the table.
-// THEN: Do K-Means clustering to find the object clouds indices.
+// DONE: THEN: Get the indices of all the points above the table.
+// DONE: THEN: Do K-Means clustering to find the object clouds indices.
 // THEN: Maybe to some shape-fitting and store the diameter/position of objects on table.
 
 

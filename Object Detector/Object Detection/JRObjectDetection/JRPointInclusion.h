@@ -26,6 +26,7 @@ class PointInclusion {
 	PointIndices excluded_indices;
 	
 	bool invert_plane;
+	double min_distance;
 	double distance_tolerance;
 	
 	bool pointWithinHull(PointXY point);
@@ -33,10 +34,12 @@ class PointInclusion {
 public:
 	
 	PointIndices included_indices;
+	vector<PointXY> flattened_points;
 	
-	PointInclusion(double _tolerance) : distance_tolerance(_tolerance) { invert_plane = false; };
+	PointInclusion(double _tolerance) : distance_tolerance(_tolerance) { invert_plane = false; min_distance = 0; };
 	//~PointInclusion();
 	
+	void setMinDistance(double newMin);
 	void setCloud(vector<PointXYZ> *newCloud);
 	void setPlane(PlaneCoefficients *newPlane);
 	void setHull(PointIndices *newHull);

@@ -145,21 +145,35 @@ public:
 
 
 
-#pragma mark -
-#pragma mark Get Object Point Methods
 
-- (size_t)getObjectsPointsCount
+#pragma mark -
+#pragma mark Get Object Cluster Methods
+
+- (size_t)getObjectClustersCount
 {
-	return self.cpp->wrapper.object_points.indices.size();
+	return self.cpp->wrapper.objects.size();
 }
-- (void)getObjectsX:(double *)x Y:(double *)y Z:(double *)z forPoint:(size_t)point
+- (size_t)getObjectPointCountForCluster:(size_t)cluster
 {
-	size_t index = self.cpp->wrapper.object_points.indices[point];
+	return self.cpp->wrapper.objects[cluster].indices.indices.size();
+}
+- (void)getObjectX:(double *)x Y:(double *)y Z:(double *)z forPoint:(size_t)point inCluster:(size_t)cluster
+{
+	size_t index = self.cpp->wrapper.objects[cluster].indices.indices[point];
 	*x = self.cpp->wrapper.input_cloud[index].x;
 	*y = self.cpp->wrapper.input_cloud[index].y;
 	*z = self.cpp->wrapper.input_cloud[index].z;
 }
-
+- (void)getObjectCentroidX:(double *)x Y:(double *)y Z:(double *)z forCluster:(size_t)cluster
+{
+	*x = self.cpp->wrapper.objects[cluster].centroid.x;
+	*y = self.cpp->wrapper.objects[cluster].centroid.y;
+	*z = self.cpp->wrapper.objects[cluster].centroid.z;
+}
+- (double)getObjectRadiusForCluster:(size_t)cluster
+{
+	return self.cpp->wrapper.objects[cluster].radius;
+}
 
 
 @end
