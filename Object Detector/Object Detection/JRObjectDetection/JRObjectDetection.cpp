@@ -427,13 +427,13 @@ void ObjectDetection::findDominantPlane()
 		
 		if (dominant_plane.index != DOMINANT_PLANE_UNASSIGNED) {
 			
-			RANSAC sac (10.0);	// ransac with 10.0mm distance tolerance.
+			RANSAC sac (RANSAC_DISTANCE_TOLERANCE);	// ransac with mm distance tolerance.
 			sac.setData(&input_cloud, &(plane_clusters[dominant_plane.index]));
 			sac.run();
 			dominant_plane.confidence = sac.confidence;
 			dominant_plane.coefficients = sac.coefficients;
 			
-			ConvexHull hull (20.0);	// convex hull with 20.0mm distance tolerance.
+			ConvexHull hull (CONVEXHULL_DISTANCE_TOLERANCE);	// convex hull with mm distance tolerance.
 			hull.setData(&input_cloud, &plane_clusters[dominant_plane.index], &dominant_plane.coefficients);
 			hull.run();
 			dominant_plane.hull = hull.hull_indices;
@@ -460,8 +460,8 @@ void ObjectDetection::segmentObjects()
 		// - Do some basic shape fitting of objects to find the diameter, height and location.
 		
 		// Get the indices of all the points above the table.
-		PointInclusion inclusion (500.0);	// Set the tolerance to include points that are up to 500mm above the table.
-		inclusion.setMinDistance(10.0);		// Set the minimum distance off the plane to 10mm. All objects less than will be ignored.
+		PointInclusion inclusion (INCLUSION_MAX_HEIGHT);	// Set the tolerance to include points that are up to 500mm above the table.
+		inclusion.setMinDistance(INCLUSION_MIN_HEIGHT);		// Set the minimum distance off the plane to 10mm. All objects less than will be ignored.
 		inclusion.setCloud(&input_cloud);
 		inclusion.setPlane(&dominant_plane.coefficients);
 		inclusion.setHull(&dominant_plane.hull);
@@ -492,6 +492,6 @@ void ObjectDetection::segmentObjects()
 // DONE: ABOVE: Also get the plane equation and convex hull of the table (dominant) plane.
 // DONE: THEN: Get the indices of all the points above the table.
 // DONE: THEN: Do K-Means clustering to find the object clouds indices.
-// THEN: Maybe to some shape-fitting and store the diameter/position of objects on table.
+// KINDA DONE: THEN: Maybe to some shape-fitting and store the diameter/position of objects on table.
 
 

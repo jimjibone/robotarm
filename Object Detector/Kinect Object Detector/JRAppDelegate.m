@@ -184,6 +184,7 @@
 	}
 	if ([[aNotification name] isEqualToString:nKinectControllerDidUpdateHardware]) {
 		[self.kinectTilt setFloatValue:[[[aNotification userInfo] objectForKey:dKinectControllerOrientation] floatValue]];
+		[self.kinectAngle setStringValue:[NSString stringWithFormat:@"%.1f", [[[aNotification userInfo] objectForKey:dKinectControllerOrientation] floatValue]]];
 	}
 }
 

@@ -115,3 +115,53 @@ PLANE_CLUSTER_THRESHOLD			| 2000
 
 
 
+More Settings To Use
+--------------------
+
+Added the settings:
+
+Value							| Amount
+--------------------------------|-------------
+RANSAC_DISTANCE_TOLERANCE		| 10.0
+CONVEXHULL_DISTANCE_TOLERANCE	| 20.0
+INCLUSION_MAX_HEIGHT			| 500.0
+INCLUSION_MIN_HEIGHT			| 10.0
+KMEANS_CLUSTER_COUNT			| 2
+KMEANS_FILTER_DISTANCE			| 100
+
+
+
+
+
+Test Set 4 (After addition of Object Segmentation)
+----------
+
+Many more features have now been added to the object detection process. There is now the inclusion of all the functions called in `ObjectDetection::segmentObjects()`. These work quite simply and do not require tweaking settings in order to get optimal performance. However
+
+###With Mug & Orange Before Object Segmentation Tuning
+![Mug & Orange Before Segmentation](test4a.png)
+![Mug & Orange](test4b.png)
+
+It is apparent that the k-means clustering is including too many points (noise) in its final clusters. This could be due to the inclusion stage including too many points that are part of the table, or it could be that the KMEANS_FILTER_DISTANCE is too high.
+
+###Begin Tuning
+
+![By Altering Filter Distance](test4c.png)
+
+
+Final tuning settings:
+
+Value							| Amount
+--------------------------------|-------------
+NORMAL_CALC_POINT_SPREAD		| 10
+COMPARE_NORMALS_DISTANCE_THRESH	| 10.0
+COMPARE_NORMALS_ANGLE_THRESH	| PI_VALUE/26
+PLANE_NEIGHBOUR_SEARCH_DIST		| 3
+PLANE_CLUSTER_THRESHOLD			| 2000
+RANSAC_DISTANCE_TOLERANCE		| 20.0
+CONVEXHULL_DISTANCE_TOLERANCE	| 20.0
+INCLUSION_MAX_HEIGHT			| 500.0
+INCLUSION_MIN_HEIGHT			| 15.0
+KMEANS_CLUSTER_COUNT			| 3
+KMEANS_FILTER_DISTANCE			| 50.0
+

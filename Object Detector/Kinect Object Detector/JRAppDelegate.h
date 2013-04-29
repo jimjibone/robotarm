@@ -26,6 +26,7 @@
 @property (assign) IBOutlet NSPopover *connectKinectPopover;
 @property (assign) IBOutlet NSButton *resetTableDetectBtn;
 @property (assign) IBOutlet NSSlider *kinectTilt;
+@property (assign) IBOutlet NSTextField *kinectAngle;
 
 // Object detection pane
 @property (assign) IBOutlet NSTextField *planeClustersFound;
