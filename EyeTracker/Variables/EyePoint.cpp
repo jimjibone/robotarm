@@ -95,7 +95,7 @@ void AvEyePointD::AddPoint(EyePointD NewPoint)
 {
     Points[NumAt] = NewPoint;
     NumAt++;
-    if (NumAt < MaxNum)
+    if (NumAt >= MaxNum)
     {
         NumAt = 0;
         First = false;
@@ -107,25 +107,25 @@ EyePointD AvEyePointD::GetCurAverage()
     if (First)
     {
         double Xs = 0, Ys = 0;
-        for (int cnt = 0; cnt <= NumAt; cnt++)
+        for (int cnt = 0; cnt < NumAt; cnt++)
         {
             Xs += Points[cnt].GetX();
             Ys += Points[cnt].GetY();
         }
-        Xs /= (NumAt + 1);
-        Ys /= (NumAt + 1);
+        Xs /= NumAt;
+        Ys /= NumAt;
         return EyePointD(Xs, Ys);
     }
     else
     {
         double Xs = 0, Ys = 0;
-        for (int cnt = 0; cnt <= MaxNum; cnt++)
+        for (int cnt = 0; cnt < MaxNum; cnt++)
         {
             Xs += Points[cnt].GetX();
             Ys += Points[cnt].GetY();
         }
-        Xs /= (NumAt + 1);
-        Ys /= (NumAt + 1);
+        Xs /= MaxNum;
+        Ys /= MaxNum;
         return EyePointD(Xs, Ys);
     }
 }
