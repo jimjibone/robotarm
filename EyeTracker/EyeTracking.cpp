@@ -31,7 +31,7 @@ bool EyeTracking::Setup()
 void EyeTracking::Run()
 {
     if (!Setup())
-    return;
+        return;
 
     bool Carry = true;
     while (Carry)
@@ -109,10 +109,10 @@ bool EyeTracking::RunCommnad(char Com)
 void EyeTracking::RunBehind()
 {
     if (!Setup())
-    return;
+        return;
 
-        Running = true;
-        pthread_create(&bk_Runner, NULL, &bk_Working, (void*) this);
+    Running = true;
+    pthread_create(&bk_Runner, NULL, &bk_Working, (void*) this);
 }
 
 void EyeTracking::StopBehind()
@@ -136,6 +136,49 @@ void* EyeTracking::bk_Working(void* ptr)
         case 27:
             This->Running = false;
             return NULL;
+        case '1':
+            This->Img_Proc.ShowCaliWindow();
+            break;
+        case '2':
+            This->Img_Proc.HideCaliWindow();
+            break;
+        case 'a':
+        case 'A':
+            This->Tracker.ShowWindow();
+            break;
+        case 's':
+        case 'S':
+            This->Tracker.HideWindow();
+            break;
+        case 'q':
+        case 'Q':
+            This->Cam.ShowImage();
+            break;
+        case 'w':
+        case 'W':
+            This->Cam.HideImage();
+            break;
+        case ' ':
+            if (This->DiffFound & This->Cali.Calibrating())
+            {
+                if (!This->Cali.TakeCaliPoint(This->CurDiff))
+                {
+                    This->Calcs.UpdateCalibration(This->Cali.GetCalibrationPoints(), This->Cali.GetCalibrationLocations());
+                }
+            }
+            break;
+        case 'c':
+        case 'C':
+            This->Cali.StartCalibration();
+            break;
+        case 'n':
+        case 'N':
+            This->Calcs.ShowWindow();
+            break;
+        case 'm':
+        case 'M':
+            This->Calcs.HideWindow();
+            break;
         }
     }
 
