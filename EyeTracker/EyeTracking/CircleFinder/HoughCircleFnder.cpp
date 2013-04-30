@@ -262,7 +262,7 @@ void HoughCircleFnder::DrawEye(IplImage* Image)
         {
             cvCircle(Image, cvPoint(Locs.CircleCenter().GetXint(), Locs.CircleCenter().GetYint()), (int)Locs.GetIrisRadius(), CV_RGB(0,255,0), 2, 8, 0);
         }
-        cvCircle(Image, cvPoint(Locs.CircleCenter().GetXint(), Locs.CircleCenter().GetYint()), (int)Locs.GetPupilRadious(), CV_RGB(255,0,0), 2, 8, 0);
+        cvCircle(Image, cvPoint(Locs.CircleCenter().GetXint(), Locs.CircleCenter().GetYint()), (int)Locs.GetPupilRadius(), CV_RGB(255,0,0), 2, 8, 0);
         cvCircle(Image, cvPoint(Locs.CircleCenter().GetXint(), Locs.CircleCenter().GetYint()), 2, CV_RGB(0,0,255), -1);
     }
 }

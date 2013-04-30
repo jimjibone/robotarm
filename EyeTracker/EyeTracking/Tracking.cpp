@@ -4,11 +4,13 @@ Tracking::Tracking()
 {
     Running = false;
     ShowWind = false;
+    open = false;
 }
 
 Tracking::~Tracking()
 {
     HideWindow();
+    if (open) myFile.close();
 }
 
 void Tracking::Setup(int Width, int Height, PosUpdate Func, void* Data)
@@ -16,6 +18,9 @@ void Tracking::Setup(int Width, int Height, PosUpdate Func, void* Data)
     CircleFinder = HoughCircleFnder(Width, Height, false);
     UpdateFuncs = Func;
     SentData = Data;
+
+    myFile.open("TestData.txt", ios::out);
+    open = true;
 }
 
 void Tracking::Track(IplImage* Orig, IplImage* Image)
@@ -66,6 +71,22 @@ void* Tracking::bk_Process_Thread(void* Input)
         {
             This->GlintsFinder.DrawGlints(DispImg);
             This->CircleFinder.DrawEye(DispImg);
+        }
+
+        if (This->open)
+        {
+            This->myFile << This->CircleFinder.GetCircleLocation().CircleCenter().GetX() << "\t" <<
+            This->CircleFinder.GetCircleLocation().CircleCenter().GetY() << "\t" <<
+            This->CircleFinder.GetCircleLocation().GetPupilRadius() << "\t" <<
+            This->GlintsFinder.GetGlintLocation().GetMid().GetX() << "\t" <<
+            This->GlintsFinder.GetGlintLocation().GetMid().GetY() << "\n";
+        }
+    }
+    else
+    {
+        if (This->open)
+        {
+            This->myFile << "\n";
         }
     }
 

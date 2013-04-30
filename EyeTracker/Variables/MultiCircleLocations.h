@@ -27,7 +27,7 @@ public:
     EyeRectangle NextSearchRectangle();
 
     double GetIrisRadius();
-    double GetPupilRadious();
+    double GetPupilRadius();
 
     EyePointD CircleCenter();
 

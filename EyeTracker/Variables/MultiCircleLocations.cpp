@@ -132,7 +132,7 @@ double MultiCircleLocations::GetIrisRadius()
     return IrisRadius;
 }
 
-double MultiCircleLocations::GetPupilRadious()
+double MultiCircleLocations::GetPupilRadius()
 {
     return PupilRadius;
 }

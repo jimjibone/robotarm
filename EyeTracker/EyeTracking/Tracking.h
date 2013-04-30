@@ -2,6 +2,7 @@
 #define TRACKING_H
 
 #include <pthread.h>
+#include <fstream>
 #include <opencv/cv.h>
 #include <opencv/highgui.h>
 #include "CircleFinder/HoughCircleFnder.h"
@@ -45,6 +46,9 @@ private:
     GlintFinder GlintsFinder;
 
     AvEyePointD CircleAv, GlintAv;
+
+    bool open;
+    ofstream myFile;
 };
 
 #endif // TRACKING_H
