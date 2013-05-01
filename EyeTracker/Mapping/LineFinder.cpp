@@ -6,12 +6,6 @@ LineFinder::LineFinder()
     CaliDone = false;
     myFile.open("Mapping Data.txt", ios::out);
     open = true;
-
-    if (open)
-    {
-        myFile << "Calbration X\t\t\t\t Calibration Y\n";
-        myFile << "a\tb\tc\td\ta\tb\tc\td\n";
-    }
 }
 
 LineFinder::~LineFinder()
@@ -22,23 +16,23 @@ LineFinder::~LineFinder()
 void LineFinder::UpdateCalibration(EyeDifferance* Differances, EyePoint* Points)
 {
     PointXYZ P1X = PointXYZ(Points[0].GetX(), Points[0].GetY(), Differances[0].GetXDiff());
-    //PointXYZ P2X = PointXYZ(Points[1].GetX(), Points[1].GetY(), Differances[1].GetXDiff());
+    PointXYZ P2X = PointXYZ(Points[1].GetX(), Points[1].GetY(), Differances[1].GetXDiff());
     PointXYZ P3X = PointXYZ(Points[2].GetX(), Points[2].GetY(), Differances[2].GetXDiff());
-    //PointXYZ P4X = PointXYZ(Points[3].GetX(), Points[3].GetY(), Differances[3].GetXDiff());
-    //PointXYZ P5X = PointXYZ(Points[4].GetX(), Points[4].GetY(), Differances[4].GetXDiff());
-    //PointXYZ P6X = PointXYZ(Points[5].GetX(), Points[5].GetY(), Differances[5].GetXDiff());
+    PointXYZ P4X = PointXYZ(Points[3].GetX(), Points[3].GetY(), Differances[3].GetXDiff());
+    PointXYZ P5X = PointXYZ(Points[4].GetX(), Points[4].GetY(), Differances[4].GetXDiff());
+    PointXYZ P6X = PointXYZ(Points[5].GetX(), Points[5].GetY(), Differances[5].GetXDiff());
     PointXYZ P7X = PointXYZ(Points[6].GetX(), Points[6].GetY(), Differances[6].GetXDiff());
-    //PointXYZ P8X = PointXYZ(Points[7].GetX(), Points[7].GetY(), Differances[7].GetXDiff());
+    PointXYZ P8X = PointXYZ(Points[7].GetX(), Points[7].GetY(), Differances[7].GetXDiff());
     PointXYZ P9X = PointXYZ(Points[8].GetX(), Points[8].GetY(), Differances[8].GetXDiff());
 
     PointXYZ P1Y = PointXYZ(Points[0].GetX(), Points[0].GetY(), Differances[0].GetYDiff());
-    //PointXYZ P2Y = PointXYZ(Points[1].GetX(), Points[1].GetY(), Differances[1].GetYDiff());
+    PointXYZ P2Y = PointXYZ(Points[1].GetX(), Points[1].GetY(), Differances[1].GetYDiff());
     PointXYZ P3Y = PointXYZ(Points[2].GetX(), Points[2].GetY(), Differances[2].GetYDiff());
-    //PointXYZ P4Y = PointXYZ(Points[3].GetX(), Points[3].GetY(), Differances[3].GetYDiff());
-    //PointXYZ P5Y = PointXYZ(Points[4].GetX(), Points[4].GetY(), Differances[4].GetYDiff());
-    //PointXYZ P6Y = PointXYZ(Points[5].GetX(), Points[5].GetY(), Differances[5].GetYDiff());
+    PointXYZ P4Y = PointXYZ(Points[3].GetX(), Points[3].GetY(), Differances[3].GetYDiff());
+    PointXYZ P5Y = PointXYZ(Points[4].GetX(), Points[4].GetY(), Differances[4].GetYDiff());
+    PointXYZ P6Y = PointXYZ(Points[5].GetX(), Points[5].GetY(), Differances[5].GetYDiff());
     PointXYZ P7Y = PointXYZ(Points[6].GetX(), Points[6].GetY(), Differances[6].GetYDiff());
-    //PointXYZ P8Y = PointXYZ(Points[7].GetX(), Points[7].GetY(), Differances[7].GetYDiff());
+    PointXYZ P8Y = PointXYZ(Points[7].GetX(), Points[7].GetY(), Differances[7].GetYDiff());
     PointXYZ P9Y = PointXYZ(Points[8].GetX(), Points[8].GetY(), Differances[8].GetYDiff());
 
     PlaneCoefficients CoefX1 = getPlaneCoefficients(P1X, P3X, P7X);
@@ -63,6 +57,32 @@ void LineFinder::UpdateCalibration(EyeDifferance* Differances, EyePoint* Points)
 
     if (open)
     {
+        myFile << "Calibration Data X\n";
+        myFile << "X\tY\tX Diff\n";
+        myFile << P1X.x << "\t" << P1X.y << "\t" << P1X.z << "\n";
+        myFile << P2X.x << "\t" << P2X.y << "\t" << P2X.z << "\n";
+        myFile << P3X.x << "\t" << P3X.y << "\t" << P3X.z << "\n";
+        myFile << P4X.x << "\t" << P4X.y << "\t" << P4X.z << "\n";
+        myFile << P5X.x << "\t" << P5X.y << "\t" << P5X.z << "\n";
+        myFile << P6X.x << "\t" << P6X.y << "\t" << P6X.z << "\n";
+        myFile << P7X.x << "\t" << P7X.y << "\t" << P7X.z << "\n";
+        myFile << P8X.x << "\t" << P8X.y << "\t" << P8X.z << "\n";
+        myFile << P9X.x << "\t" << P9X.y << "\t" << P9X.z << "\n\n";
+
+        myFile << "Calibration Data Y\n";
+        myFile << "X\tY\tY Diff\n";
+        myFile << P1Y.x << "\t" << P1Y.y << "\t" << P1Y.z << "\n";
+        myFile << P2Y.x << "\t" << P2Y.y << "\t" << P2Y.z << "\n";
+        myFile << P3Y.x << "\t" << P3Y.y << "\t" << P3Y.z << "\n";
+        myFile << P4Y.x << "\t" << P4Y.y << "\t" << P4Y.z << "\n";
+        myFile << P5Y.x << "\t" << P5Y.y << "\t" << P5Y.z << "\n";
+        myFile << P6Y.x << "\t" << P6Y.y << "\t" << P6Y.z << "\n";
+        myFile << P7Y.x << "\t" << P7Y.y << "\t" << P7Y.z << "\n";
+        myFile << P8Y.x << "\t" << P8Y.y << "\t" << P8Y.z << "\n";
+        myFile << P9Y.x << "\t" << P9Y.y << "\t" << P9Y.z << "\n\n";
+
+        myFile << "Calbration X\t\t\t\t Calibration Y\n";
+        myFile << "a\tb\tc\td\ta\tb\tc\td\n";
         myFile << CoeX.a << "\t" << CoeX.b << "\t" << CoeX.c << "\t" << CoeX.d << "\t" <<
         CoeY.a << "\t" << CoeY.b << "\t" << CoeY.c << "\t" << CoeY.d << "\n\n";
         myFile << "Output\n";

@@ -15,7 +15,7 @@ Tracking::~Tracking()
 
 void Tracking::Setup(int Width, int Height, PosUpdate Func, void* Data)
 {
-    CircleFinder = HoughCircleFnder(Width, Height, true);
+    CircleFinder = HoughCircleFnder(Width, Height, false);
     UpdateFuncs = Func;
     SentData = Data;
 
