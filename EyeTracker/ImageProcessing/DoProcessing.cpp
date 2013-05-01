@@ -5,6 +5,7 @@ DoProcessing::DoProcessing()
     ShowWind = false;
     Running = false;
     Img_proc = ImagePlaying(120, 150);
+    //Img_proc = ImagePlaying(100, 110);
 }
 
 DoProcessing::~DoProcessing()

@@ -8,6 +8,9 @@
 #include "../Common/WindowsSizer.h"
 #include <opencv/cv.h>
 #include <opencv/highgui.h>
+#include <fstream>
+
+using namespace std;
 
 class LineFinder
 {
@@ -31,6 +34,9 @@ private:
     WindowSizer Sizer;
 
     PlaneCoefficients CoeY, CoeX;
+
+    bool open;
+    ofstream myFile;
 };
 
 #endif // LINEFINDER_H

@@ -42,8 +42,8 @@ void EyeTracking::Run()
                 Img_Proc.GetNumWindows() +
                 Calcs.GetNumWindows() == 0)
         {
-            //Tracker.ShowWindow();
-            Cam.ShowImage();
+            Tracker.ShowWindow();
+            //Cam.ShowImage();
         }
 
         Carry = RunCommnad(cvWaitKey(0));

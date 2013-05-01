@@ -4,11 +4,19 @@ LineFinder::LineFinder()
 {
     ShowWind = false;
     CaliDone = false;
+    myFile.open("Mapping Data.txt", ios::out);
+    open = true;
+
+    if (open)
+    {
+        myFile << "Calbration X\t\t\t\t Calibration Y\n";
+        myFile << "a\tb\tc\td\ta\tb\tc\td\n";
+    }
 }
 
 LineFinder::~LineFinder()
 {
-    //dtor
+    myFile.close();
 }
 
 void LineFinder::UpdateCalibration(EyeDifferance* Differances, EyePoint* Points)
@@ -53,6 +61,14 @@ void LineFinder::UpdateCalibration(EyeDifferance* Differances, EyePoint* Points)
                              (CoefY1.c + CoefY2.c + CoefY3.c + CoefY4.c)/4,
                              (CoefY1.d + CoefY2.d + CoefY3.d + CoefY4.d)/4);
 
+    if (open)
+    {
+        myFile << CoeX.a << "\t" << CoeX.b << "\t" << CoeX.c << "\t" << CoeX.d << "\t" <<
+        CoeY.a << "\t" << CoeY.b << "\t" << CoeY.c << "\t" << CoeY.d << "\n\n";
+        myFile << "Output\n";
+        myFile << "X\tY\n";
+    }
+
     CaliDone = true;
 }
 
@@ -68,6 +84,12 @@ EyePointD LineFinder::FindPoint(EyeDifferance Diff)
 
         EyePointD P = EyePointD(X, Y);
         if (ShowWind) UpdateWindow(P);
+
+        if (open)
+        {
+            myFile << P.GetX() << "\t" << P.GetY() << "\n";
+        }
+
         return P;
     }
     else
