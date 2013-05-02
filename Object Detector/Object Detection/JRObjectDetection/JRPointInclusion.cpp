@@ -48,7 +48,7 @@ double pointPlaneDistance(PointXYZ point, PlaneCoefficients plane)
 }
 
 /* -----------------------------------------------------------------------------------------------------------------
- FOR THE BELOW FUNCTION ONLY - Modified lightly for use in this program.
+ FOR THE BELOW FUNCTION ONLY - Modified lightly for C++ and use in this program.
  
  SOURCE: http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
  

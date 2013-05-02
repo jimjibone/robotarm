@@ -14,7 +14,7 @@
 // Returns a positive value, if OAB makes a counter-clockwise turn,
 // negative for clockwise turn, and zero if the points are collinear.
 double ConvexHull::cross(const PointNXYZIJ &o, const PointNXYZIJ &a, const PointNXYZIJ &b) {
-	return (a.i - o.i) * (double)(b.j - o.j) - (a.j - o.j) * (double)(b.i - o.i);
+	return (a.i - o.i) * (b.j - o.j) - (a.j - o.j) * (b.i - o.i);
 }
 
 void ConvexHull::projectPoints()
@@ -82,6 +82,9 @@ void ConvexHull::setData(vector<PointXYZ> *newCloud, PointIndices *newIndices, P
 
 void ConvexHull::run()
 {
+	// Perform the monotone chain convex hull algorithm.
+	// Information on this can be found here: http://www.algorithmist.com/index.php/Monotone_Chain_Convex_Hull
+	
 	cout << "ConvexHull::run(). Starting." << endl;
 	boost::posix_time::ptime start = boost::posix_time::microsec_clock::local_time();
 	

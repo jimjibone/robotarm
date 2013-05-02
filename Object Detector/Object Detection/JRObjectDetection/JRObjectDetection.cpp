@@ -34,8 +34,9 @@ PlaneCoefficients getPlaneCoefficients(PointXYZ a, PointXYZ b, PointXYZ c)
 		return PlaneCoefficients(0, 0, 0, 0);
 	}
 	
-	//http://keisan.casio.com/has10/SpecExec.cgi# or
-	//http://www.easycalculation.com/analytical/cartesian-plane-equation.php
+	// http://keisan.casio.com/has10/SpecExec.cgi# or
+	// http://www.easycalculation.com/analytical/cartesian-plane-equation.php or
+	// Weisstein, Eric W. "Plane." From MathWorld--A Wolfram Web Resource. http://mathworld.wolfram.com/Plane.html
 	double Pa = (b.y - a.y)*(c.z - a.z) - (c.y - a.y)*(b.z - a.z);
 	double Pb = (b.z - a.z)*(c.x - a.x) - (c.z - a.z)*(b.x - a.x);
 	double Pc = (b.x - a.x)*(c.y - a.y) - (c.x - a.x)*(b.y - a.y);
@@ -202,7 +203,7 @@ void ObjectDetection::segmentPlanes()
 	// ITERATE through all nodes:
 	//		IF node unassigned:
 	//			ASSIGN node to a new component id C
-	//			DO a depth-first-search for all nodes connected to this one:
+	//			DO a continuous-search for all nodes connected to this one:
 	//				mark them with same component id C
 	
 	if (validDepthData) {
