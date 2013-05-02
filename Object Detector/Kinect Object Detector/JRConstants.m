@@ -9,8 +9,6 @@
 
 #import "JRConstants.h"
 
-
-
 @implementation JRConstants
 
 // Kinect Controller Notifications

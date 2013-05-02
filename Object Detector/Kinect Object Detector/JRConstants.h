@@ -9,9 +9,6 @@
 
 #import <Foundation/Foundation.h>
 
-
-
-
 @interface JRConstants : NSObject
 
 // Kinect Controller Notifications

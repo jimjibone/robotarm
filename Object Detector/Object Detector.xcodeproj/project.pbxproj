@@ -23,7 +23,6 @@
 		1ADF88F7165AE3E2004A442B /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ADF88F6165AE3E2004A442B /* OpenGL.framework */; };
 		1ADF88F9165AE3E8004A442B /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ADF88F8165AE3E8004A442B /* GLUT.framework */; };
 		1ADF88FB165AE401004A442B /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ADF88FA165AE401004A442B /* CoreVideo.framework */; };
-		D15D2B09171C097600A10D3A /* JRPointRotationXYZ.m in Sources */ = {isa = PBXBuildFile; fileRef = D15D2B08171C097600A10D3A /* JRPointRotationXYZ.m */; };
 		D17F8206172DA4FA0084B79C /* JRPointInclusion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D17F8204172DA4FA0084B79C /* JRPointInclusion.cpp */; };
 		D17F8209172DCCBE0084B79C /* JRKMeansClustering.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D17F8207172DCCBE0084B79C /* JRKMeansClustering.cpp */; };
 		D1843660172C9D79004D730C /* JRConvexHull.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D184365E172C9D79004D730C /* JRConvexHull.cpp */; };
@@ -76,8 +75,6 @@
 		1ADF88F6165AE3E2004A442B /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		1ADF88F8165AE3E8004A442B /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
 		1ADF88FA165AE401004A442B /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
-		D15D2B07171C097600A10D3A /* JRPointRotationXYZ.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JRPointRotationXYZ.h; sourceTree = "<group>"; };
-		D15D2B08171C097600A10D3A /* JRPointRotationXYZ.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JRPointRotationXYZ.m; sourceTree = "<group>"; };
 		D17F8204172DA4FA0084B79C /* JRPointInclusion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = JRPointInclusion.cpp; sourceTree = "<group>"; };
 		D17F8205172DA4FA0084B79C /* JRPointInclusion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JRPointInclusion.h; sourceTree = "<group>"; };
 		D17F8207172DCCBE0084B79C /* JRKMeansClustering.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = JRKMeansClustering.cpp; sourceTree = "<group>"; };
@@ -183,8 +180,8 @@
 			children = (
 				1A6F6AAE165A8A2B00FA3601 /* JRKinectController.h */,
 				1A6F6AAF165A8A2B00FA3601 /* JRKinectController.m */,
-				1A6F6AB0165A8A2B00FA3601 /* JRKinectHelpers.c */,
 				1A6F6AB1165A8A2B00FA3601 /* JRKinectHelpers.h */,
+				1A6F6AB0165A8A2B00FA3601 /* JRKinectHelpers.c */,
 			);
 			path = "Kinect Control";
 			sourceTree = "<group>";
@@ -209,8 +206,6 @@
 				1ADF88E8165AD4B0004A442B /* GLProgram.m */,
 				1ADF88E9165AD4B0004A442B /* GLView.h */,
 				1ADF88EA165AD4B0004A442B /* GLView.m */,
-				D15D2B07171C097600A10D3A /* JRPointRotationXYZ.h */,
-				D15D2B08171C097600A10D3A /* JRPointRotationXYZ.m */,
 			);
 			path = "OpenGL View";
 			sourceTree = "<group>";
@@ -218,18 +213,18 @@
 		D192E13517171D0F00B94D3D /* JRObjectDetection */ = {
 			isa = PBXGroup;
 			children = (
-				D192E13617171D2600B94D3D /* JRObjectDetection.cpp */,
 				D192E13717171D2600B94D3D /* JRObjectDetection.h */,
+				D192E13617171D2600B94D3D /* JRObjectDetection.cpp */,
 				D19413F4171B4B67005EDC0D /* JRObjectDetectionWrapper.h */,
 				D19413F5171B4B67005EDC0D /* JRObjectDetectionWrapper.mm */,
-				D1CB8DA2172C253C007E0A43 /* JRRANSAC.cpp */,
 				D1CB8DA3172C253C007E0A43 /* JRRANSAC.h */,
-				D184365E172C9D79004D730C /* JRConvexHull.cpp */,
+				D1CB8DA2172C253C007E0A43 /* JRRANSAC.cpp */,
 				D184365F172C9D79004D730C /* JRConvexHull.h */,
-				D17F8204172DA4FA0084B79C /* JRPointInclusion.cpp */,
+				D184365E172C9D79004D730C /* JRConvexHull.cpp */,
 				D17F8205172DA4FA0084B79C /* JRPointInclusion.h */,
-				D17F8207172DCCBE0084B79C /* JRKMeansClustering.cpp */,
+				D17F8204172DA4FA0084B79C /* JRPointInclusion.cpp */,
 				D17F8208172DCCBE0084B79C /* JRKMeansClustering.h */,
+				D17F8207172DCCBE0084B79C /* JRKMeansClustering.cpp */,
 			);
 			path = JRObjectDetection;
 			sourceTree = "<group>";
@@ -311,7 +306,6 @@
 				1A99C67316C0982000F3677D /* JRConstants.m in Sources */,
 				D192E13817171D2600B94D3D /* JRObjectDetection.cpp in Sources */,
 				D19413F6171B4B67005EDC0D /* JRObjectDetectionWrapper.mm in Sources */,
-				D15D2B09171C097600A10D3A /* JRPointRotationXYZ.m in Sources */,
 				D1CB8DA4172C253C007E0A43 /* JRRANSAC.cpp in Sources */,
 				D1843660172C9D79004D730C /* JRConvexHull.cpp in Sources */,
 				D17F8206172DA4FA0084B79C /* JRPointInclusion.cpp in Sources */,
