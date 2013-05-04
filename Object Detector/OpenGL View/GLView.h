@@ -69,6 +69,7 @@
 	// Draw Modes
 	BOOL _drawFrustrum;
 	BOOL _drawSegmentedPlanes;
+	BOOL _drawDominantPlanePoints;
 	BOOL _drawDominantPlane;
 	BOOL _drawObjectsPoints;
 	BOOL _normals;

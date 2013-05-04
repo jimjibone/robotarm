@@ -32,7 +32,7 @@
 #define CONVEXHULL_DISTANCE_TOLERANCE	(20.0)			// The max distance a point can be from the plane to be included as a plane point.
 #define INCLUSION_MAX_HEIGHT			(500.0)			// The maximum height a point can have of the dominant plane in order to be included as an object.
 #define INCLUSION_MIN_HEIGHT			(15.0)			// The minimum height a point must have off the dominant plane in order to be included as an object.
-#define KMEANS_CLUSTER_COUNT			(3)				// The number of clusters the k-means algorithm should look for.
+#define KMEANS_CLUSTER_COUNT			(2)				// The number of clusters the k-means algorithm should look for.
 #define KMEANS_FILTER_DISTANCE			(50.0)			// The max distance a point can be away from its centroid for it to be included.
 
 using namespace std;

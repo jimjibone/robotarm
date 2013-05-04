@@ -109,11 +109,12 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 	_drawFrustrum = YES;
 	_drawSegmentedPlanes = NO;
 	_drawDominantPlane = NO;
+	_drawDominantPlanePoints = NO;
 	_drawObjectsPoints = NO;
-	_normals = YES;
+	_normals = NO;
     _mirror = NO;
-    _natural = NO;
-    _drawMode = MODE_POINTS;
+    _natural = YES;
+    _drawMode = MODE_MESH;
 	
 	//_planeData = (_ransacConfidentPlane){0, 0, 0, 0, 0};
     
@@ -578,6 +579,44 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 		
 	}
 }
+- (void)drawDominantPlanePoints
+{
+	// PLANE
+	
+	/*XYZPoint bl = (XYZPoint){-600, 600,
+	 zWorldFromPlaneAndWorldXY(_dominant_plane_hull_coefficients, -600, -600)};
+	 XYZPoint tl = (XYZPoint){600, 600,
+	 zWorldFromPlaneAndWorldXY(_dominant_plane_hull_coefficients, 600, -600)};
+	 XYZPoint tr = (XYZPoint){600, -600,
+	 zWorldFromPlaneAndWorldXY(_dominant_plane_hull_coefficients, 600, 600)};
+	 XYZPoint br = (XYZPoint){-600, -600,
+	 zWorldFromPlaneAndWorldXY(_dominant_plane_hull_coefficients, -600, 600)};
+	 
+	 glBegin(GL_QUADS);
+	 glColor4f(.392156863, 1, .392156863, 0.3);
+	 // bl, tl, tr, br
+	 glVertex3d(bl.x, bl.y, -bl.z);
+	 glVertex3d(tl.x, tl.y, -tl.z);
+	 glVertex3d(tr.x, tr.y, -tr.z);
+	 glVertex3d(br.x, br.y, -br.z);
+	 glEnd();*/
+	
+	// LOOP
+	
+	GLfloat prevPointSize = 0;
+	glGetFloatv(GL_POINT_SIZE, &prevPointSize);
+	glPointSize(8);
+	
+	glBegin(GL_POINTS);
+	glColor4f(1, 0, 0, 0.8);
+	for (int i = 0; i < _dominant_plane_hull_point_count-1; i++) {
+		// Don't draw the last point because it is the same as the last.
+		glVertex3d(_dominant_plane_hull_points[i].x, -_dominant_plane_hull_points[i].y, -_dominant_plane_hull_points[i].z+2);
+	}
+	glEnd();
+	
+	glPointSize(prevPointSize);
+}
 - (void)drawDominantPlane
 {
 	// PLANE
@@ -601,20 +640,6 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 	glEnd();*/
 	
 	// LOOP
-	
-	GLfloat prevPointSize = 0;
-	glGetFloatv(GL_POINT_SIZE, &prevPointSize);
-	glPointSize(8);
-	
-	glBegin(GL_POINTS);
-	glColor4f(1, 0, 0, 0.8);
-	for (int i = 0; i < _dominant_plane_hull_point_count-1; i++) {
-		// Don't draw the last point because it is the same as the last.
-		glVertex3d(_dominant_plane_hull_points[i].x, -_dominant_plane_hull_points[i].y, -_dominant_plane_hull_points[i].z+2);
-	}
-	glEnd();
-	
-	glPointSize(prevPointSize);
 	
 	GLfloat prevLineWidth = 0;
 	glGetFloatv(GL_LINE_WIDTH, &prevLineWidth);
@@ -836,9 +861,10 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
         
         if (_drawFrustrum)			[self drawFrustrum];
 		//if (_drawSegmentedPlanes)	[self drawSegmentedPlanes];
-		if (_drawSegmentedPlanes)	[self drawSegmentedPlanesPoints];
+		//if (_drawSegmentedPlanes)	[self drawSegmentedPlanesPoints];
+		//if (_drawDominantPlanePoints)		[self drawDominantPlanePoints];
 		if (_drawDominantPlane)		[self drawDominantPlane];
-		if (_drawObjectsPoints)		[self drawObjectsPoints];
+		//if (_drawObjectsPoints)		[self drawObjectsPoints];
 		if (_drawObjectsPoints)		[self drawObjectsRadii];
 		
 		glDisable(GL_POINT_SMOOTH);
