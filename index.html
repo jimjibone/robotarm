@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=640" />
+
+    <link rel="stylesheet" href="stylesheets/core.css" media="screen"/>
+    <link rel="stylesheet" href="stylesheets/mobile.css" media="handheld, only screen and (max-device-width:640px)"/>
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css"/>
+
+    <script type="text/javascript" src="javascripts/modernizr.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="javascripts/headsmart.min.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function () {
+        $('#main_content').headsmart()
+      })
+    </script>
+    <title>Robotarm by jimjibone</title>
+  </head>
+
+  <body>
+    <a id="forkme_banner" href="https://github.com/jimjibone/robotarm">View on GitHub</a>
+    <div class="shell">
+
+      <header>
+        <span class="ribbon-outer">
+          <span class="ribbon-inner">
+            <h1>Robotarm</h1>
+            <h2>Code for the Eye-Tracking Robotic Arm 4th Year project by engineering students at the University of Leicester.</h2>
+          </span>
+          <span class="left-tail"></span>
+          <span class="right-tail"></span>
+        </span>
+      </header>
+
+      <section id="downloads">
+        <span class="inner">
+          <a href="https://github.com/jimjibone/robotarm/zipball/master" class="zip"><em>download</em> .ZIP</a><a href="https://github.com/jimjibone/robotarm/tarball/master" class="tgz"><em>download</em> .TGZ</a>
+        </span>
+      </section>
+
+
+      <span class="banner-fix"></span>
+
+
+      <section id="main_content">
+        <h1>
+<a name="eye-tracking-robotic-arm" class="anchor" href="#eye-tracking-robotic-arm"><span class="octicon octicon-link"></span></a>Eye-Tracking Robotic Arm</h1>
+
+<p>This project is looking at the building of a robotic arm capable of lifting objects off a table, controlled by a user using eye-tracking. The movement control of the arm is assisted using 3D vision and object detection. The eye-tracking and object detection is made possible by utilising a PS3 Eye camera and the Xbox Kinect sensor.</p>
+
+<h2>
+<a name="whats-here" class="anchor" href="#whats-here"><span class="octicon octicon-link"></span></a>Whats Here?</h2>
+
+<ol>
+<li>Dependencies</li>
+<li>
+<code>install.sh</code>?</li>
+<li>Object Detection</li>
+<li>Eye Tracking</li>
+</ol><h2>
+<a name="install-dependencies" class="anchor" href="#install-dependencies"><span class="octicon octicon-link"></span></a>Install Dependencies</h2>
+
+<h3>
+<a name="the-dependencies" class="anchor" href="#the-dependencies"><span class="octicon octicon-link"></span></a>The Dependencies</h3>
+
+<p>So far:</p>
+
+<ul>
+<li>libfreenect (OpenKinect)</li>
+<li>Point Cloud Library</li>
+<li>OpenGL/GLUT (but we don't need to worry about this...)</li>
+</ul><h3>
+<a name="os-x-and-ubuntu" class="anchor" href="#os-x-and-ubuntu"><span class="octicon octicon-link"></span></a>OS X and Ubuntu</h3>
+
+<p>In the Terminal run these commands, the script will do the rest, hopefully.</p>
+
+<ol>
+<li>Clone source (if not already cloned). </li>
+<li>
+<code>cd</code> into the repo.</li>
+<li>Install deps.</li>
+</ol><div class="highlight"><pre>git clone git://github.com/jimjibone/robotarm.git
+<span class="nb">cd </span>robotarm
+./deps/install.sh
+</pre></div>
+
+<h3>
+<a name="other-oss-windoze" class="anchor" href="#other-oss-windoze"><span class="octicon octicon-link"></span></a>Other OS's (Windoze)</h3>
+
+<p>Soz guys but there are no installs for other OS's because of the PS Eye camera being stoopid.
+Well, the PS Eye camera does not work on the latest version of OS X, <em>sadface</em> but does work on Linux and Windows reportedly. Apart from that everything works on all platforms! Except this dependency install. Maybe later.</p>
+
+<h2>
+<a name="what-does-installsh-do" class="anchor" href="#what-does-installsh-do"><span class="octicon octicon-link"></span></a>What does <code>install.sh</code> do?</h2>
+
+<h3>
+<a name="install-all-the-dependencies-of-the-dependencies" class="anchor" href="#install-all-the-dependencies-of-the-dependencies"><span class="octicon octicon-link"></span></a>Install all the dependencies of the dependencies</h3>
+
+<p>Does that.</p>
+
+<h3>
+<a name="openkinect" class="anchor" href="#openkinect"><span class="octicon octicon-link"></span></a>OpenKinect</h3>
+
+<p>In order to get OK to bridge over properly with PCL we need to edit some files before OK installation. This has already been done in the jimjibone fork of libfreenect (jimjibone/libfreenect). This is then downloaded, built, installed and permissions + drivers fixed (on Linux).</p>
+
+<h3>
+<a name="opencv" class="anchor" href="#opencv"><span class="octicon octicon-link"></span></a>OpenCV</h3>
+
+<p>OS X: A simple Homebrew install :) <code>brew install opencv</code>
+Linux: Just a standard install. But it is the cutting edge version from GitHub! BEWARE!</p>
+
+<h3>
+<a name="point-cloud-library" class="anchor" href="#point-cloud-library"><span class="octicon octicon-link"></span></a>Point Cloud Library</h3>
+
+<p>OS X: Not very easy. For more info see the <code>install.sh</code> script and see how I have had to modify the <a href="http://mxcl.github.com/homebrew/">Homebrew</a> Formula.
+Linux: Good ol' Ubuntu has a PCL install using <code>apt-get</code>. Easy.</p>
+
+<h2>
+<a name="build-object_detect-files" class="anchor" href="#build-object_detect-files"><span class="octicon octicon-link"></span></a>Build <code>object_detect</code> files</h2>
+
+<p>This can be done very simply by using Cmake:</p>
+
+<ol>
+<li>In the Terminal <code>cd</code> into object_detect</li>
+<li><code>mkdir build</code></li>
+<li><code>cd build</code></li>
+<li>Various <code>cmake</code> commands can now be run to produce makefiles or IDE projects:
+
+<ol>
+<li>Normal binary makefile - <code>cmake ..</code>
+</li>
+<li>Xcode project - <code>cmake .. -G 'Xcode'</code>
+</li>
+<li>For other IDE's run <code>cmake</code> and a list of Generators will appear at the bottom</li>
+</ol>
+</li>
+<li>To make the binaries if you used <code>cmake ..</code> then run <code>make</code>
+</li>
+<li>Otherwise, open the project file in your IDE and build that way.</li>
+</ol><h2>
+<a name="build-eyetracker-files" class="anchor" href="#build-eyetracker-files"><span class="octicon octicon-link"></span></a>Build <code>EyeTracker</code> files</h2>
+
+<p>Kinda need to do this...</p>
+      </section>
+
+      <footer>
+        <span class="ribbon-outer">
+          <span class="ribbon-inner">
+            <p>this project by <a href="https://github.com/jimjibone">jimjibone</a> can be found on <a href="https://github.com/jimjibone/robotarm">GitHub</a></p>
+          </span>
+          <span class="left-tail"></span>
+          <span class="right-tail"></span>
+        </span>
+        <p>Generated with <a href="http://pages.github.com">GitHub Pages</a> using Merlot</p>
+        <span class="octocat"></span>
+      </footer>
+
+    </div>
+
+    
+  </body>
+</html>
