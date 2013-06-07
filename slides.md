@@ -46,7 +46,13 @@ Control - Eye-Tracking
 Control - Object Detection
 ==========================
 
-> James
+Why need Object Detection?
+Why use Kinect?
+Processes Required to Detect Objects
+In detail... foreach ... with photos of output ... and results/effectiveness of computation? ... how i made it better?
+Final results ... video ... time taken to calculate
+Improvements & Future Work
+
 
 
 Project Execution

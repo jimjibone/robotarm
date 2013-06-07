@@ -10,10 +10,28 @@ body {
   background: -o-radial-gradient(#f0f0f0, #bebebe);
   background: radial-gradient(#f0f0f0, #bebebe);
 }
-.title p {
-  padding: 20px 0;
+/*
+	Generic Slides
+	Styles by James Reuss
+*/
+/*
+	Introduction Slides
+	Written by ###########
+	Styles by James Reuss
+*/
+#title h1 {
+  padding: 0 0 80px;
+}
+#title ul {
+  list-style: none;
+  padding-left: 0;
   line-height: 1.5em;
 }
+/*
+	Object Detection Slides
+	Written by James Reuss
+	Styles by James Reuss
+*/
 /*
 	... and give links a nice look.
 */
@@ -143,10 +161,10 @@ a:focus {
 	First is the title step with a big <h1> (no room for padding) and some
 	3D positioning along Z axis.
 */
-#title {
+#title-2 {
   padding: 0;
 }
-#title .try {
+#title-2 .try {
   font-size: 64px;
   position: absolute;
   top: -0.5em;
@@ -157,7 +175,7 @@ a:focus {
   -o-transform: translateZ(20px);
   transform: translateZ(20px);
 }
-#title h1 {
+#title-2 h1 {
   font-size: 190px;
   -webkit-transform: translateZ(50px);
   -moz-transform: translateZ(50px);
@@ -165,7 +183,7 @@ a:focus {
   -o-transform: translateZ(50px);
   transform: translateZ(50px);
 }
-#title .footnote {
+#title-2 .footnote {
   font-size: 32px;
 }
 /*
