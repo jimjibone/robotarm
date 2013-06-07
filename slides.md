@@ -47,7 +47,7 @@ Control - Object Detection
 ==========================
 
 Why is Object Detection Needed?
---------------------------
+-------------------------------
 
 At this point the robotic arm system is ready for use, however it is unable to detect its environment.
 The system having the ability to detect its environment will aid it in many ways:
