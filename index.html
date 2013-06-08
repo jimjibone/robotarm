@@ -120,9 +120,9 @@
 	
 	<!--
 		
-		Mechanical
+		Mechanical Part 1
 		
-		by Amy Lymn & Joe Ahuja
+		by Amy Lymn
 		
 	-->
 	
@@ -132,6 +132,15 @@
 	</div>
 	
 	<!-- Add Amy's Stuff Here!!! -->
+	
+	
+	<!--
+		
+		Mechanical Part 2
+		
+		by Joe Ahuja
+		
+	-->
 	
 	<div class="step" data-x="-2000" data-y="100">
 		<h1>Concept Ideas</h1>
@@ -487,6 +496,92 @@
 	</div>
 	
 	
+	<!--
+		
+		Control - Eye-Tracker
+		
+		by Ian Chapple
+		
+	-->
+	
+	<div class="step centre" data-x="5200" data-y="1600" data-z="200" data-rotate-x="-90" data-rotate-y="90">
+		<h2>Control Systems</h2>
+		<h1>Eye-Tracker</h1>
+		<p>By Ian Chapple</p>
+	</div>
+	
+	<div id="pseye" class="step" data-x="5200" data-y="2600" data-z="200" data-rotate-x="-90" data-rotate-y="90">
+		<h1>Hardware</h1>
+		<div id="text">
+			<ul>
+				<li>Build a cheap eye tracker</li>
+				<li>Normally cost >£10,000</li>
+				<br>
+				<li>Built for ~£70 using:</li>
+				<ul>
+					<li>Playstation Eye Camera</li>
+					<li>Infra Red LED's</li>
+				</ul>
+			</ul>
+		</div>
+		<div id="img"></div>
+	</div>
+	
+	<div class="step" data-x="5200" data-y="2600" data-z="-600" data-rotate-x="-90" data-rotate-y="90">
+		<img src="img/eyetrackerbox.jpg" width="800px">
+	</div>
+	
+	<div class="step" data-x="5200" data-y="1600" data-z="-600" data-rotate-x="-90" data-rotate-y="90">
+		<h1>Software</h1>
+		<p>Image Processing:</p>
+		<ul>
+			<li>Locate Eye/Pupil</li>
+			<li>Locate glint from light source</li>
+		</ul>
+		<p>Data Mapping:</p>
+		<ul>
+			<li>Map Data</li>
+			<li>Find Coordinate from map and Eye/Glint locations</li>
+		</ul>
+	</div>
+	
+	<div class="step eyedetect1" data-x="4000" data-y="2600" data-z="-600" data-rotate-x="-90" data-rotate-y="90">
+		<h1>Contour Finding</h1>
+		<p>Find the edges of objects in an image</p>
+		<img src="img/threshold.png" width="540px">
+	</div>
+	
+	<div class="step eyedetect" data-x="4000" data-y="2550" data-z="-930" data-rotate-x="0" data-rotate-y="90">
+		<h1>Circle Finding</h1>
+		<p>Locate circular objects from within an image</p>
+		<img src="img/threshold.png" width="540px">
+	</div>
+	
+	<div class="step eyedetect" data-x="4000" data-y="2880" data-z="-980" data-rotate-x="90" data-rotate-y="90">
+		<h1>Glint Finding</h1>
+		<p>Find brightest point in image</p>
+		<img src="img/threshold.png" width="540px">
+	</div>
+	
+	<div class="step" data-x="4400" data-y="3800" data-z="-980" data-rotate-x="90" data-rotate-y="90">
+		<h1>Data Mapping</h1>
+		<p>Linear 3D map:</p>
+		<img src="img/planeeq.png">
+	</div>
+	
+	<div class="step" data-x="4400" data-y="3800" data-z="-450" data-rotate-x="90" data-rotate-y="90">
+		<p>Use 2 sets of equations to locate coorinates (x,y):</p>
+		<img src="img/transformxeq.png">
+		<img src="img/transformyeq.png">
+	</div>
+	
+	<div class="step" data-x="4400" data-y="3800" data-z="-100" data-rotate-x="0" data-rotate-y="90">
+		<h2>Eye-Tracking</h2>
+		<h1>Video</h1>
+	</div>
+	
+	
+	
 	
 	
 	<!--
@@ -508,12 +603,6 @@
 		<p>Some reasons...</p>
 	</div>
 -->
-
-
-
-
-	<div id="overview" class="step" data-x="2000" data-y="-200" data-scale="10">
-	</div>
 
 </div>
 
@@ -537,8 +626,8 @@ if ("ontouchstart" in document.documentElement) {
 		var key = String.fromCharCode(e.keyCode || e.charCode);
 		if (key === 's') { // s
 			impress().goto('title');
-		} else if (key === 'e') { // e
-			impress().goto('overview');
+		} else if (key === 'c') { // e
+			impress().goto('contents');
 		}
 	}
 	

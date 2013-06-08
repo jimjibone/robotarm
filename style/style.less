@@ -179,26 +179,69 @@ a {
 	}
 }
 
-#actuator1 {
-	background-image: url('steppershoulder.png');
+#pseye {
+	display: block;
+	clear: both;
+	//width: 1100px;
+
+	#img {
+		float: right;
+		background-image: url('../img/pseye.jpg');
+		background-position: center center;
+		background-repeat: no-repeat;
+		background-size: 100%;
+		width: 45%;
+		min-height: 400px;
+	}
+
+	#text {
+		float: left;
+		width: 50%;
+		p, li {
+			font-size: 0.7em;
+		}
+	}
+
+	a {
+		font-size: 0.5em;
+	}
+}
+
+.transform(...) {
+  -webkit-transform: @arguments;
+  -moz-transform: @arguments;
+  -o-transform: @arguments;
+  -ms-transform: @arguments;
+  transform: @arguments;
+}
+
+.eyedetect.present {
+	img {
+		opacity: 1;
+		
+		-webkit-transition: opacity 1s;
+		-moz-transition:	opacity 1s;
+		-ms-transition:	 opacity 1s;
+		-o-transition:		opacity 1s;
+		transition:		 opacity 1s;
+	}
+}
+.eyedetect1.past,
+.eyedetect.past,
+.eyedetect.future {
+	img {
+		opacity: 0;
+		
+		-webkit-transition: opacity 1s;
+		-moz-transition:	opacity 1s;
+		-ms-transition:	 opacity 1s;
+		-o-transition:		opacity 1s;
+		transition:		 opacity 1s;
+	}
 }
 
 #objectdetection {
-	
 	text-align: center;
-	
-	.try {
-		font-size: 64px;
-		position: absolute;
-		top: -0.5em;
-		left: 1.5em;
-	
-		-webkit-transform: translateZ(20px);
-		-moz-transform:	translateZ(20px);
-		-ms-transform:	 translateZ(20px);
-		-o-transform:		translateZ(20px);
-		transform:		 translateZ(20px);
-	}
 }
 
 
