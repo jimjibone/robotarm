@@ -121,15 +121,30 @@
 	</div>
 	
 	<div class="step" data-x="3000" data-y="-500">
-		<h1>Breakdown of Sub-Systems</h1>
+		<h1>Controller</h1>
 		
+		<p>A controller was required to implement the logic of the control system, it must:</p>
 		<ul>
-			<li>Controller</li>
-			<li>Power Supply</li>
-			<li>Actuators and Drivers</li>
-			<li>Feedback Control</li>
-			<li>User Interface</li>
+			<li>Be suitable for rapid prototyping of proof of concept software</li>
+			<li>Be open source</li>
+			<li>Have built in features suc as analogue to digital converters and serial interfaces</li>
+			<li>Be readily available at a reasonable price</li>
 		</ul>
+	</div>
+	<div id="arduino" class="step" data-x="3000" data-y="150">
+		<p>Having considered the options, an Arduino Mega 2560 was selected:</p>
+		<div id="img"></div>
+		<div id="text">
+			<p>This was selected because:</p>
+			<ul>
+				<li>It has many digital I/O pins</li>
+				<li>16 Analogue to Digital Converter pins</li>
+				<li>USB port can interface with PC via serial link</li>
+				<li>16MHz of processing power</li>
+				<li>Can be programmed with an Open Source IDE</li>
+			</ul>
+		</div>
+		<a href="http://nicegear.co.nz/obj/images/arduino_mega.jpg" class="reference">http://nicegear.co.nz/obj/images/arduino_mega.jpg</a>
 	</div>
 	
 	

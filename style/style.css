@@ -355,6 +355,29 @@ a:focus {
 #electronic {
   text-align: center;
 }
+#arduino {
+  display: block;
+  clear: both;
+}
+#arduino #img {
+  float: left;
+  background-image: url('../img/arduino.jpg');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 100%;
+  width: 45%;
+  min-height: 400px;
+}
+#arduino #text {
+  padding-left: 50%;
+}
+#arduino #text p,
+#arduino #text li {
+  font-size: 0.7em;
+}
+#arduino a {
+  font-size: 0.5em;
+}
 #objectdetection {
   text-align: center;
 }
