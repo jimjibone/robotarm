@@ -31,8 +31,16 @@ p,ul,li {
 	font-size: 0.8em;
 	line-height: normal;
 }
-ol ol {
-	margin: 0.3em 0;
+ol, ul {
+	ol {
+		margin: 0.3em 0;
+	}
+	ul {
+		margin: 0;
+	}
+}
+li {
+	padding-bottom: 0.5em;
 }
 
 a {
@@ -106,6 +114,10 @@ a {
 		list-style: none;
 		padding-left: 0;
 		line-height: 1.5em;
+		
+		li {
+			padding-bottom: 0;
+		}
 	}
 }
 
@@ -123,6 +135,9 @@ a {
 	
 	h1 {
 		text-align: center;
+	}
+	li {
+		padding-bottom: 0;
 	}
 }
 

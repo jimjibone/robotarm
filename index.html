@@ -31,7 +31,7 @@
 
 <div id="impress">
 
-	<div id="title" class="step" data-x="-1500" data-y="-1500" data-z="-500">
+	<div id="title" class="step" data-x="-2500" data-y="-2500" data-z="500" data-scale="4">
 		<h1>Eye-Tracking Robotic Arm</h1>
 		<p>University of Leicester - Bioengineering Group</p>
 		<ul>
@@ -43,7 +43,7 @@
 		</ul>
 	</div>
 
-	<div id="contents" class="step" data-x="-500" data-y="-1500" data-z="-500">
+	<div id="contents" class="step" data-x="1000" data-y="-2500" data-z="500" data-scale="4">
 		<h1>Contents</h1>
 		<ol>
 			<li>Intoduction</li>
@@ -66,11 +66,11 @@
 		by Amy Lymn
 		
 	-->
-	
+	<!--
 	<div id="introduction" class="step" data-x="500" data-y="-1500">
 		<h1>Introduction</h1>
 	</div>
-	
+-->
 	
 	<!--
 		
@@ -79,11 +79,11 @@
 		by Amy Lymn
 		
 	-->
-	
+	<!--
 	<div id="mechanical" class="step" data-x="-1000" data-y="-500">
 		<h1>Mechanical</h1>
 	</div>
-	
+-->
 	
 	<!--
 		
@@ -131,7 +131,8 @@
 			<li>Be readily available at a reasonable price</li>
 		</ul>
 	</div>
-	<div id="arduino" class="step" data-x="3000" data-y="200" data-rotate-z="90">
+	
+	<div id="arduino" class="step" data-x="3000" data-y="250" data-rotate-z="90">
 		<p>Having considered the options, an Arduino Mega 2560 was selected:</p>
 		<div id="img"></div>
 		<div id="text">
@@ -162,22 +163,20 @@
 		<h1>Actuator Systems (Research)</h1>
 		
 		<ul>
-			<li>Servo Motors
-				<ul>
-					<li>Very high performance</li>
-					<li>Built in feedback for control purposes</li>
-					<li>Very expensive</li>
-					<li>Difficult to implement in time given</li>
-				</ul>
-			</li>
+			<li>Servo Motors</li>
+			<ul>
+				<li>Very high performance</li>
+				<li>Built in feedback for control purposes</li>
+				<li>Very expensive</li>
+				<li>Difficult to implement in time given</li>
+			</ul>
 			
-			<li>Stepper Motors
-				<ul>
-					<li>Less expensive than servo motors</li>
-					<li>Open loop control</li>
-					<li>Easy to implement in both hardware and software</li>
-				</ul>
-			</li>
+			<li>Stepper Motors</li>
+			<ul>
+				<li>Less expensive than servo motors</li>
+				<li>Open loop control</li>
+				<li>Easy to implement in both hardware and software</li>
+			</ul>
 		</ul>
 	</div>
 	
@@ -214,6 +213,93 @@
 		<p>Two RE 385 DC Motors</p>
 	</div>
 	
+	<div class="step" data-x="5800" data-y="-3800" data-z="0" data-rotate-x="0">
+		<h1>Actuator Systems Circuitry Development</h1>
+		<p>In order to actuate these motors, specific driver circuity was required, although there were some factors to take into consideration:</p>
+		<ul>
+			<li>Electrical power requirements of the motors</li>
+			<li>The stepper motor coil configurations</li>
+			<li>Controlling the motors with software</li>
+			<li>Standardising and Implementing on a PCB</li>
+		</ul>
+	</div>
+	
+	<div class="step" data-x="5800" data-y="-3000" data-z="0" data-rotate-x="0">
+		<h1>Feedback Systems</h1>
+		
+		<ul>
+			<li>Feedback control was required to improve overall system robustness</li>
+			<li>Hall Effect Sensors used to provide positional information to the controller</li>
+			<li>Sensor signals are compared with the input signals in order to make corrections</li>
+		</ul>
+	</div>
+	
+	<div class="step" data-x="5800" data-y="-2200" data-z="0" data-rotate-x="0">
+		<h1>Feedback Systems (Implementation)</h1>
+		<img src="img/feedbackdiagram.png" width="800px">
+		<p>The feedback system corrects errors caused by disturbances caused by motor slip etc.</p>
+	</div>
+	
+	<div class="step" data-x="5800" data-y="-1400" data-z="0" data-rotate-x="0">
+		<h1>User Interface</h1>
+		
+		<p>In order to develop this system into a standalone unit, several major components were required:</p>
+		<ul>
+			<li>User inputs</li>
+			<ul>
+				<li>Buttons and switches</li>
+				<li>Variable Inputs</li>
+			</ul>
+			<li>User feedback</li>
+			<ul>
+				<li>LEDs</li>
+				<li>Liquid Crystal Display</li>
+			</ul>
+		</ul>
+	</div>
+	
+	<div class="step" data-x="5800" data-y="-800" data-z="0" data-rotate-x="0">
+		<h1>Progress to Date</h1>
+		
+		<ul>
+			<li>Implemented initial prototypes of the aforementioned sub-systems but <strong>without</strong> extensive testing in-place</li>
+			<li>Interface to Eye-Tracker/Object Detection hasn't been implemented</li>
+		</ul>
+	</div>
+	
+	<div class="step" data-x="5800" data-y="-250" data-z="0" data-rotate-x="0">
+		<h1>Problems and Limitations</h1>
+		
+		<ul>
+			<li>Stepper motors require gearing</li>
+			<li>Resolution of feedback system is low</li>
+			<li>Feedback system implemented for shoulder motor <strong>only</strong></li>
+			<li>Doesn't behave as a hard real time system</li>
+		</ul>
+	</div>
+	
+	<div class="step" data-x="5800" data-y="450" data-z="0" data-rotate-x="0">
+		<h1>Further Improvements</h1>
+		
+		<ul>
+			<li>Unified Power Supply</li>
+			<li>Replace stepper motors with servo motors</li>
+			<li>High resolution Rotary encoders for feedback</li>
+			<li>Improvements to software using TTC or Pre-emptive scheduling systems (i.e. real time)</li>
+			<li>Implementation using real time microcontrollers</li>
+			<li>Implementation of a Controller Area Network</li>
+			<li>Embrace the open source community</li>
+			<li>Alternative manual control schemes</li>
+		</ul>
+	</div>
+	
+	<div class="step centre" data-x="5800" data-y="800" data-z="200" data-rotate-x="-90">
+		<h2>Electronic Control System</h2>
+		<h1>Live Demo</h1>
+	</div>
+	
+	
+	
 	
 	<!--
 		
@@ -238,7 +324,7 @@
 
 
 
-	<div id="overview" class="step" data-x="2000" data-y="0" data-scale="10">
+	<div id="overview" class="step" data-x="2000" data-y="-200" data-scale="10">
 	</div>
 
 </div>

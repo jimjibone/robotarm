@@ -278,8 +278,16 @@ li {
   font-size: 0.8em;
   line-height: normal;
 }
-ol ol {
+ol ol,
+ul ol {
   margin: 0.3em 0;
+}
+ol ul,
+ul ul {
+  margin: 0;
+}
+li {
+  padding-bottom: 0.5em;
 }
 a {
   color: inherit;
@@ -337,6 +345,9 @@ a:focus {
   padding-left: 0;
   line-height: 1.5em;
 }
+#title ul li {
+  padding-bottom: 0;
+}
 #contents {
   display: block;
   width: 600px;
@@ -349,6 +360,9 @@ a:focus {
 }
 #contents h1 {
   text-align: center;
+}
+#contents li {
+  padding-bottom: 0;
 }
 /*
 	Object Detection Slides
