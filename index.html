@@ -2,21 +2,21 @@
 
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=1024" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <title>Eye-Tracking Robotic Arm</title>
-    
-    <meta name="description" content="The final presentation for the Eye-Tracking Robotic Arm project by the University of Leicester MEng Bioengineering Group 2013." />
-    <meta name="author" content="James Reuss" />
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=1024" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<title>Eye-Tracking Robotic Arm</title>
+	
+	<meta name="description" content="The final presentation for the Eye-Tracking Robotic Arm project by the University of Leicester MEng Bioengineering Group 2013." />
+	<meta name="author" content="James Reuss" />
 
-    <link href="http://fonts.googleapis.com/css?family=Open+Sans:regular,semibold,italic,italicsemibold|PT+Sans:400,700,400italic,700italic|PT+Serif:400,700,400italic,700italic" rel="stylesheet" />
+	<link href="http://fonts.googleapis.com/css?family=Open+Sans:regular,semibold,italic,italicsemibold|PT+Sans:400,700,400italic,700italic|PT+Serif:400,700,400italic,700italic" rel="stylesheet" />
 
-    <link href="style/normalize.css" rel="stylesheet" />
-    <link href="style/style.css" rel="stylesheet" />
-    
-    <link rel="shortcut icon" href="favicon.png" />
-    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+	<link href="style/normalize.css" rel="stylesheet" />
+	<link href="style/style.css" rel="stylesheet" />
+	
+	<link rel="shortcut icon" href="favicon.png" />
+	<link rel="apple-touch-icon" href="apple-touch-icon.png" />
 </head>
 
 
@@ -24,92 +24,140 @@
 
 
 <div class="fallback-message">
-    <p>Your browser <b>doesn't support the features required</b> by impress.js, so you are presented with a simplified version of this presentation.</p>
-    <p>For the best experience please use the latest <b>Chrome</b>, <b>Safari</b> or <b>Firefox</b> browser.</p>
+	<p>Your browser <b>doesn't support the features required</b> by impress.js, so you are presented with a simplified version of this presentation.</p>
+	<p>For the best experience please use the latest <b>Chrome</b>, <b>Safari</b> or <b>Firefox</b> browser.</p>
 </div>
 
 
 <div id="impress">
 
-    <div id="title" class="step" data-x="-1500" data-y="-1500" data-z="-500">
-        <h1>Eye-Tracking Robotic Arm</h1>
-        <p>University of Leicester - Bioengineering Group</p>
-        <ul>
-            <li>James Reuss</li>
-            <li>Will Scott-Jackson</li>
-            <li>Amy Lymn</li>
-            <li>Joe Ahuja</li>
-            <li>Ian Chapple</li>
-        </ul>
-    </div>
+	<div id="title" class="step" data-x="-1500" data-y="-1500" data-z="-500">
+		<h1>Eye-Tracking Robotic Arm</h1>
+		<p>University of Leicester - Bioengineering Group</p>
+		<ul>
+			<li>James Reuss</li>
+			<li>Will Scott-Jackson</li>
+			<li>Amy Lymn</li>
+			<li>Joe Ahuja</li>
+			<li>Ian Chapple</li>
+		</ul>
+	</div>
 
-    <div id="contents" class="step" data-x="-500" data-y="-1500" data-z="-500">
-        <h1>Contents</h1>
-        <ol>
-            <li>Intoduction</li>
-            <li>Mechanical</li>
-            <li>Electrical</li>
-            <li>Control</li>
-            <ol type="a">
-                <li>Eye-Tracking</li>
-                <li>Object Detection</li>
-            </ol>
-            <li>Project Execution</li>
-        </ol>
-    </div>
-    
-    
-    <!--
-        
-        Introduction
-        
-        by Amy Lymn
-        
-    -->
-    
-    <div id="introduction" class="step" data-x="500" data-y="-1500">
-        <h1>Introduction</h1>
-    </div>
-    
-    
-    <!--
-        
-        Mechanical
-        
-        by Amy Lymn
-        
-    -->
-    
-    <div id="mechanical" class="step" data-x="-1000" data-y="-500">
-        <h1>Mechanical</h1>
-    </div>
-    
-    
-    <!--
-        
-        Object Detection
-        
-        by James Reuss
-        
-    -->
+	<div id="contents" class="step" data-x="-500" data-y="-1500" data-z="-500">
+		<h1>Contents</h1>
+		<ol>
+			<li>Intoduction</li>
+			<li>Mechanical</li>
+			<li>Electrical</li>
+			<li>Control</li>
+			<ol type="a">
+				<li>Eye-Tracking</li>
+				<li>Object Detection</li>
+			</ol>
+			<li>Project Execution</li>
+		</ol>
+	</div>
+	
+	
+	<!--
+		
+		Introduction
+		
+		by Amy Lymn
+		
+	-->
+	
+	<div id="introduction" class="step" data-x="500" data-y="-1500">
+		<h1>Introduction</h1>
+	</div>
+	
+	
+	<!--
+		
+		Mechanical
+		
+		by Amy Lymn
+		
+	-->
+	
+	<div id="mechanical" class="step" data-x="-1000" data-y="-500">
+		<h1>Mechanical</h1>
+	</div>
+	
+	
+	<!--
+		
+		Electronic Control System
+		
+		by Will Scott-Jackson
+		
+	-->
+	
+	<div id="electronic" class="step" data-x="0" data-y="-500">
+		<h1>Electronic Control System</h1>
+		<p>By Will Scott-Jackson</p>
+	</div>
+	
+	<div class="step" data-x="1000" data-y="-500">
+		<h1>Design Rationale</h1>
+		
+		<ul>
+			<li>To develop a proof of concept control system and driver systems that can interface witht he Eye-Tracker and Object Detection</li>
+			<li>To develop it so that it can operate as a standalone unit</li>
+			<li>To develop the system using readily available, open source hardware and software</li>
+		</ul>
+	</div>
+	
+	<div class="step" data-x="2000" data-y="-500">
+		<h1>Breakdown of Sub-Systems</h1>
+		
+		<ul>
+			<li>Controller</li>
+			<li>Power Supply</li>
+			<li>Actuators and Drivers</li>
+			<li>Feedback Control</li>
+			<li>User Interface</li>
+		</ul>
+	</div>
+	
+	<div class="step" data-x="3000" data-y="-500">
+		<h1>Breakdown of Sub-Systems</h1>
+		
+		<ul>
+			<li>Controller</li>
+			<li>Power Supply</li>
+			<li>Actuators and Drivers</li>
+			<li>Feedback Control</li>
+			<li>User Interface</li>
+		</ul>
+	</div>
+	
+	
+	<!--
+		
+		Object Detection
+		
+		by James Reuss
+		
+	-->
 
-    <div id="objectdetection" class="step" data-x="-1000" data-y="500">
-        <h2>Control</h2>
-        <h1>Object Detection</h1>
-        <p>By James Reuss</p>
-    </div>
-    
-    <div id="objectdetection1" class="step" data-x="-1000" data-y="1000" data-rotate-x="-70">
-        <h1>Why Object Detection?</h1>
-        <p>Some reasons...</p>
-    </div>
+	<div id="objectdetection" class="step" data-x="-1000" data-y="500">
+		<h2>Control</h2>
+		<h1>Object Detection</h1>
+		<p>By James Reuss</p>
+	</div>
+	
+	<div id="objectdetection1" class="step" data-x="-1000" data-y="1000" data-rotate-x="-70">
+		<h1>Why Object Detection?</h1>
+		<p>Some reasons...</p>
+	</div>
 
 
 
 
 
-    <div id="overview" class="step" data-x="1000" data-y="0" data-scale="5">
-    </div>
+	<div id="overview" class="step" data-x="1000" data-y="0" data-scale="5">
+	</div>
 
 </div>
 
@@ -117,11 +165,11 @@
 
 
 <div class="hint">
-    <p>Use a spacebar or arrow keys to navigate</p>
+	<p>Use a spacebar or arrow keys to navigate</p>
 </div>
 <script>
 if ("ontouchstart" in document.documentElement) {
-    document.querySelector(".hint").innerHTML = "<p>Tap on the left or right to navigate</p>";
+	document.querySelector(".hint").innerHTML = "<p>Tap on the left or right to navigate</p>";
 }
 </script>
 

@@ -352,6 +352,9 @@ a:focus {
 	Written by James Reuss
 	Styles by James Reuss
 */
+#electronic {
+  text-align: center;
+}
 #objectdetection {
   text-align: center;
 }
