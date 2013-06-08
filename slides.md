@@ -53,15 +53,39 @@ At this point the robotic arm system is ready for use, however it is unable to d
 The system having the ability to detect its environment will aid it in many ways:
 - It can determine if the user is looking at an object, the table surface or elsewhere.
 - It can determine if a less direct route is required for moving to avoid an object.
-- It can self calibrate the arm position.
+- It can help self calibrate the arm position.
 
 This detection of the environment can be achieved by using object detection.
 
+There are many different systems that implement this. For example, the method shown uses an array of infra-red emitters and cameras which can detect the position in 3D of reflective balls attached to the quadcopters.
+![KMel Robotics Quadrotors & IR](kmel.jpg)
+
 Why use Kinect?
-Processes Required to Detect Objects
+---------------
+
+However, these systems are very expensive and are not ideal for use in this system.
+
+A more affordable 3D vision system is the Xbox Kinect sensor which was released in 2010 for around £100.
+
+How the Kinect works and it's Data
+----------------------------------
+
+Algorithms Required to Detect Objects
+-------------------------------------
+
+*Overview*
+
+Detailed Explanation of Algorithms
+----------------------------------
+
 In detail... foreach ... with photos of output ... and results/effectiveness of computation? ... how i made it better?
-Final results ... video ... time taken to calculate
+
+Final Results
+-------------
+ ... video ... time taken to calculate
+
 Improvements & Future Work
+--------------------------
 
 
 
