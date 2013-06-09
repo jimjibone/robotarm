@@ -301,6 +301,106 @@ a {
 	text-align: center;
 }
 
+#arrowvert {
+	width: 0;
+	height: 0;
+	position: relative;
+	left: 0px;
+	top: -520px;
+}
+#arrowhoriz {
+	width: 0;
+	height: 0;
+	position: relative;
+	left: 75px;
+	top: -600px;
+}
+
+#pixels1,
+#pixels2,
+#pixels3,
+#pixels4,
+#pixels5 {
+	list-style: none;
+	//display: inline;
+	text-align: center;
+	padding: 0;
+	margin: 0;
+	
+	li {
+		text-align: center;
+		display: inline-block;
+		background-color: #4F67D0;
+		color: white;
+		width: 40px;
+		padding: 20px 20px;
+		margin: 10px 10px;
+		
+		border: 1px solid rgba(0, 0, 0, .3);
+		border-radius: 5px;
+		box-shadow: 0 2px 6px rgba(0, 0, 0, .1);
+	}
+}
+.impress-enabled .step.future {
+	#pixels1,
+	#pixels2,
+	#pixels3,
+	#pixels4,
+	#pixels5 {
+		li {
+			opacity: 0;
+			.transform(translatey(200px));
+		}
+	}
+}
+.impress-enabled .step.active {
+	#pixels1,
+	#pixels2,
+	#pixels3,
+	#pixels4,
+	#pixels5 {
+		li {
+			opacity: 1;
+			.transform(translatey(0px));
+		}
+	}
+	#pixels1 {
+		li:nth-of-type(1) { .transition(opacity 1s 1.50s, 0.5s 1.00s;); }
+		li:nth-of-type(2) { .transition(opacity 1s 1.60s, 0.5s 1.10s;); }
+		li:nth-of-type(3) { .transition(opacity 1s 1.70s, 0.5s 1.20s;); }
+		li:nth-of-type(4) { .transition(opacity 1s 1.80s, 0.5s 1.30s;); }
+		li:nth-of-type(5) { .transition(opacity 1s 1.90s, 0.5s 1.40s;); }
+	}
+	#pixels2 {
+		li:nth-of-type(1) { .transition(opacity 1s 2.00s, 0.5s 1.50s;); }
+		li:nth-of-type(2) { .transition(opacity 1s 2.10s, 0.5s 1.60s;); }
+		li:nth-of-type(3) { .transition(opacity 1s 2.20s, 0.5s 1.70s;); }
+		li:nth-of-type(4) { .transition(opacity 1s 2.30s, 0.5s 1.80s;); }
+		li:nth-of-type(5) { .transition(opacity 1s 2.40s, 0.5s 1.90s;); }
+	}
+	#pixels3 {
+		li:nth-of-type(1) { .transition(opacity 1s 2.50s, 0.5s 2.00s;); }
+		li:nth-of-type(2) { .transition(opacity 1s 2.60s, 0.5s 2.10s;); }
+		li:nth-of-type(3) { .transition(opacity 1s 2.70s, 0.5s 2.20s;); }
+		li:nth-of-type(4) { .transition(opacity 1s 2.80s, 0.5s 2.30s;); }
+		li:nth-of-type(5) { .transition(opacity 1s 2.90s, 0.5s 2.40s;); }
+	}
+	#pixels4 {
+		li:nth-of-type(1) { .transition(opacity 1s 3.00s, 0.5s 2.50s;); }
+		li:nth-of-type(2) { .transition(opacity 1s 3.10s, 0.5s 2.60s;); }
+		li:nth-of-type(3) { .transition(opacity 1s 3.20s, 0.5s 2.70s;); }
+		li:nth-of-type(4) { .transition(opacity 1s 3.30s, 0.5s 2.80s;); }
+		li:nth-of-type(5) { .transition(opacity 1s 3.40s, 0.5s 2.90s;); }
+	}
+	#pixels5 {
+		li:nth-of-type(1) { .transition(opacity 1s 3.50s, 0.5s 3.00s;); }
+		li:nth-of-type(2) { .transition(opacity 1s 3.60s, 0.5s 3.10s;); }
+		li:nth-of-type(3) { .transition(opacity 1s 3.70s, 0.5s 3.20s;); }
+		li:nth-of-type(4) { .transition(opacity 1s 3.80s, 0.5s 3.30s;); }
+		li:nth-of-type(5) { .transition(opacity 1s 3.90s, 0.5s 3.40s;); }
+	}
+}
+
 .impress-enabled .step.future {
 	#reason0 {
 		opacity: 0;
