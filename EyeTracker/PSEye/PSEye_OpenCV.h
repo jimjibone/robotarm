@@ -29,6 +29,8 @@ public:
     IplImage* GetCurrentImage();
 
     int GetNumOfWindows();
+
+    void SaveImage();
 protected:
 private:
     PSEyeGetter Cam;
@@ -43,6 +45,7 @@ private:
 
     bool StillRunning;
     bool ShowWind;
+    bool SaveImg;
 };
 
 #endif // PSEYE_OPENCV_H

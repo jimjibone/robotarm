@@ -5,6 +5,7 @@ Tracking::Tracking()
     Running = false;
     ShowWind = false;
     open = false;
+    WCapture = false;
 }
 
 Tracking::~Tracking()
@@ -76,6 +77,11 @@ void* Tracking::bk_Process_Thread(void* Input)
         {
             This->GlintsFinder.DrawGlints(DispImg);
             This->CircleFinder.DrawEye(DispImg);
+
+            if (This->WCapture)
+            {
+                cvWriteFrame(This->Capture, DispImg);
+            }
         }
     }
 
@@ -128,6 +134,7 @@ void Tracking::HideWindow()
 {
     if (ShowWind)
     {
+        StopVideoCapture();
         ShowWind = false;
         cvDestroyWindow("ImageProcessing");
     }
@@ -141,4 +148,24 @@ int Tracking::GetNumOfWindows()
     if (ShowWind) Num++;
 
     return Num;
+}
+
+void Tracking::StartVideoCapture()
+{
+    if (ShowWind & !WCapture)
+    {
+        Capture = cvCreateVideoWriter("EyeTrackerVideo.avi", CV_FOURCC('D','I','V','X'), 15, cvSize(640, 480));
+        WCapture = true;
+        printf("Capturing Video\n");
+    }
+}
+
+void Tracking::StopVideoCapture()
+{
+    if (WCapture)
+    {
+        WCapture = false;
+        cvReleaseVideoWriter(&Capture);
+        printf("Finsihed Video Capture\n");
+    }
 }

@@ -38,12 +38,12 @@ private:
     static const int PupilMaxR = 40;
     static const int PupilAccept = 2;
 
-    static const int IrisMinR = 27;
-    static const int IrisMaxR = 40;
+    static const int IrisMinR = 45;
+    static const int IrisMaxR = 100;
     static const int IrisStep = 2;
-    static const int IrisAccept = 8;
+    static const int IrisAccept = 10;
 
-    static const int CircleStep = 20;
+    static const int CircleStep = 15;
 
     static const int AllStep = 3;
 

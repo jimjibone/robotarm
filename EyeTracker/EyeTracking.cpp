@@ -43,7 +43,8 @@ void EyeTracking::Run()
                 Calcs.GetNumWindows() == 0)
         {
             Tracker.ShowWindow();
-            //Cam.ShowImage();
+            Cam.ShowImage();
+            Img_Proc.ShowCaliWindow();
         }
 
         Carry = RunCommnad(cvWaitKey(0));
@@ -102,6 +103,15 @@ bool EyeTracking::RunCommnad(char Com)
     case 'm':
     case 'M':
         Calcs.HideWindow();
+        break;
+    case 'p':
+    case 'P':
+        Cam.SaveImage();
+    case '[':
+        Tracker.StartVideoCapture();
+        break;
+    case ']':
+        Tracker.StopVideoCapture();
         break;
     }
     return true;

@@ -28,6 +28,9 @@ public:
     void HideWindow();
 
     int GetNumOfWindows();
+
+    void StartVideoCapture();
+    void StopVideoCapture();
 protected:
 private:
     IplImage* CurImage;
@@ -41,6 +44,7 @@ private:
     bool Running;
 
     bool ShowWind;
+    bool WCapture;
 
     HoughCircleFnder CircleFinder;
     GlintFinder GlintsFinder;
@@ -49,6 +53,8 @@ private:
 
     bool open;
     ofstream myFile;
+
+    CvVideoWriter* Capture;
 };
 
 #endif // TRACKING_H

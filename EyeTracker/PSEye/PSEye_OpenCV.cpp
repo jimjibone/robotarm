@@ -4,6 +4,7 @@ PSEye_OpenCV::PSEye_OpenCV()
 {
     StillRunning = false;
     ShowWind = false;
+    SaveImg = false;
     ThisTimer = EyeTimers(34L);
 }
 
@@ -54,6 +55,14 @@ void PSEye_OpenCV::DoItFunction(void* ptr)
         {
             cvShowImage("PSCam Image", CurImg);
         }
+
+        if (This->SaveImg)
+        {
+            cvSaveImage("TestImage.png", CurImg);
+            This->SaveImg = false;
+            printf("Image Saved\n");
+        }
+
         This->NewImgFunct(CurImg, This->SentData);
     }
 }
@@ -97,4 +106,9 @@ int PSEye_OpenCV::GetNumOfWindows()
     {
         return 0;
     }
+}
+
+void PSEye_OpenCV::SaveImage()
+{
+    SaveImg = true;
 }
