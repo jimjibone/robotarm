@@ -310,6 +310,15 @@ a:focus {
 .centre {
   text-align: center;
 }
+.reference {
+  width: 0;
+}
+.reference a {
+  position: relative;
+  top: 20px;
+  left: -20px;
+  font-size: 0.5em;
+}
 /*
 	Boring Style Slide
 */
@@ -387,6 +396,31 @@ a:focus {
 	Written by James Reuss
 	Styles by James Reuss
 */
+#displacement {
+  display: block;
+  clear: both;
+}
+#displacement p {
+  padding-top: 550px;
+}
+#displacement #img1 {
+  float: left;
+  background-image: url('../img/horizarm.png');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 100%;
+  width: 45%;
+  min-height: 400px;
+}
+#displacement #img2 {
+  float: right;
+  background-image: url('../img/vertarm.png');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 100%;
+  width: 45%;
+  min-height: 400px;
+}
 #electronic {
   text-align: center;
 }
