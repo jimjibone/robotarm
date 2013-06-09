@@ -81,6 +81,10 @@ The organisation means that you know the location of neighbouring pixels within 
 
 Both the RGB and Depth images are structured in this way. It is also possible to get the depth data in millimetre units.
 
+Using the Kinect's built in calibration data it is possible to convert the pixel location and depth to a 3D point with all values in millimetres.
+
+The collection of all of these 3D points is what forms the point cloud, as shown here with the RGB image mapped on top.
+
 Algorithms Required to Detect Objects
 -------------------------------------
 
@@ -104,7 +108,7 @@ Then passing the current point, with its neighbours, through the surface normal 
 
 ### Plane Segmentation
 
-
+It is now possible to segment all of these points into 
 
 
 
