@@ -84,7 +84,7 @@ Both the RGB and Depth images are structured in this way. It is also possible to
 Algorithms Required to Detect Objects
 -------------------------------------
 
-To actually convert this depth image into a useable form
+To actually convert this depth image into a usable form and then find the objects, several operations must be performed on the data. These are:
 
 - Surface Normals
 - Plane Segmentation
@@ -95,6 +95,18 @@ To actually convert this depth image into a useable form
 		- Convex Hull
 - Point Inclusion
 - K-Means Clustering - Object Cloud Clustering
+
+### Surface Normals
+
+The first task is to calculate the surface normal for each point in the depth data. This requires determining the 3D vertices for each point.
+
+Then passing the current point, with its neighbours, through the surface normal equation.
+
+### Plane Segmentation
+
+
+
+
 
 *Overview*
 
