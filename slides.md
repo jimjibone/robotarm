@@ -108,7 +108,30 @@ Then passing the current point, with its neighbours, through the surface normal 
 
 ### Plane Segmentation
 
-It is now possible to segment all of these points into 
+It is now possible to segment all of these points into their relative planes.
+
+#### Point Clustering
+
+This is done using tags. Then by iterating through each point, if the current point has no tag, it is assigned a new one, then a scan is made around this point for all the neighbouring points that have a normal angle difference between a certain threshold. If the neighbouring point has a small difference angle then it is given the same tag as the original point. Each point, found to be within the tolerance, is then pushed back to the queue for further processing of its own neighbours.
+
+This results in each 3D point having associated to it a tag.
+
+#### Cluster Filtering
+
+Now that each point has a tag it is now possible to filter out points that do not represent a planar surface.
+
+- First count how many points make up each tag
+- Add each point to a collection of other points with that tag
+- Filter out all the clusters (tags) with a given threshold
+
+#### Dominant Plane
+
+We now have a collection of plane clusters, but we really need to know which one is the table.
+
+We can look at each cluster and determine its confidence as being the table (assuming that there is a table in the scene)
+
+The confidence is calculated by giving a weighting to both the point count and the centroid position relative to the camera. This way, the largest and most centre plane is selected.
+
 
 
 

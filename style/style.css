@@ -748,6 +748,15 @@ a:focus {
   -o-transition: opacity 1s 3.9s, 0.5s 3.4s;
   transition: opacity 1s 3.9s, 0.5s 3.4s;
 }
+#clusterimg {
+  width: 0;
+  height: 0;
+}
+#clusterimg img {
+  position: relative;
+  left: 600px;
+  top: -700px;
+}
 .impress-enabled .step.future #reason0 {
   opacity: 0;
 }

@@ -790,6 +790,65 @@
 		<div class="centre"><img src="img/planecoefficientseq.png"></div>
 		<p style="text-align:right;">using neighbouring points.</p>
 	</div>
+	
+	<div class="step" data-x="3800" data-y="7800" data-z="800" data-rotate-y="-90">
+		<h1>Plane Segmentation</h1>
+		<p>As mentioned previously, this contains many steps</p>
+		<ul>
+			<li>Point Clustering</li>
+			<li>Cluster Filtering</li>
+			<li>Dominant Plane Detection</li>
+			<ul>
+				<li>RANSAC</li>
+				<li>Convex Hull</li>
+			</ul>
+		</ul>
+	</div>
+	
+	<div class="step" data-x="3600" data-y="7200" data-z="1800" data-rotate-y="-90">
+		<h1>Point Clustering</h1>
+		<p>Use Tags!</p>
+		<ul>
+			<li>Iterate through all points. For each:</li>
+			<ul>
+				<li>Does it already have a tag? Then go to the next point. Otherwise:</li>
+				<ul>
+					<li>Give this point a new tag</li>
+					<li>For each of the neighbouring points:</li>
+					<ul style="font-size:1em;">
+						<li>Determine the angular difference using normals</li>
+						<li>If the difference is within a threshold then this point is given the same tag as the original and is pushed to the queue</li>
+					</ul>
+				</ul>
+			</ul>
+		</ul>
+		<p>Now each point has a tag</p>
+		<div id="clusterimg"><img src="img/clustering.png"></div>
+	</div>
+	
+	<div class="step" data-x="3600" data-y="7800" data-z="1800" data-rotate-y="-90">
+		<h1>Cluster Filtering</h1>
+		<p>Now filter out tags that don't represent a plane</p>
+		<ul>
+			<li>First count how many points belong to each tag</li>
+			<li>Add each point to its relevant tag cluster</li>
+			<li>Filter out all the clusters below a given point count threshold</li>
+		</ul>
+	</div>
+	
+	<div class="step" data-x="3600" data-y="8300" data-z="1800" data-rotate-y="-90">
+		<h1>Dominant Plane Finding</h1>
+		<p>Which plane cluster is the table?</p>
+		<ul>
+			<li>Determine the confidence of each cluster</li>
+			<ul>
+				<li>Based on point count, and</li>
+				<li>Centroid (relative to camera)</li>
+			</ul>
+			<li>The cluster with the highest confidence must be the table</li>
+		</ul>
+		<p>NB: This assumes that there is a table</p>
+	</div>
 
 
 
@@ -803,7 +862,7 @@
 	-->
 
 	<div id="overview" class="step centre" data-x="3200" data-y="6600" data-scale="1">
-		<h1>Thankyou for listening!</h1>
+		<h1>Thank you for listening!</h1>
 	</div>
 
 </div>
