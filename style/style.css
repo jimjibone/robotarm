@@ -311,12 +311,29 @@ a:focus {
   text-align: center;
 }
 .reference {
-  width: 0;
+  max-width: 50%;
+  margin: 0 auto;
+  text-align: center;
 }
 .reference a {
-  position: relative;
-  top: 20px;
-  left: -20px;
+  opacity: 0.7;
+  width: 150px;
+  margin: 0 -75px;
+  position: absolute;
+  left: 50%;
+  bottom: 0%;
+  font-size: 0.5em;
+}
+.reference.left a {
+  position: absolute;
+  left: 20%;
+  bottom: 0%;
+  font-size: 0.5em;
+}
+.reference.right a {
+  position: absolute;
+  left: 80%;
+  bottom: 0%;
   font-size: 0.5em;
 }
 /*
@@ -376,7 +393,7 @@ a:focus {
 #contents a {
   color: inherit;
   text-decoration: none;
-  border-bottom: 1px #f11 solid;
+  border-bottom: 2px rgba(255, 17, 17, 0.3) solid;
   padding: 0;
   background: none;
   text-shadow: none;
