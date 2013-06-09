@@ -208,22 +208,24 @@ a {
 }
 
 .transform(...) {
-  -webkit-transform: @arguments;
-  -moz-transform: @arguments;
-  -o-transform: @arguments;
-  -ms-transform: @arguments;
-  transform: @arguments;
+	-webkit-transform: @arguments;
+	   -moz-transform: @arguments;
+	     -o-transform: @arguments;
+	    -ms-transform: @arguments;
+	        transform: @arguments;
+}
+.transition(...) {
+	-webkit-transition: @arguments;
+	   -moz-transition: @arguments;
+	    -ms-transition: @arguments;
+	     -o-transition: @arguments;
+	        transition: @arguments;
 }
 
 .eyedetect.present {
 	img {
 		opacity: 1;
-		
-		-webkit-transition: opacity 1s;
-		-moz-transition:	opacity 1s;
-		-ms-transition:	 opacity 1s;
-		-o-transition:		opacity 1s;
-		transition:		 opacity 1s;
+		.transition(opacity 1s);
 	}
 }
 .eyedetect1.past,
@@ -231,17 +233,45 @@ a {
 .eyedetect.future {
 	img {
 		opacity: 0;
-		
-		-webkit-transition: opacity 1s;
-		-moz-transition:	opacity 1s;
-		-ms-transition:	 opacity 1s;
-		-o-transition:		opacity 1s;
-		transition:		 opacity 1s;
+		.transition(opacity 1s);
 	}
 }
 
 #objectdetection {
 	text-align: center;
+}
+
+.impress-enabled .step.future {
+	#reason0 {
+		opacity: 0;
+	}
+	#reason1,#reason2,#reason3 {
+		opacity: 0;
+		.transform(translatey(200px));
+	}
+}
+.impress-enabled .step.active {
+	#reason0 {
+		opacity: 1;
+		.transform(translatey(0px));
+		.transition(opacity 1s);
+	}
+	#reason1 {
+		opacity: 1;
+		.transform(translatey(0px));
+		.transition(opacity 1s 2.5s, 0.5s 2s;);
+	}
+	#reason2 {
+		opacity: 1;
+		.transform(translatey(0px));
+		.transition(opacity 1s 3.5s, 0.5s 3s;);
+	}
+	
+	#reason3 {
+		opacity: 1;
+		.transform(translatey(0px));
+		.transition(opacity 1s 4.5s, 0.5s 4s;);
+	}
 }
 
 

@@ -55,8 +55,6 @@ The system having the ability to detect its environment will aid it in many ways
 - It can determine if a less direct route is required for moving to avoid an object.
 - It can help self calibrate the arm position.
 
-This detection of the environment can be achieved by using object detection.
-
 There are many different systems that implement this. For example, the method shown uses an array of infra-red emitters and cameras which can detect the position in 3D of reflective balls attached to the quadcopters.
 ![KMel Robotics Quadrotors & IR](kmel.jpg)
 
@@ -69,6 +67,8 @@ A more affordable 3D vision system is the Xbox Kinect sensor which was released 
 
 How the Kinect works and it's Data
 ----------------------------------
+
+The Kinect
 
 Algorithms Required to Detect Objects
 -------------------------------------

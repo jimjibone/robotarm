@@ -440,3 +440,68 @@ a:focus {
 #objectdetection {
   text-align: center;
 }
+.impress-enabled .step.future #reason0 {
+  opacity: 0;
+}
+.impress-enabled .step.future #reason1,
+.impress-enabled .step.future #reason2,
+.impress-enabled .step.future #reason3 {
+  opacity: 0;
+  -webkit-transform: translatey(200px);
+  -moz-transform: translatey(200px);
+  -o-transform: translatey(200px);
+  -ms-transform: translatey(200px);
+  transform: translatey(200px);
+}
+.impress-enabled .step.active #reason0 {
+  opacity: 1;
+  -webkit-transform: translatey(0px);
+  -moz-transform: translatey(0px);
+  -o-transform: translatey(0px);
+  -ms-transform: translatey(0px);
+  transform: translatey(0px);
+  -webkit-transition: opacity 1s;
+  -moz-transition: opacity 1s;
+  -ms-transition: opacity 1s;
+  -o-transition: opacity 1s;
+  transition: opacity 1s;
+}
+.impress-enabled .step.active #reason1 {
+  opacity: 1;
+  -webkit-transform: translatey(0px);
+  -moz-transform: translatey(0px);
+  -o-transform: translatey(0px);
+  -ms-transform: translatey(0px);
+  transform: translatey(0px);
+  -webkit-transition: opacity 1s 2.5s, 0.5s 2s;
+  -moz-transition: opacity 1s 2.5s, 0.5s 2s;
+  -ms-transition: opacity 1s 2.5s, 0.5s 2s;
+  -o-transition: opacity 1s 2.5s, 0.5s 2s;
+  transition: opacity 1s 2.5s, 0.5s 2s;
+}
+.impress-enabled .step.active #reason2 {
+  opacity: 1;
+  -webkit-transform: translatey(0px);
+  -moz-transform: translatey(0px);
+  -o-transform: translatey(0px);
+  -ms-transform: translatey(0px);
+  transform: translatey(0px);
+  -webkit-transition: opacity 1s 3.5s, 0.5s 3s;
+  -moz-transition: opacity 1s 3.5s, 0.5s 3s;
+  -ms-transition: opacity 1s 3.5s, 0.5s 3s;
+  -o-transition: opacity 1s 3.5s, 0.5s 3s;
+  transition: opacity 1s 3.5s, 0.5s 3s;
+}
+.impress-enabled .step.active #reason3 {
+  opacity: 1;
+  -webkit-transform: translatey(0px);
+  -moz-transform: translatey(0px);
+  -o-transform: translatey(0px);
+  -ms-transform: translatey(0px);
+  transform: translatey(0px);
+  -webkit-transition: opacity 1s 4.5s, 0.5s 4s;
+  -moz-transition: opacity 1s 4.5s, 0.5s 4s;
+  -ms-transition: opacity 1s 4.5s, 0.5s 4s;
+  -o-transition: opacity 1s 4.5s, 0.5s 4s;
+  transition: opacity 1s 4.5s, 0.5s 4s;
+}
