@@ -65,10 +65,12 @@ However, these systems are very expensive and are not ideal for use in this syst
 
 A more affordable 3D vision system is the Xbox Kinect sensor which was released in 2010 for around £100.
 
-How the Kinect works and it's Data
-----------------------------------
+How does the Kinect work?
+-------------------------
 
-The Kinect
+![Kinect with labels](img/kinectlabel.png)
+
+The Kinect has a regular RGB camera which just detects the coloured light.
 
 Algorithms Required to Detect Objects
 -------------------------------------
