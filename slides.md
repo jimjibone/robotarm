@@ -132,6 +132,44 @@ We can look at each cluster and determine its confidence as being the table (ass
 
 The confidence is calculated by giving a weighting to both the point count and the centroid position relative to the camera. This way, the largest and most centre plane is selected.
 
+**RANSAC**
+
+The RANSAC algorithm stands for Random Sample and Consensus.
+
+It is a means by which it is possible to quickly approximate a desired value, and in this case it is used to approximate the plane coefficients of the table surface.
+
+It works by:
+
+- First selecting a number of random points
+- Then group them into threes and determine their normal coefficients
+- Then compare all the other 'non-random' points with each normal
+- If the normal has a point nearby it (within a threshold) then increase its confidence
+- The normal coefficients that have the highest confidence is the approximate of the table plane.
+
+**Convex Hull**
+
+Using the Convex Hull algorithm it is possible to determine the points which make up the outer edge of the table surface. This later allows for the processing of points that only lie within and on the table.
+
+The simplest analogy that explains the convex hull is the rubber band. Imagine these points make up all the table surface points. Stretch a rubber band around all the points and let go. You will end up with the rubber band looking like this once it has contracted.
+
+This is similar to how the convex hull algorithm works. You are then left with all the points that make up the outer ring of the collection.
+
+### Point Inclusion
+
+We now have a lot information available:
+
+- The table plane coefficients (RANSAC)
+- The table plane bounds (convex hull)
+- The points that make up the table surface
+
+So now we need to find out which points from the original point cloud make up the objects on the table.
+
+To do this, it is possible to use the point-in-polygon algorithm. This was implemented using the Point Inclusion in Polygon Test created by W. Randolf Franklin.
+
+It uses the method shown here to determine whether point is located within a given polygon. In this case, the polygon is all the points of the convex hull.
+
+
+
 
 
 

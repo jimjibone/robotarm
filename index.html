@@ -816,7 +816,7 @@
 					<li>Give this point a new tag</li>
 					<li>For each of the neighbouring points:</li>
 					<ul style="font-size:1em;">
-						<li>Determine the angular difference using normals</li>
+						<li>Determine the angular difference using surface normals</li>
 						<li>If the difference is within a threshold then this point is given the same tag as the original and is pushed to the queue</li>
 					</ul>
 				</ul>
@@ -836,7 +836,7 @@
 		</ul>
 	</div>
 	
-	<div class="step" data-x="3600" data-y="8300" data-z="1800" data-rotate-y="-90">
+	<div class="step" data-x="3600" data-y="8350" data-z="1800" data-rotate-y="-90">
 		<h1>Dominant Plane Finding</h1>
 		<p>Which plane cluster is the table?</p>
 		<ul>
@@ -848,6 +848,48 @@
 			<li>The cluster with the highest confidence must be the table</li>
 		</ul>
 		<p>NB: This assumes that there is a table</p>
+	</div>
+	
+	<div class="step" data-x="3600" data-y="8350" data-z="2600" data-rotate-y="-90" data-rotate-x="-90">
+		<h1>The RANSAC Algorithm</h1>
+		<p><small>RANdom Sample And Consensus</small></p>
+		<ul>
+			<li>This algorithm allows a fast approximation of a desired value</li>
+			<li>In this case it is used to approximate the plane coefficients of the table</li>
+			<li>How it works:</li>
+		</ul>
+		<img src="img/ransac.png" width="800">
+	</div>
+	
+	<div class="step" data-x="3600" data-y="7400" data-z="2600" data-rotate-y="-90" data-rotate-x="-90">
+		<h1>The Convex Hull Algorithm</h1>
+		<ul>
+			<li>This algorithm will give the points that make up the edges of the table</li>
+			<li>This allows for later processing of points that lie within and on the table</li>
+			<li>How it works:</li>
+		</ul>
+		<img src="img/convexhull.png" width="800">
+	</div>
+	
+	<div class="step" data-x="3800" data-y="8500" data-z="800" data-rotate-y="-90">
+		<h1>Point Inclusion</h1>
+		<p>There is now a lot of information available:</p>
+		<ul>
+			<li id="reason1">Table plane coefficients - from RANSAC</li>
+			<li id="reason2">Table plane bounds - from Convex Hull</li>
+			<li id="reason3">Table surface points - from Plane Clustering</li>
+		</ul>
+		<p id="reason4">Which points make up objects on the table?</p>
+	</div>
+	
+	<div class="step" data-x="3800" data-y="9050" data-z="800" data-rotate-y="-90">
+		<p id="reason0">Use a Point-In-Polygon algorithm</p>
+		<ul>
+			<li id="reason0">Implemented using <a href="http:// www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html">Point Inclusion in Polygon Test created by W. Randolf Franklin</a></li>
+		</ul>
+		<div class="centre">
+			<img src="img/pointinclusion.png">
+		</div>
 	</div>
 
 

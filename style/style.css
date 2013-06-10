@@ -762,7 +762,9 @@ a:focus {
 }
 .impress-enabled .step.future #reason1,
 .impress-enabled .step.future #reason2,
-.impress-enabled .step.future #reason3 {
+.impress-enabled .step.future #reason3,
+.impress-enabled .step.future #reason4,
+.impress-enabled .step.future #reason5 {
   opacity: 0;
   -webkit-transform: translatey(200px);
   -moz-transform: translatey(200px);
@@ -790,11 +792,11 @@ a:focus {
   -o-transform: translatey(0px);
   -ms-transform: translatey(0px);
   transform: translatey(0px);
-  -webkit-transition: opacity 1s 2.5s, 0.5s 2s;
-  -moz-transition: opacity 1s 2.5s, 0.5s 2s;
-  -ms-transition: opacity 1s 2.5s, 0.5s 2s;
-  -o-transition: opacity 1s 2.5s, 0.5s 2s;
-  transition: opacity 1s 2.5s, 0.5s 2s;
+  -webkit-transition: opacity 1s 2s, 0.5s 1.5s;
+  -moz-transition: opacity 1s 2s, 0.5s 1.5s;
+  -ms-transition: opacity 1s 2s, 0.5s 1.5s;
+  -o-transition: opacity 1s 2s, 0.5s 1.5s;
+  transition: opacity 1s 2s, 0.5s 1.5s;
 }
 .impress-enabled .step.active #reason2 {
   opacity: 1;
@@ -803,11 +805,11 @@ a:focus {
   -o-transform: translatey(0px);
   -ms-transform: translatey(0px);
   transform: translatey(0px);
-  -webkit-transition: opacity 1s 3.5s, 0.5s 3s;
-  -moz-transition: opacity 1s 3.5s, 0.5s 3s;
-  -ms-transition: opacity 1s 3.5s, 0.5s 3s;
-  -o-transition: opacity 1s 3.5s, 0.5s 3s;
-  transition: opacity 1s 3.5s, 0.5s 3s;
+  -webkit-transition: opacity 1s 3s, 0.5s 2.5s;
+  -moz-transition: opacity 1s 3s, 0.5s 2.5s;
+  -ms-transition: opacity 1s 3s, 0.5s 2.5s;
+  -o-transition: opacity 1s 3s, 0.5s 2.5s;
+  transition: opacity 1s 3s, 0.5s 2.5s;
 }
 .impress-enabled .step.active #reason3 {
   opacity: 1;
@@ -816,9 +818,35 @@ a:focus {
   -o-transform: translatey(0px);
   -ms-transform: translatey(0px);
   transform: translatey(0px);
-  -webkit-transition: opacity 1s 4.5s, 0.5s 4s;
-  -moz-transition: opacity 1s 4.5s, 0.5s 4s;
-  -ms-transition: opacity 1s 4.5s, 0.5s 4s;
-  -o-transition: opacity 1s 4.5s, 0.5s 4s;
-  transition: opacity 1s 4.5s, 0.5s 4s;
+  -webkit-transition: opacity 1s 4s, 0.5s 3.5s;
+  -moz-transition: opacity 1s 4s, 0.5s 3.5s;
+  -ms-transition: opacity 1s 4s, 0.5s 3.5s;
+  -o-transition: opacity 1s 4s, 0.5s 3.5s;
+  transition: opacity 1s 4s, 0.5s 3.5s;
+}
+.impress-enabled .step.active #reason4 {
+  opacity: 1;
+  -webkit-transform: translatey(0px);
+  -moz-transform: translatey(0px);
+  -o-transform: translatey(0px);
+  -ms-transform: translatey(0px);
+  transform: translatey(0px);
+  -webkit-transition: opacity 1s 5s, 0.5s 4.5s;
+  -moz-transition: opacity 1s 5s, 0.5s 4.5s;
+  -ms-transition: opacity 1s 5s, 0.5s 4.5s;
+  -o-transition: opacity 1s 5s, 0.5s 4.5s;
+  transition: opacity 1s 5s, 0.5s 4.5s;
+}
+.impress-enabled .step.active #reason5 {
+  opacity: 1;
+  -webkit-transform: translatey(0px);
+  -moz-transform: translatey(0px);
+  -o-transform: translatey(0px);
+  -ms-transform: translatey(0px);
+  transform: translatey(0px);
+  -webkit-transition: opacity 1s 6s, 0.5s 5.5s;
+  -moz-transition: opacity 1s 6s, 0.5s 5.5s;
+  -ms-transition: opacity 1s 6s, 0.5s 5.5s;
+  -o-transition: opacity 1s 6s, 0.5s 5.5s;
+  transition: opacity 1s 6s, 0.5s 5.5s;
 }
