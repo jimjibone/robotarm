@@ -447,7 +447,7 @@
 		</ul>
 	</div>
 	
-	<div class="step" data-x="4800" data-y="450" data-z="-300" data-rotate-x="90">
+	<div class="step" data-x="4800" data-y="700" data-z="0" data-rotate-x="0">
 		<h1>Actuator Systems (Research cont.)</h1>
 		
 		<ul>
@@ -460,27 +460,27 @@
 		</ul>
 	</div>
 	
-	<div class="step" data-x="5800" data-y="450" data-z="-300" data-rotate-x="90">
+	<div class="step" data-x="5100" data-y="700" data-z="-500" data-rotate-y="-90">
 		<h1>Actuator Systems (Selections)</h1>
 		<p>Based on the aforementioned research, several electrical motors were selected:</p>
 	</div>
 	
-	<div class="step centre" data-x="5800" data-y="-900" data-z="-300" data-rotate-x="90">
+	<div class="step centre" data-x="5100" data-y="-100" data-z="-500" data-rotate-y="-90">
 		<img src="img/steppershoulder.png">
 		<p>One Trinamic QSH-5718-51-28-101</p>
 	</div>
 	
-	<div class="step centre" data-x="5800" data-y="-2200" data-z="-300" data-rotate-x="90">
+	<div class="step centre" data-x="4000" data-y="-100" data-z="-500" data-rotate-y="-90">
 		<img src="img/stepperelbow.png">
 		<p>One Astrosyn - MY3002 Size 11 Stepper Motor</p>
 	</div>
 	
-	<div class="step centre" data-x="5800" data-y="-3400" data-z="-300" data-rotate-x="90">
+	<div class="step centre" data-x="2900" data-y="-100" data-z="-500" data-rotate-y="-90">
 		<img src="img/motorhand.png">
 		<p>Two RE 385 DC Motors</p>
 	</div>
 	
-	<div class="step" data-x="5800" data-y="-3800" data-z="100" data-rotate-x="0">
+	<div class="step" data-x="2900" data-y="-1100" data-z="-500" data-rotate-y="-90">
 		<h1>Actuator Systems Circuitry Development</h1>
 		<p>In order to actuate these motors, specific driver circuity was required, although there were some factors to take into consideration:</p>
 		<ul>
@@ -491,7 +491,7 @@
 		</ul>
 	</div>
 	
-	<div class="step" data-x="5800" data-y="-3000" data-z="100" data-rotate-x="0">
+	<div class="step" data-x="3400" data-y="-1100" data-z="-1200" data-rotate-y="-180">
 		<h1>Feedback Systems</h1>
 		
 		<ul>
@@ -894,7 +894,69 @@
 	
 	<div class="step" data-x="3800" data-y="9200" data-z="000" data-rotate-y="-90" data-rotate-x="-90">
 		<h1>Object Point Clustering</h1>
-		<p></p>
+		<ul>
+			<li id="reason1">The final stage of processing</li>
+			<li id="reason2">Have a collection of 3D points representing <strong>all</strong> objects on the table</li>
+			<li id="reason3">Need to split up these points into individual objects</li>
+			<li id="reason4">Use the K-Means clustering algorithm</li>
+		</ul>
+	</div>
+	
+	<div class="step" data-x="2600" data-y="9200" data-z="000" data-rotate-y="-90" data-rotate-x="-90">
+		<h1>K-Means Algorithm</h1>
+		<p>A process by which:</p>
+		<ul>
+			<li>All the points are spilt into 'k' groups</li>
+			<li>Calculate the centroid of each group</li>
+			<li>Determine the distance each point has from all of the centroids</li>
+			<ul>
+				<li>If the point is closer to another group rather than its own, move it to the other group</li>
+			</ul>
+			<li>Once there are no more movements of points, the clustering is finished</li>
+		</ul>
+	</div>
+	
+	<div class="step" data-x="1800" data-y="9800" data-z="000" data-rotate-y="-180" data-rotate-x="-90">
+		<h1>Results</h1>
+	</div>
+	
+	<div class="step" data-x="1800" data-y="8600" data-z="000" data-rotate-y="-180" data-rotate-x="-90">
+		<p>Before Calibration</p>
+		<div class="bigimage">
+			<img src="img/objtest0.png">
+		</div>
+	</div>
+	
+	<div class="step" data-x="1800" data-y="7400" data-z="000" data-rotate-y="-180" data-rotate-x="-90">
+		<p>Some Calibration</p>
+		<div class="bigimage">
+			<img src="img/objtest1.png">
+		</div>
+	</div>
+	
+	<div class="step" data-x="1800" data-y="6200" data-z="000" data-rotate-y="-180" data-rotate-x="-90">
+		<p>After Calibration</p>
+		<div class="bigimage">
+			<img src="img/objtest2.png">
+		</div>
+	</div>
+	
+	<div class="step" data-x="1800" data-y="5000" data-z="000" data-rotate-y="-180" data-rotate-x="-90">
+		<p>With Object Detection</p>
+		<div class="bigimage">
+			<img src="img/objtest3.png">
+		</div>
+	</div>
+	
+	<div class="step" data-x="1800" data-y="3800" data-z="000" data-rotate-y="-180" data-rotate-x="-90">
+		<p>Extended Calibration</p>
+		<div class="bigimage">
+			<img src="img/objtest4.png" width="1250">
+		</div>
+	</div>
+	
+	<div class="step" data-x="1000" data-y="3000" data-z="000" data-rotate-y="-90" data-rotate-x="-90" data-rotate-z="0">
+		<p>Improvements</p>
 	</div>
 
 

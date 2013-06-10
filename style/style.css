@@ -850,3 +850,11 @@ a:focus {
   -o-transition: opacity 1s 6s, 0.5s 5.5s;
   transition: opacity 1s 6s, 0.5s 5.5s;
 }
+.bigimage {
+  width: 100%;
+  margin: 0 auto;
+}
+.bigimage img {
+  position: relative;
+  left: -27%;
+}

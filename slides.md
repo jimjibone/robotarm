@@ -181,22 +181,37 @@ Performing this operation on all of the points will give a collection of points 
 
 ### Object Point Clustering
 
+This is the final stage of the processing!
 
+We have a collection of 3D points which represent **all** of the objects we want to detect.
 
+Now, we just need to spilt up these groups of points into their individual objects. This is where the K-Means clustering algorithm comes in.
 
-*Overview*
+So what is the K-Means algorithm?
 
-Detailed Explanation of Algorithms
-----------------------------------
+It is a process by which:
 
-In detail... foreach ... with photos of output ... and results/effectiveness of computation? ... how i made it better?
+- All of the points are split up into 'k' groups.
+- We then need to calculate the centroid of each group.
+- Now iterate through each point and determine which group it is closest to.
+- If it is closer to a different group other than its own, move it.
+- Continue this process until there are no more movements of points.
+
+The points will now be split into the 'k' clusters correctly.
 
 Final Results
 -------------
- ... video ... time taken to calculate
+
+So how does this system work in practice?
+
+After calibration of the object detection system there were some very good results.
+
+Comment on each image.
 
 Improvements & Future Work
 --------------------------
+
+
 
 
 
