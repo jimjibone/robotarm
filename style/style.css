@@ -69,13 +69,15 @@
 */
 #overview {
   /*display: none*/
+
+  text-shadow: 0 1px 16px rgba(0, 0, 0, 0.7);
 }
 /*
 	We also make other steps visible and give them a pointer cursor using the
 	`impress-on-` class.
 */
 .impress-on-overview .step {
-  opacity: 1;
+  opacity: 0.5;
   cursor: pointer;
 }
 /*
