@@ -208,10 +208,24 @@ After calibration of the object detection system there were some very good resul
 
 Comment on each image.
 
-Improvements & Future Work
---------------------------
+Improvements
+------------
 
+One major limitation of the object detection system that has been implemented is that the K-Means algorithm requires that you specify how many objects there are before computation. This can be troublesome in a more practical application.
 
+However, an alternative clustering method was discovered, but there was no time to implement it.
+
+This method was to use the clustering technique previously used for planes, but instead of using the point surface normals as comparators, the distance of a point from a centroid would be used. In this way, it would be possible to implement a system which could support, theoretically an infinite amount of objects.
+
+Future Work
+-----------
+
+There are many additional pieces of work which can be carried out on this section. These are:
+
+- Shape fitting
+- Integration of eye-tracker information
+- Communication with electronic system
+- Reduced processing time
 
 
 
