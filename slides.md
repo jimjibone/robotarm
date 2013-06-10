@@ -168,7 +168,18 @@ To do this, it is possible to use the point-in-polygon algorithm. This was imple
 
 It uses the method shown here to determine whether point is located within a given polygon. In this case, the polygon is all the points of the convex hull.
 
+This algorithm works by:
 
+- Running a semi-infinite ray out from a test point towards the tested point.
+- As the ray crosses an edge of the polygon a count is incremented.
+- When the ray crosses an edge it is switching between inside and outside.
+- This is also known as the Jordan Curve Theorem.
+- Depending upon the number of crosses the ray has made will determine the position of the point.
+- An even value of switches indicates outside. An odd value indicates that the point is inside.
+
+Performing this operation on all of the points will give a collection of points which make up all the objects on the table.
+
+### Object Point Clustering
 
 
 
